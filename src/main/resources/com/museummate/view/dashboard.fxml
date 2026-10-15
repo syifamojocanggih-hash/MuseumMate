@@ -6,7 +6,7 @@
 
 <ScrollPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.museummate.controller.DashboardController"
-            fitToWidth="true" style="-fx-background-color: transparent; -fx-background: transparent;">
+            fitToWidth="true" style="-fx-background-color: transparent; -fx-background: #f8fafc;">
 
     <VBox spacing="20">
         <!-- Page Header -->
@@ -56,17 +56,17 @@
                         <ColumnConstraints percentWidth="40" halignment="RIGHT" />
                     </columnConstraints>
 
-                    <Label text="📜 Naskah Kuno (Faktor 1.5)" GridPane.rowIndex="0" GridPane.columnIndex="0" />
-                    <Label fx:id="lblNaskahCount" text="0 item" style="-fx-font-weight: bold;" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+                    <Label text="📜 Naskah Kuno (Faktor 1.5)" style="-fx-text-fill: #1e293b; -fx-font-size: 13px;" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+                    <Label fx:id="lblNaskahCount" text="0 item" style="-fx-font-weight: bold; -fx-text-fill: #2563eb; -fx-font-size: 13px;" GridPane.rowIndex="0" GridPane.columnIndex="1" />
 
-                    <Label text="🎨 Lukisan Tradisional/Modern (Faktor 1.2)" GridPane.rowIndex="1" GridPane.columnIndex="0" />
-                    <Label fx:id="lblLukisanCount" text="0 item" style="-fx-font-weight: bold;" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+                    <Label text="🎨 Lukisan Tradisional/Modern (Faktor 1.2)" style="-fx-text-fill: #1e293b; -fx-font-size: 13px;" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+                    <Label fx:id="lblLukisanCount" text="0 item" style="-fx-font-weight: bold; -fx-text-fill: #2563eb; -fx-font-size: 13px;" GridPane.rowIndex="1" GridPane.columnIndex="1" />
 
-                    <Label text="🏺 Artefak &amp; Senjata Sejarah (Faktor 1.0)" GridPane.rowIndex="2" GridPane.columnIndex="0" />
-                    <Label fx:id="lblArtefakCount" text="0 item" style="-fx-font-weight: bold;" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+                    <Label text="🏺 Artefak &amp; Senjata Sejarah (Faktor 1.0)" style="-fx-text-fill: #1e293b; -fx-font-size: 13px;" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+                    <Label fx:id="lblArtefakCount" text="0 item" style="-fx-font-weight: bold; -fx-text-fill: #2563eb; -fx-font-size: 13px;" GridPane.rowIndex="2" GridPane.columnIndex="1" />
 
-                    <Label text="🦴 Fosil &amp; Paleontologi (Faktor 0.8)" GridPane.rowIndex="3" GridPane.columnIndex="0" />
-                    <Label fx:id="lblFosilCount" text="0 item" style="-fx-font-weight: bold;" GridPane.rowIndex="3" GridPane.columnIndex="1" />
+                    <Label text="🦴 Fosil &amp; Paleontologi (Faktor 0.8)" style="-fx-text-fill: #1e293b; -fx-font-size: 13px;" GridPane.rowIndex="3" GridPane.columnIndex="0" />
+                    <Label fx:id="lblFosilCount" text="0 item" style="-fx-font-weight: bold; -fx-text-fill: #2563eb; -fx-font-size: 13px;" GridPane.rowIndex="3" GridPane.columnIndex="1" />
                 </GridPane>
             </VBox>
 
@@ -81,27 +81,27 @@
 
                     <HBox alignment="CENTER_LEFT" spacing="8" GridPane.rowIndex="0" GridPane.columnIndex="0">
                         <Label text="●" style="-fx-text-fill: #16a34a; -fx-font-size: 14px;" />
-                        <Label text="Baik (Bobot 1)" />
+                        <Label text="Baik (Bobot 1)" style="-fx-text-fill: #1e293b; -fx-font-size: 13px;" />
                     </HBox>
-                    <Label fx:id="lblDetilBaik" text="0" style="-fx-font-weight: bold;" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+                    <Label fx:id="lblDetilBaik" text="0" style="-fx-font-weight: bold; -fx-text-fill: #16a34a; -fx-font-size: 13px;" GridPane.rowIndex="0" GridPane.columnIndex="1" />
 
                     <HBox alignment="CENTER_LEFT" spacing="8" GridPane.rowIndex="1" GridPane.columnIndex="0">
                         <Label text="●" style="-fx-text-fill: #2563eb; -fx-font-size: 14px;" />
-                        <Label text="Cukup (Bobot 2)" />
+                        <Label text="Cukup (Bobot 2)" style="-fx-text-fill: #1e293b; -fx-font-size: 13px;" />
                     </HBox>
-                    <Label fx:id="lblDetilCukup" text="0" style="-fx-font-weight: bold;" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+                    <Label fx:id="lblDetilCukup" text="0" style="-fx-font-weight: bold; -fx-text-fill: #2563eb; -fx-font-size: 13px;" GridPane.rowIndex="1" GridPane.columnIndex="1" />
 
                     <HBox alignment="CENTER_LEFT" spacing="8" GridPane.rowIndex="2" GridPane.columnIndex="0">
                         <Label text="●" style="-fx-text-fill: #d97706; -fx-font-size: 14px;" />
-                        <Label text="Rusak Ringan (Bobot 3)" />
+                        <Label text="Rusak Ringan (Bobot 3)" style="-fx-text-fill: #1e293b; -fx-font-size: 13px;" />
                     </HBox>
-                    <Label fx:id="lblDetilRingan" text="0" style="-fx-font-weight: bold;" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+                    <Label fx:id="lblDetilRingan" text="0" style="-fx-font-weight: bold; -fx-text-fill: #d97706; -fx-font-size: 13px;" GridPane.rowIndex="2" GridPane.columnIndex="1" />
 
                     <HBox alignment="CENTER_LEFT" spacing="8" GridPane.rowIndex="3" GridPane.columnIndex="0">
                         <Label text="●" style="-fx-text-fill: #dc2626; -fx-font-size: 14px;" />
-                        <Label text="Rusak Berat (Bobot 4)" />
+                        <Label text="Rusak Berat (Bobot 4)" style="-fx-text-fill: #1e293b; -fx-font-size: 13px;" />
                     </HBox>
-                    <Label fx:id="lblDetilBerat" text="0" style="-fx-font-weight: bold;" GridPane.rowIndex="3" GridPane.columnIndex="1" />
+                    <Label fx:id="lblDetilBerat" text="0" style="-fx-font-weight: bold; -fx-text-fill: #dc2626; -fx-font-size: 13px;" GridPane.rowIndex="3" GridPane.columnIndex="1" />
                 </GridPane>
             </VBox>
         </HBox>

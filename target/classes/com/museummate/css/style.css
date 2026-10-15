@@ -11,12 +11,17 @@
     -fx-text-fill: #0f172a;
 }
 
+/* Global label color fallback (prevents white-on-white text in cards) */
+.label {
+    -fx-text-fill: #0f172a;
+}
+
 /* ==========================================================================
    Ultra-Slim Modern Scrollbars (VS Code / macOS Style — No 90s chunky arrows)
    ========================================================================== */
 .scroll-pane {
     -fx-background-color: transparent;
-    -fx-background: transparent;
+    -fx-background: #f8fafc;
     -fx-border-color: transparent;
     -fx-padding: 0;
 }
