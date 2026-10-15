@@ -71,6 +71,10 @@ public class DatabaseConnection {
                 executeSqlScript(conn, "/db/schema.sql");
                 executeSqlScript(conn, "/db/seed_data.sql");
                 System.out.println("Inisialisasi basis data berhasil diselesaikan.");
+            } else {
+                // Pastikan akun bawaan memiliki hash BCrypt yang valid
+                stmt.executeUpdate("UPDATE pengguna SET password_hash = '$2a$10$X5n4R/yuL10Mh.BtxxXctOO05edLPDZ6ofQDEZyBTxkLud2ObNzRC' WHERE username = 'admin'");
+                stmt.executeUpdate("UPDATE pengguna SET password_hash = '$2a$10$EpwndmY6IelLsj9hUCFR1e9v5j7CvB2Ao/LJm0v0kVNO/Jek9EIbe' WHERE username = 'konservator'");
             }
         } catch (SQLException e) {
             System.err.println("Gagal memverifikasi skema tabel: " + e.getMessage());

@@ -105,8 +105,8 @@ CREATE TABLE IF NOT EXISTS jadwal_perawatan (
 -- SEED DATA
 -- Default password: admin123 untuk admin, konservator123 untuk konservator
 INSERT INTO pengguna (id_pengguna, username, password_hash, nama_lengkap, peran) VALUES
-(1, 'admin', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Ahmad Syifa (Administrator)', 'ADMIN'),
-(2, 'konservator', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Amanda Eka (Konservator Senior)', 'KONSERVATOR')
+(1, 'admin', '$2a$10$X5n4R/yuL10Mh.BtxxXctOO05edLPDZ6ofQDEZyBTxkLud2ObNzRC', 'Ahmad Syifa (Administrator)', 'ADMIN'),
+(2, 'konservator', '$2a$10$EpwndmY6IelLsj9hUCFR1e9v5j7CvB2Ao/LJm0v0kVNO/Jek9EIbe', 'Amanda Eka (Konservator Senior)', 'KONSERVATOR')
 ON DUPLICATE KEY UPDATE nama_lengkap = VALUES(nama_lengkap);
 
 INSERT INTO koleksi (id_koleksi, kode_registrasi, nama, kategori, asal, tahun_perkiraan, bahan, lokasi_penyimpanan, sumber_perolehan, kondisi, tanggal_diterima) VALUES

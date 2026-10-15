@@ -10,8 +10,8 @@ USE museummate_db;
 
 -- 1. Seed Pengguna
 INSERT INTO pengguna (id_pengguna, username, password_hash, nama_lengkap, peran) VALUES
-(1, 'admin', '$2a$10$w3U6j09u2K7B3C4e5d6..1234567890abcdefghijklmnopqrstuv', 'Ahmad Syifa (Administrator)', 'ADMIN'),
-(2, 'konservator', '$2a$10$w3U6j09u2K7B3C4e5d6..1234567890abcdefghijklmnopqrstuv', 'Amanda Eka (Konservator Senior)', 'KONSERVATOR')
+(1, 'admin', '$2a$10$X5n4R/yuL10Mh.BtxxXctOO05edLPDZ6ofQDEZyBTxkLud2ObNzRC', 'Ahmad Syifa (Administrator)', 'ADMIN'),
+(2, 'konservator', '$2a$10$EpwndmY6IelLsj9hUCFR1e9v5j7CvB2Ao/LJm0v0kVNO/Jek9EIbe', 'Amanda Eka (Konservator Senior)', 'KONSERVATOR')
 ON DUPLICATE KEY UPDATE nama_lengkap = VALUES(nama_lengkap);
 
 -- 2. Seed Koleksi Induk
