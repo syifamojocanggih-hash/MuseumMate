@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.museummate.controller.PemeriksaanController"
+      spacing="16">
+
+    <!-- Header Section -->
+    <HBox alignment="CENTER_LEFT" spacing="16">
+        <VBox spacing="3" HBox.hgrow="ALWAYS">
+            <Label text="Pencatatan Pemeriksaan &amp; Riwayat Konservasi" styleClass="page-title" />
+            <Label text="Pemeriksaan berkala fisik koleksi museum. Setiap catatan baru otomatis memperbarui kondisi terkini koleksi terkait." styleClass="page-subtitle" />
+        </VBox>
+        <Button text="+ Catat Pemeriksaan Baru" onAction="#handleBukaFormCatat" styleClass="btn-primary" />
+    </HBox>
+
+    <!-- Filter by Collection Box -->
+    <HBox styleClass="card" spacing="12" alignment="CENTER_LEFT" style="-fx-padding: 12px 16px;">
+        <Label text="Pilih Koleksi untuk Ditelusuri:" styleClass="form-label" style="-fx-padding: 6px 0 0 0;" />
+        <ComboBox fx:id="cmbPilihKoleksi" prefWidth="350.0" promptText="-- Tampilkan Seluruh Riwayat Terkini --" />
+        <Button text="Tampilkan Semua" onAction="#handleTampilkanSemua" styleClass="btn-secondary" />
+        <Region HBox.hgrow="ALWAYS" />
+        <Label fx:id="lblTotalCatatan" text="Total: 0 catatan pemeriksaan" style="-fx-text-fill: #64748b; -fx-font-size: 12px;" />
+    </HBox>
+
+    <!-- Inspection History Table -->
+    <VBox styleClass="card" VBox.vgrow="ALWAYS" spacing="10">
+        <TableView fx:id="tablePemeriksaan" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="colTanggal" text="Tanggal Pemeriksaan" prefWidth="150.0" />
+                <TableColumn fx:id="colKode" text="Kode Koleksi" prefWidth="120.0" />
+                <TableColumn fx:id="colNama" text="Nama Koleksi" prefWidth="240.0" />
+                <TableColumn fx:id="colKondisiHasil" text="Kondisi Hasil" prefWidth="130.0" />
+                <TableColumn fx:id="colTindakan" text="Tindakan Konservasi" prefWidth="250.0" />
+                <TableColumn fx:id="colCatatan" text="Catatan Khusus" prefWidth="240.0" />
+                <TableColumn fx:id="colPetugas" text="Petugas Pencatat" prefWidth="160.0" />
+            </columns>
+            <placeholder>
+                <Label text="Belum ada riwayat pemeriksaan fisik yang tercatat." />
+            </placeholder>
+        </TableView>
+    </VBox>
+
+</VBox>

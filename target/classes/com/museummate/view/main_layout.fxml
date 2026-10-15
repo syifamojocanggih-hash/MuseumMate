@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.museummate.controller.MainLayoutController"
+            prefHeight="750.0" prefWidth="1180.0"
+            stylesheets="@../css/style.css">
+
+    <!-- Left Sidebar Navigation -->
+    <left>
+        <VBox styleClass="sidebar" spacing="6">
+            <!-- Brand -->
+            <VBox spacing="2" style="-fx-padding: 0 0 16px 0;">
+                <Label text="MuseumMate" styleClass="sidebar-brand-title" />
+                <Label text="Konservasi &amp; Koleksi Museum" styleClass="sidebar-brand-subtitle" />
+            </VBox>
+
+            <!-- User Session Box -->
+            <VBox styleClass="user-profile-box" spacing="3">
+                <Label fx:id="lblNamaPengguna" text="Nama Pengguna" styleClass="user-name-label" />
+                <Label fx:id="lblPeranPengguna" text="ADMINISTRATOR" styleClass="user-role-badge" />
+            </VBox>
+
+            <Separator style="-fx-padding: 6px 0;" />
+
+            <!-- Nav Links -->
+            <Button fx:id="btnNavDashboard" text="📊  Dashboard Ringkasan" onAction="#showDashboard"
+                    maxWidth="Infinity" styleClass="nav-button" />
+
+            <Button fx:id="btnNavKoleksi" text="🏛️  Data Koleksi (F2/F3)" onAction="#showKoleksi"
+                    maxWidth="Infinity" styleClass="nav-button" />
+
+            <Button fx:id="btnNavPrioritas" text="⚡  Prioritas Perawatan (F6)" onAction="#showPrioritas"
+                    maxWidth="Infinity" styleClass="nav-button" />
+
+            <Button fx:id="btnNavPemeriksaan" text="📋  Catat Pemeriksaan (F4)" onAction="#showPemeriksaan"
+                    maxWidth="Infinity" styleClass="nav-button" />
+
+            <Button fx:id="btnNavJadwal" text="📅  Jadwal Perawatan (F5)" onAction="#showJadwal"
+                    maxWidth="Infinity" styleClass="nav-button" />
+
+            <!-- Admin Only Nav Link -->
+            <Button fx:id="btnNavPengguna" text="👥  Kelola Akun (F1)" onAction="#showPengguna"
+                    maxWidth="Infinity" styleClass="nav-button" />
+
+            <!-- Spacer -->
+            <Region VBox.vgrow="ALWAYS" />
+
+            <Separator style="-fx-padding: 6px 0;" />
+
+            <Button text="🚪  Keluar (Logout)" onAction="#handleLogout"
+                    maxWidth="Infinity" styleClass="nav-button" style="-fx-text-fill: #f87171;" />
+        </VBox>
+    </left>
+
+    <!-- Main Content Area -->
+    <center>
+        <StackPane fx:id="contentArea" styleClass="content-area" />
+    </center>
+
+</BorderPane>

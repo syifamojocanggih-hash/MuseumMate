@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.museummate.controller.TambahJadwalController"
+      prefWidth="500.0" spacing="16" style="-fx-padding: 24px;"
+      stylesheets="@../css/style.css">
+
+    <VBox spacing="4">
+        <Label text="Susun Jadwal Perawatan Koleksi" styleClass="page-title" />
+        <Label text="Rencanakan agenda tindakan konservasi preventif maupun kuratif." styleClass="page-subtitle" />
+    </VBox>
+
+    <Separator />
+
+    <VBox spacing="12">
+        <VBox spacing="4">
+            <Label text="Pilih Benda Koleksi *" styleClass="form-label" />
+            <ComboBox fx:id="cmbKoleksi" maxWidth="Infinity" promptText="-- Pilih Koleksi --" />
+        </VBox>
+
+        <VBox spacing="4">
+            <Label text="Tanggal Rencana Perawatan *" styleClass="form-label" />
+            <DatePicker fx:id="dpTanggalRencana" maxWidth="Infinity" />
+        </VBox>
+
+        <VBox spacing="4">
+            <Label text="Nama Kegiatan Perawatan *" styleClass="form-label" />
+            <TextField fx:id="txtKegiatan" promptText="mis: Fumigasi rutin, Pelapisan Paraloid B-72, Pembersihan jamur" />
+        </VBox>
+
+        <VBox spacing="4">
+            <Label text="Keterangan Tambahan / Lokasi Pengerjaan" styleClass="form-label" />
+            <TextArea fx:id="txtKeterangan" prefRowCount="3" promptText="mis: Dilakukan di laboratorium kimia konservasi lantai 2" wrapText="true" />
+        </VBox>
+    </VBox>
+
+    <Separator />
+
+    <HBox alignment="CENTER_RIGHT" spacing="12">
+        <Button text="Batal" onAction="#handleBatal" styleClass="btn-secondary" />
+        <Button text="Simpan Jadwal" onAction="#handleSimpan" styleClass="btn-primary" />
+    </HBox>
+
+</VBox>

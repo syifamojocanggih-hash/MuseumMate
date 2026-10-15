@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<ScrollPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.museummate.controller.KoleksiFormController"
+            prefWidth="640.0" prefHeight="650.0" fitToWidth="true"
+            stylesheets="@../css/style.css">
+
+    <VBox spacing="16" style="-fx-padding: 20px;">
+        <VBox spacing="4">
+            <Label fx:id="lblFormTitle" text="Tambah Koleksi Baru" styleClass="page-title" />
+            <Label text="Lengkapi informasi data inti dan atribut khusus sesuai kategori objek." styleClass="page-subtitle" />
+        </VBox>
+
+        <Separator />
+
+        <!-- Bagian Data Inti Koleksi -->
+        <VBox spacing="12">
+            <Label text="1. Informasi Inti Koleksi" styleClass="card-title" />
+
+            <GridPane hgap="12" vgap="12">
+                <columnConstraints>
+                    <ColumnConstraints percentWidth="50" />
+                    <ColumnConstraints percentWidth="50" />
+                </columnConstraints>
+
+                <!-- Kode Registrasi -->
+                <VBox spacing="4" GridPane.rowIndex="0" GridPane.columnIndex="0">
+                    <Label text="Kode Registrasi *" styleClass="form-label" />
+                    <TextField fx:id="txtKodeRegistrasi" promptText="mis: MM-NSK-004" />
+                </VBox>
+
+                <!-- Kategori -->
+                <VBox spacing="4" GridPane.rowIndex="0" GridPane.columnIndex="1">
+                    <Label text="Kategori Koleksi *" styleClass="form-label" />
+                    <ComboBox fx:id="cmbKategori" maxWidth="Infinity" />
+                </VBox>
+
+                <!-- Nama Koleksi -->
+                <VBox spacing="4" GridPane.rowIndex="1" GridPane.columnIndex="0" GridPane.columnSpan="2">
+                    <Label text="Nama Koleksi *" styleClass="form-label" />
+                    <TextField fx:id="txtNama" promptText="Masukkan nama lengkap benda koleksi" />
+                </VBox>
+
+                <!-- Kondisi Fisik -->
+                <VBox spacing="4" GridPane.rowIndex="2" GridPane.columnIndex="0">
+                    <Label text="Kondisi Fisik *" styleClass="form-label" />
+                    <ComboBox fx:id="cmbKondisi" maxWidth="Infinity" />
+                </VBox>
+
+                <!-- Tanggal Diterima -->
+                <VBox spacing="4" GridPane.rowIndex="2" GridPane.columnIndex="1">
+                    <Label text="Tanggal Diterima *" styleClass="form-label" />
+                    <DatePicker fx:id="dpTanggalDiterima" maxWidth="Infinity" />
+                </VBox>
+
+                <!-- Asal Daerah -->
+                <VBox spacing="4" GridPane.rowIndex="3" GridPane.columnIndex="0">
+                    <Label text="Asal / Budaya" styleClass="form-label" />
+                    <TextField fx:id="txtAsal" promptText="mis: Trowulan, Jawa Timur" />
+                </VBox>
+
+                <!-- Tahun / Era Perkiraan -->
+                <VBox spacing="4" GridPane.rowIndex="3" GridPane.columnIndex="1">
+                    <Label text="Tahun / Era Perkiraan" styleClass="form-label" />
+                    <TextField fx:id="txtTahunPerkiraan" promptText="mis: Abad ke-14 / Tahun 1945" />
+                </VBox>
+
+                <!-- Bahan -->
+                <VBox spacing="4" GridPane.rowIndex="4" GridPane.columnIndex="0">
+                    <Label text="Bahan Pembuatan" styleClass="form-label" />
+                    <TextField fx:id="txtBahan" promptText="mis: Logam Perunggu, Kayu Jati" />
+                </VBox>
+
+                <!-- Sumber Perolehan -->
+                <VBox spacing="4" GridPane.rowIndex="4" GridPane.columnIndex="1">
+                    <Label text="Sumber Perolehan" styleClass="form-label" />
+                    <TextField fx:id="txtSumberPerolehan" promptText="mis: Hibah, Ekskavasi, Pembelian" />
+                </VBox>
+
+                <!-- Lokasi Penyimpanan -->
+                <VBox spacing="4" GridPane.rowIndex="5" GridPane.columnIndex="0" GridPane.columnSpan="2">
+                    <Label text="Lokasi Penyimpanan" styleClass="form-label" />
+                    <TextField fx:id="txtLokasiPenyimpanan" promptText="mis: Galeri Utama - Vitrin 02 / Ruang Khusus Naskah Rak B" />
+                </VBox>
+            </GridPane>
+        </VBox>
+
+        <Separator />
+
+        <!-- Bagian Atribut Spesifik Sesuai Kategori (OOP) -->
+        <VBox spacing="12">
+            <Label fx:id="lblSpesifikTitle" text="2. Atribut Khusus Kategori (OOP Subclass)" styleClass="card-title" />
+
+            <!-- Subform Lukisan -->
+            <GridPane fx:id="gridLukisan" hgap="12" vgap="12" visible="false" managed="false">
+                <columnConstraints>
+                    <ColumnConstraints percentWidth="50" />
+                    <ColumnConstraints percentWidth="50" />
+                </columnConstraints>
+                <VBox spacing="4" GridPane.rowIndex="0" GridPane.columnIndex="0">
+                    <Label text="Seniman / Pelukis" styleClass="form-label" />
+                    <TextField fx:id="txtSeniman" promptText="mis: Raden Saleh" />
+                </VBox>
+                <VBox spacing="4" GridPane.rowIndex="0" GridPane.columnIndex="1">
+                    <Label text="Teknik / Media" styleClass="form-label" />
+                    <TextField fx:id="txtTeknikMedia" promptText="mis: Cat minyak di atas kanvas" />
+                </VBox>
+                <VBox spacing="4" GridPane.rowIndex="1" GridPane.columnIndex="0">
+                    <Label text="Dimensi Ukuran" styleClass="form-label" />
+                    <TextField fx:id="txtDimensi" promptText="mis: 120 x 85 cm" />
+                </VBox>
+                <VBox spacing="4" GridPane.rowIndex="1" GridPane.columnIndex="1" alignment="CENTER_LEFT">
+                    <Label text="Bingkai / Frame" styleClass="form-label" />
+                    <CheckBox fx:id="chkAdaBingkai" text="Memiliki pigura / bingkai pelindung" selected="true" />
+                </VBox>
+            </GridPane>
+
+            <!-- Subform Artefak -->
+            <GridPane fx:id="gridArtefak" hgap="12" vgap="12" visible="false" managed="false">
+                <columnConstraints>
+                    <ColumnConstraints percentWidth="50" />
+                    <ColumnConstraints percentWidth="50" />
+                </columnConstraints>
+                <VBox spacing="4" GridPane.rowIndex="0" GridPane.columnIndex="0">
+                    <Label text="Era / Dinasti" styleClass="form-label" />
+                    <TextField fx:id="txtEraDinasti" promptText="mis: Kerajaan Majapahit Akhir" />
+                </VBox>
+                <VBox spacing="4" GridPane.rowIndex="0" GridPane.columnIndex="1">
+                    <Label text="Fungsi Objek" styleClass="form-label" />
+                    <TextField fx:id="txtFungsiObjek" promptText="mis: Senjata Tikam Pusaka / Alat Ritual" />
+                </VBox>
+                <VBox spacing="4" GridPane.rowIndex="1" GridPane.columnIndex="0" GridPane.columnSpan="2">
+                    <Label text="Inskripsi / Ornamen" styleClass="form-label" />
+                    <TextField fx:id="txtInskripsiOrnamen" promptText="Keterangan inskripsi huruf atau motif pahatan" />
+                </VBox>
+            </GridPane>
+
+            <!-- Subform Naskah -->
+            <GridPane fx:id="gridNaskah" hgap="12" vgap="12" visible="false" managed="false">
+                <columnConstraints>
+                    <ColumnConstraints percentWidth="50" />
+                    <ColumnConstraints percentWidth="50" />
+                </columnConstraints>
+                <VBox spacing="4" GridPane.rowIndex="0" GridPane.columnIndex="0">
+                    <Label text="Bahasa Naskah" styleClass="form-label" />
+                    <TextField fx:id="txtBahasa" promptText="mis: Jawa Kuno / Sansekerta" />
+                </VBox>
+                <VBox spacing="4" GridPane.rowIndex="0" GridPane.columnIndex="1">
+                    <Label text="Aksara / Huruf" styleClass="form-label" />
+                    <TextField fx:id="txtAksara" promptText="mis: Kawi / Pegon / Bali Kuno" />
+                </VBox>
+                <VBox spacing="4" GridPane.rowIndex="1" GridPane.columnIndex="0">
+                    <Label text="Alas Naskah" styleClass="form-label" />
+                    <TextField fx:id="txtAlasNaskah" promptText="mis: Daun Lontar, Kertas Daluwang" />
+                </VBox>
+                <VBox spacing="4" GridPane.rowIndex="1" GridPane.columnIndex="1">
+                    <Label text="Jumlah Halaman / Lembar" styleClass="form-label" />
+                    <Spinner fx:id="spnJumlahHalaman" editable="true" maxWidth="Infinity" />
+                </VBox>
+            </GridPane>
+
+            <!-- Subform Fosil -->
+            <GridPane fx:id="gridFosil" hgap="12" vgap="12" visible="false" managed="false">
+                <columnConstraints>
+                    <ColumnConstraints percentWidth="50" />
+                    <ColumnConstraints percentWidth="50" />
+                </columnConstraints>
+                <VBox spacing="4" GridPane.rowIndex="0" GridPane.columnIndex="0">
+                    <Label text="Nama Ilmiah / Taksa" styleClass="form-label" />
+                    <TextField fx:id="txtNamaIlmiahTaksa" promptText="mis: Homo erectus / Stegodon" />
+                </VBox>
+                <VBox spacing="4" GridPane.rowIndex="0" GridPane.columnIndex="1">
+                    <Label text="Bagian Anatomi" styleClass="form-label" />
+                    <TextField fx:id="txtBagianAnatomi" promptText="mis: Tempurung kepala, Geraham" />
+                </VBox>
+                <VBox spacing="4" GridPane.rowIndex="1" GridPane.columnIndex="0" GridPane.columnSpan="2">
+                    <Label text="Formasi Geologi" styleClass="form-label" />
+                    <TextField fx:id="txtFormasiGeologi" promptText="mis: Formasi Kabuh, Plestosen Tengah" />
+                </VBox>
+            </GridPane>
+        </VBox>
+
+        <Separator />
+
+        <!-- Buttons -->
+        <HBox alignment="CENTER_RIGHT" spacing="12">
+            <Button text="Batal" onAction="#handleBatal" styleClass="btn-secondary" />
+            <Button fx:id="btnSimpan" text="Simpan Data Koleksi" onAction="#handleSimpan" styleClass="btn-primary" />
+        </HBox>
+    </VBox>
+</ScrollPane>

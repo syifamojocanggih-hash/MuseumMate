@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.museummate.controller.PrioritasController"
+      spacing="16">
+
+    <!-- Header Section -->
+    <HBox alignment="CENTER_LEFT" spacing="16">
+        <VBox spacing="3" HBox.hgrow="ALWAYS">
+            <Label text="Prioritas Perawatan Otomatis (Fitur Pembeda Utama)" styleClass="page-title" />
+            <Label text="Pengurutan dinamis tindak lanjut konservasi berdasarkan rumus bobot kondisi, hari terlewat, dan faktor kerentanan kategori." styleClass="page-subtitle" />
+        </VBox>
+        <HBox spacing="10">
+            <Button text="📄 Ekspor Daftar Prioritas PDF" onAction="#handleExportPdf" styleClass="btn-secondary" />
+            <Button text="🔄 Hitung Ulang Skor" onAction="#loadDataPrioritas" styleClass="btn-primary" />
+        </HBox>
+    </HBox>
+
+    <!-- Formula Information Banner (PRD 6.4) -->
+    <HBox styleClass="formula-banner" alignment="CENTER_LEFT" spacing="16">
+        <Label text="💡" style="-fx-font-size: 22px;" />
+        <VBox spacing="3" HBox.hgrow="ALWAYS">
+            <Label text="Rumus Perhitungan Skor Prioritas (PRD Bagian 6.4):" style="-fx-font-weight: bold; -fx-text-fill: #92400e; -fx-font-size: 13px;" />
+            <Label text="Skor Prioritas = (Bobot Kondisi × 10) + (Hari sejak Pemeriksaan Terakhir ÷ 30) × Faktor Kategori"
+                   style="-fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #78350f;" />
+            <Label text="Bobot: Baik = 1, Cukup = 2, Rusak Ringan = 3, Rusak Berat = 4 | Faktor: Naskah = 1.5, Lukisan = 1.2, Artefak = 1.0, Fosil = 0.8"
+                   style="-fx-font-size: 11px; -fx-text-fill: #b45309;" />
+        </VBox>
+        <VBox spacing="4" alignment="CENTER_RIGHT">
+            <Label text="Tanggal Acuan Hitung:" style="-fx-font-size: 11px; -fx-text-fill: #78350f;" />
+            <DatePicker fx:id="dpTanggalAcuan" prefWidth="150.0" onAction="#handleTanggalAcuanChange" />
+        </VBox>
+    </HBox>
+
+    <!-- Priority Queue Table -->
+    <VBox styleClass="card" VBox.vgrow="ALWAYS" spacing="10">
+        <TableView fx:id="tablePrioritas" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="colNo" text="No" prefWidth="50.0" />
+                <TableColumn fx:id="colKode" text="Kode Registrasi" prefWidth="120.0" />
+                <TableColumn fx:id="colNama" text="Nama Koleksi" prefWidth="250.0" />
+                <TableColumn fx:id="colKategori" text="Kategori (Faktor)" prefWidth="140.0" />
+                <TableColumn fx:id="colKondisi" text="Kondisi Fisik" prefWidth="130.0" />
+                <TableColumn fx:id="colAcuan" text="Acuan Pemeriksaan" prefWidth="150.0" />
+                <TableColumn fx:id="colHari" text="Hari Terlewat" prefWidth="110.0" />
+                <TableColumn fx:id="colSkor" text="Skor Prioritas" prefWidth="120.0" />
+                <TableColumn fx:id="colUrgensi" text="Tingkat Urgensi" prefWidth="120.0" />
+            </columns>
+            <placeholder>
+                <Label text="Tidak ada data koleksi yang dapat dihitung." />
+            </placeholder>
+        </TableView>
+
+        <!-- Bottom Actions -->
+        <HBox alignment="CENTER_RIGHT" spacing="10" style="-fx-padding: 6px 0 0 0;">
+            <Label fx:id="lblSummary" text="Total: 0 koleksi dihitung" style="-fx-text-fill: #64748b; -fx-font-size: 12px;" HBox.hgrow="ALWAYS" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Button text="📋 Catat Pemeriksaan Langsung" onAction="#handleCatatPemeriksaan" styleClass="btn-primary" />
+            <Button text="📅 Buat Jadwal Perawatan" onAction="#handleBuatJadwal" styleClass="btn-secondary" />
+        </HBox>
+    </VBox>
+
+</VBox>
