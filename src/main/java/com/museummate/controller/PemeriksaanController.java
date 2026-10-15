@@ -11,10 +11,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.stage.Modality;
@@ -63,6 +65,30 @@ public class PemeriksaanController {
         colKode.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getKodeKoleksi()));
         colNama.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getNamaKoleksi()));
         colKondisiHasil.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getKondisiHasil().getLabel()));
+
+        // Badge kapsul modern untuk kondisi hasil
+        colKondisiHasil.setCellFactory(col -> new TableCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                    setGraphic(null);
+                } else {
+                    Label badge = new Label(item.toUpperCase());
+                    badge.getStyleClass().add(switch (item.toLowerCase()) {
+                        case "rusak berat" -> "badge-kritis";
+                        case "rusak ringan" -> "badge-tinggi";
+                        case "cukup" -> "badge-sedang";
+                        default -> "badge-rendah";
+                    });
+                    setText(null);
+                    setGraphic(badge);
+                    setAlignment(Pos.CENTER);
+                }
+            }
+        });
+
         colTindakan.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getTindakan()));
         colCatatan.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getCatatan()));
         colPetugas.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getNamaPetugas()));

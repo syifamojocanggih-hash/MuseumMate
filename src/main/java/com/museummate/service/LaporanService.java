@@ -32,27 +32,53 @@ public class LaporanService {
 
         document.open();
 
-        // Header Title
-        Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16, Color.DARK_GRAY);
-        Font subtitleFont = FontFactory.getFont(FontFactory.HELVETICA, 10, Color.GRAY);
+        // Kop Surat Resmi Pemkot Surabaya & Museum Surabaya (Gedung Siola)
+        Font kopHeaderFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12, Color.BLACK);
+        Font kopSubFont = FontFactory.getFont(FontFactory.HELVETICA, 9, Color.DARK_GRAY);
+        Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14, new Color(30, 41, 59));
+        Font subtitleFont = FontFactory.getFont(FontFactory.HELVETICA, 9, Color.GRAY);
         Font thFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 9, Color.WHITE);
-        Font tdFont = FontFactory.getFont(FontFactory.HELVETICA, 9, Color.BLACK);
+        Font tdFont = FontFactory.getFont(FontFactory.HELVETICA, 8, Color.BLACK);
+        Font ttdFont = FontFactory.getFont(FontFactory.HELVETICA, 9, Color.BLACK);
 
-        Paragraph title = new Paragraph("MUSEUMMATE — LAPORAN INVENTARIS KOLEKSI MUSEUM", titleFont);
+        Paragraph kop1 = new Paragraph("PEMERINTAH KOTA SURABAYA", kopHeaderFont);
+        kop1.setAlignment(Element.ALIGN_CENTER);
+        document.add(kop1);
+
+        Paragraph kop2 = new Paragraph("DINAS KEBUDAYAAN, KEPEMUDAAN DAN OLAHRAGA SERTA PARIWISATA", kopHeaderFont);
+        kop2.setAlignment(Element.ALIGN_CENTER);
+        document.add(kop2);
+
+        Paragraph kop3 = new Paragraph("UPTD PENGELOLAAN MUSEUM DAN GEDUNG SENI BUDAYA — MUSEUM SURABAYA (GEDUNG SIOLA)", kopSubFont);
+        kop3.setAlignment(Element.ALIGN_CENTER);
+        document.add(kop3);
+
+        Paragraph kop4 = new Paragraph("Jl. Tunjungan No. 1–3, Genteng, Surabaya — Telp. (031) 5312144 | Laman: surabaya.go.id", kopSubFont);
+        kop4.setAlignment(Element.ALIGN_CENTER);
+        kop4.setSpacingAfter(8);
+        document.add(kop4);
+
+        // Garis Pembatas Kop
+        Paragraph line = new Paragraph("________________________________________________________________________________________________________________________", kopSubFont);
+        line.setAlignment(Element.ALIGN_CENTER);
+        line.setSpacingAfter(12);
+        document.add(line);
+
+        Paragraph title = new Paragraph("LAPORAN INVENTARIS RESMI KOLEKSI CAGAR BUDAYA", titleFont);
         title.setAlignment(Element.ALIGN_CENTER);
         document.add(title);
 
-        Paragraph sub = new Paragraph("Dicetak pada: " + DateUtil.formatIndonesian(LocalDate.now()) + " | Total Data: " + daftarKoleksi.size() + " koleksi", subtitleFont);
+        Paragraph sub = new Paragraph("Basis Data Master Siola | Dicetak pada: " + DateUtil.formatIndonesian(LocalDate.now()) + " | Total: " + daftarKoleksi.size() + " Koleksi Terdaftar", subtitleFont);
         sub.setAlignment(Element.ALIGN_CENTER);
-        sub.setSpacingAfter(15);
+        sub.setSpacingAfter(14);
         document.add(sub);
 
         // Tabel Data Koleksi
         PdfPTable table = new PdfPTable(7);
         table.setWidthPercentage(100);
-        table.setWidths(new float[]{1.5f, 3.5f, 1.8f, 2.0f, 2.0f, 1.8f, 2.0f});
+        table.setWidths(new float[]{1.5f, 3.8f, 1.6f, 2.0f, 2.0f, 1.7f, 2.2f});
 
-        String[] headers = {"Kode", "Nama Koleksi", "Kategori", "Asal Daerah", "Bahan", "Kondisi", "Lokasi Simpan"};
+        String[] headers = {"Kode", "Nama Koleksi", "Kategori", "Asal Daerah", "Bahan / Material", "Kondisi", "Lokasi Display Siola"};
         Color thBg = new Color(30, 41, 59); // Slate-800
 
         for (String h : headers) {
@@ -81,6 +107,13 @@ public class LaporanService {
         }
 
         document.add(table);
+
+        // Tanda Tangan Pengesahan Kuratorial
+        Paragraph ttd = new Paragraph("\nSurabaya, " + DateUtil.formatIndonesian(LocalDate.now()) + "\nKonservator / Kurator Museum Surabaya (Gedung Siola)\n\n\n\n( .............................................................. )\nNIP. ...........................................................", ttdFont);
+        ttd.setAlignment(Element.ALIGN_RIGHT);
+        ttd.setIndentationRight(40);
+        document.add(ttd);
+
         document.close();
     }
 
@@ -90,25 +123,51 @@ public class LaporanService {
 
         document.open();
 
-        Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16, new Color(146, 64, 14)); // Bronze
-        Font subtitleFont = FontFactory.getFont(FontFactory.HELVETICA, 10, Color.GRAY);
+        Font kopHeaderFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12, Color.BLACK);
+        Font kopSubFont = FontFactory.getFont(FontFactory.HELVETICA, 9, Color.DARK_GRAY);
+        Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14, new Color(146, 64, 14)); // Bronze
+        Font subtitleFont = FontFactory.getFont(FontFactory.HELVETICA, 9, Color.GRAY);
         Font thFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 9, Color.WHITE);
-        Font tdFont = FontFactory.getFont(FontFactory.HELVETICA, 9, Color.BLACK);
+        Font tdFont = FontFactory.getFont(FontFactory.HELVETICA, 8, Color.BLACK);
+        Font ttdFont = FontFactory.getFont(FontFactory.HELVETICA, 9, Color.BLACK);
 
-        Paragraph title = new Paragraph("MUSEUMMATE — DAFTAR PRIORITAS TINDAK LANJUT KONSERVASI", titleFont);
+        Paragraph kop1 = new Paragraph("PEMERINTAH KOTA SURABAYA", kopHeaderFont);
+        kop1.setAlignment(Element.ALIGN_CENTER);
+        document.add(kop1);
+
+        Paragraph kop2 = new Paragraph("DINAS KEBUDAYAAN, KEPEMUDAAN DAN OLAHRAGA SERTA PARIWISATA", kopHeaderFont);
+        kop2.setAlignment(Element.ALIGN_CENTER);
+        document.add(kop2);
+
+        Paragraph kop3 = new Paragraph("UPTD PENGELOLAAN MUSEUM DAN GEDUNG SENI BUDAYA — MUSEUM SURABAYA (GEDUNG SIOLA)", kopSubFont);
+        kop3.setAlignment(Element.ALIGN_CENTER);
+        document.add(kop3);
+
+        Paragraph kop4 = new Paragraph("Jl. Tunjungan No. 1–3, Genteng, Surabaya — Telp. (031) 5312144 | Laman: surabaya.go.id", kopSubFont);
+        kop4.setAlignment(Element.ALIGN_CENTER);
+        kop4.setSpacingAfter(8);
+        document.add(kop4);
+
+        // Garis Pembatas Kop
+        Paragraph line = new Paragraph("________________________________________________________________________________________________________________________", kopSubFont);
+        line.setAlignment(Element.ALIGN_CENTER);
+        line.setSpacingAfter(12);
+        document.add(line);
+
+        Paragraph title = new Paragraph("LAPORAN DAFTAR PRIORITAS TINDAK LANJUT KONSERVASI & PERAWATAN", titleFont);
         title.setAlignment(Element.ALIGN_CENTER);
         document.add(title);
 
-        Paragraph sub = new Paragraph("Algoritma Prioritas Otomatis PRD 6.4 | Dicetak pada: " + DateUtil.formatIndonesian(LocalDate.now()), subtitleFont);
+        Paragraph sub = new Paragraph("Algoritma Prioritas Otomatis PRD 6.4 | Dicetak pada: " + DateUtil.formatIndonesian(LocalDate.now()) + " | Total Antrean: " + daftarPrioritas.size() + " Koleksi", subtitleFont);
         sub.setAlignment(Element.ALIGN_CENTER);
-        sub.setSpacingAfter(15);
+        sub.setSpacingAfter(14);
         document.add(sub);
 
         PdfPTable table = new PdfPTable(7);
         table.setWidthPercentage(100);
-        table.setWidths(new float[]{1.0f, 1.8f, 4.0f, 1.8f, 1.8f, 2.2f, 1.8f});
+        table.setWidths(new float[]{1.0f, 1.8f, 4.2f, 1.8f, 1.8f, 2.0f, 2.2f});
 
-        String[] headers = {"No", "Kode", "Nama Koleksi", "Kategori", "Kondisi", "Hari Terlewat", "Skor Prioritas"};
+        String[] headers = {"No", "Kode", "Nama Koleksi", "Kategori", "Kondisi", "Hari Terlewat", "Skor Prioritas (Urgensi)"};
         Color thBg = new Color(146, 64, 14);
 
         for (String h : headers) {
@@ -138,6 +197,12 @@ public class LaporanService {
         }
 
         document.add(table);
+
+        Paragraph ttd = new Paragraph("\nSurabaya, " + DateUtil.formatIndonesian(LocalDate.now()) + "\nKonservator / Kurator Museum Surabaya (Gedung Siola)\n\n\n\n( .............................................................. )\nNIP. ...........................................................", ttdFont);
+        ttd.setAlignment(Element.ALIGN_RIGHT);
+        ttd.setIndentationRight(40);
+        document.add(ttd);
+
         document.close();
     }
 

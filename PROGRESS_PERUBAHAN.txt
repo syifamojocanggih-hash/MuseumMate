@@ -278,11 +278,51 @@ Tests run: 10, Failures: 0, Errors: 0, Skipped: 0 -> BUILD SUCCESS (100% Pass)
   pengujian unit JUnit 5 tetap 100% BUILD SUCCESS, dan aplikasi JavaFX langsung
   menampilkan seluruh inventaris asli Museum Surabaya Gedung Siola.
 
+[13] PENYEMPURNAAN APLIKASI DESKTOP & EKSPOR PDF RESMI
+--------------------------------------------------------------------------------
+- Pembaruan Kop Surat Resmi pada Layanan Cetak Laporan PDF (LaporanService.java):
+  * Header formal: PEMERINTAH KOTA SURABAYA, DINAS KEBUDAYAAN, KEPEMUDAAN DAN
+    OLAHRAGA SERTA PARIWISATA, UPTD PENGELOLAAN MUSEUM DAN GEDUNG SENI BUDAYA.
+  * Alamat: Jl. Tunjungan No. 1-3, Genteng, Surabaya.
+  * Garis pembatas resmi kop dan kolom tanda tangan pengesahan kuratorial/konservator.
+- Identitas Desktop Application:
+  * Judul jendela utama JavaFX: 'MuseumMate — Museum Surabaya (Gedung Siola)'.
+  * Sidebar branding: penegasan nama museum dengan aksen warna gold.
+  * Form Login: sub-judul identitas Museum Surabaya Gedung Siola.
+- Peluncur 1-Klik Windows Desktop:
+  * Membuat file 'JALANKAN_MUSEUMMATE.bat' di direktori utama proyek sehingga
+    pengguna/dosen dapat langsung menjalankan aplikasi dengan klik ganda tanpa terminal.
+
+[14] PEROMBAKAN DESAIN ANTARMUKA (MODERN CURATORIAL WORKSTATION)
+--------------------------------------------------------------------------------
+- Transformasi Menyeluruh Desain Antarmuka (Opsi 1: Sleek Slate & Royal Sapphire):
+  * Penggantian palet warna dari cokelat kuno menjadi perpaduan modern:
+    Canvas Stone Light (#f8fafc), Obsidian Dark Sidebar (#0b0f19), dan Royal
+    Sapphire Blue (#2563eb) dengan kontras tinggi berstandar WCAG AA.
+  * Custom Ultra-Slim Modern Scrollbar:
+    Menghilangkan panah scrollbar kuno 90-an era JavaFX default dan menggantinya
+    dengan scrollbar ramping 8px semi-transparan bergaya modern (macOS/VS Code).
+  * Elevated Card & Visual Depth:
+    Menambahkan soft ambient drop shadow pada kartu statistik, kontainer tabel,
+    dan form dialog sehingga tampilan memiliki kedalaman visual elegan dan tidak datar.
+  * Data Grid TableView Lega (Breathing Space):
+    Tinggi baris tabel dinaikkan ke 38px, header tabel bergaya netral modern,
+    dan alternating row color yang sangat lembut untuk kenyamanan membaca mata.
+  * Modern Pill Badges (Kapsul Indikator Status & Urgensi):
+    Mengganti teks berwarna biasa dengan komponen Label kapsul membulat (badge)
+    untuk tingkat urgensi prioritas (Kritis, Tinggi, Sedang, Rendah), kondisi fisik,
+    dan status jadwal (Terlambat, Selesai, Rencana, Dibatalkan).
+  * Navigasi & Input Form Modern:
+    Active nav button dengan rounded pill highlight, serta kolom input dan combobox
+    dengan efek focus ring lembut saat aktif.
+  * Pembaruan Dokumentasi: Berkas DESIGN.md dimutakhirkan mencerminkan sistem desain baru.
+
 ================================================================================
 STATUS TERAKHIR:
-Proyek berhasil dikompilasi, pengujian unit 100% lulus, basis data terhubung,
-seluruh 336 koleksi autentik Museum Surabaya (Gedung Siola) telah aktif masuk
-ke dalam aplikasi dan dapat dijelajahi langsung pada antarmuka JavaFX.
+Proyek berhasil dimutakhirkan dengan desain modern berstandar enterprise (Sleek Slate
+& Royal Sapphire), scrollbar ultra-slim, elevated card depth, pill badges di seluruh
+tabel, pengujian unit 10/10 lulus (100% BUILD SUCCESS), dan 336 data autentik aktif.
 ================================================================================
+
 
 

@@ -8,6 +8,7 @@ import com.museummate.util.AlertHelper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -62,7 +63,7 @@ public class DashboardController {
         colSkor.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getSkorFormatted()));
         colUrgensi.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getTingkatUrgensi()));
 
-        // Styling badge urgensi
+        // Styling badge urgensi modern kapsul pill
         colUrgensi.setCellFactory(col -> new TableCell<>() {
             @Override
             protected void updateItem(String item, boolean empty) {
@@ -70,16 +71,17 @@ public class DashboardController {
                 if (empty || item == null) {
                     setText(null);
                     setGraphic(null);
-                    setStyle("");
                 } else {
-                    setText(item);
-                    getStyleClass().removeAll("badge-kritis", "badge-tinggi", "badge-sedang", "badge-rendah");
-                    switch (item.toLowerCase()) {
-                        case "kritis" -> setStyle("-fx-text-fill: #991b1b; -fx-font-weight: bold; -fx-alignment: CENTER;");
-                        case "tinggi" -> setStyle("-fx-text-fill: #9a3412; -fx-font-weight: bold; -fx-alignment: CENTER;");
-                        case "sedang" -> setStyle("-fx-text-fill: #1e40af; -fx-alignment: CENTER;");
-                        default -> setStyle("-fx-text-fill: #166534; -fx-alignment: CENTER;");
-                    }
+                    Label badge = new Label(item.toUpperCase());
+                    badge.getStyleClass().add(switch (item.toLowerCase()) {
+                        case "kritis" -> "badge-kritis";
+                        case "tinggi" -> "badge-tinggi";
+                        case "sedang" -> "badge-sedang";
+                        default -> "badge-rendah";
+                    });
+                    setText(null);
+                    setGraphic(badge);
+                    setAlignment(Pos.CENTER);
                 }
             }
         });

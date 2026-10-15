@@ -11,6 +11,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -84,7 +85,7 @@ public class JadwalController {
             return new SimpleStringProperty(j.getStatus().getLabel().toUpperCase());
         });
 
-        // Visual highlight terlambat (PRD F5)
+        // Visual highlight pill terlambat / status (PRD F5)
         colStatusVisual.setCellFactory(col -> new TableCell<>() {
             @Override
             protected void updateItem(String item, boolean empty) {
@@ -92,18 +93,20 @@ public class JadwalController {
                 if (empty || item == null) {
                     setText(null);
                     setGraphic(null);
-                    setStyle("");
                 } else {
-                    setText(item);
+                    Label badge = new Label(item.toUpperCase());
                     if ("TERLAMBAT".equalsIgnoreCase(item)) {
-                        setStyle("-fx-text-fill: #dc2626; -fx-font-weight: bold; -fx-alignment: CENTER;");
+                        badge.getStyleClass().add("badge-terlambat");
                     } else if ("SELESAI".equalsIgnoreCase(item)) {
-                        setStyle("-fx-text-fill: #16a34a; -fx-alignment: CENTER;");
+                        badge.getStyleClass().add("badge-selesai");
                     } else if ("DIBATALKAN".equalsIgnoreCase(item)) {
-                        setStyle("-fx-text-fill: #64748b; -fx-alignment: CENTER;");
+                        badge.getStyleClass().add("badge-batal");
                     } else {
-                        setStyle("-fx-text-fill: #2563eb; -fx-alignment: CENTER;");
+                        badge.getStyleClass().add("badge-rencana");
                     }
+                    setText(null);
+                    setGraphic(badge);
+                    setAlignment(Pos.CENTER);
                 }
             }
         });

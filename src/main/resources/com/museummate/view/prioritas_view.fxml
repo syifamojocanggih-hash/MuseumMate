@@ -24,14 +24,14 @@
     <HBox styleClass="formula-banner" alignment="CENTER_LEFT" spacing="16">
         <Label text="💡" style="-fx-font-size: 22px;" />
         <VBox spacing="3" HBox.hgrow="ALWAYS">
-            <Label text="Rumus Perhitungan Skor Prioritas (PRD Bagian 6.4):" style="-fx-font-weight: bold; -fx-text-fill: #92400e; -fx-font-size: 13px;" />
+            <Label text="Rumus Perhitungan Skor Prioritas (PRD Bagian 6.4):" style="-fx-font-weight: bold; -fx-text-fill: #1e40af; -fx-font-size: 13px;" />
             <Label text="Skor Prioritas = (Bobot Kondisi × 10) + (Hari sejak Pemeriksaan Terakhir ÷ 30) × Faktor Kategori"
-                   style="-fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #78350f;" />
+                   style="-fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #1e3a8a;" />
             <Label text="Bobot: Baik = 1, Cukup = 2, Rusak Ringan = 3, Rusak Berat = 4 | Faktor: Naskah = 1.5, Lukisan = 1.2, Artefak = 1.0, Fosil = 0.8"
-                   style="-fx-font-size: 11px; -fx-text-fill: #b45309;" />
+                   style="-fx-font-size: 11px; -fx-text-fill: #2563eb; -fx-font-weight: 500;" />
         </VBox>
         <VBox spacing="4" alignment="CENTER_RIGHT">
-            <Label text="Tanggal Acuan Hitung:" style="-fx-font-size: 11px; -fx-text-fill: #78350f;" />
+            <Label text="Tanggal Acuan Hitung:" style="-fx-font-size: 11px; -fx-text-fill: #1e40af; -fx-font-weight: bold;" />
             <DatePicker fx:id="dpTanggalAcuan" prefWidth="150.0" onAction="#handleTanggalAcuanChange" />
         </VBox>
     </HBox>
