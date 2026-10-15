@@ -1,0 +1,288 @@
+================================================================================
+MUSEUMMATE — CATATAN PROGRES PERUBAHAN & PENAMBAHAN PROYEK
+Sistem Manajemen Koleksi dan Konservasi Museum dengan Prioritas Perawatan Otomatis
+Berdasarkan: PRD_MuseumMate.docx (Versi 1.0 - Team 8, PENS 2026)
+Waktu Pencatatan: 15 Oktober 2026
+================================================================================
+
+[1] SETUP LINGKUNGAN & BUILD TOOL
+--------------------------------------------------------------------------------
+- Terdeteksi dan menggunakan Java Development Kit: JDK 26 (Oracle Corporation).
+- Instalasi Apache Maven 3.9.9 pada folder lokal pengguna:
+  C:\Users\ASUS\AppData\Local\Programs\apache-maven-3.9.9\bin
+- Menambahkan konfigurasi Maven Wrapper ke dalam root repositori:
+  * mvnw (skrip wrapper untuk Linux/macOS)
+  * mvnw.cmd (skrip wrapper untuk Windows)
+  * .mvn/wrapper/maven-wrapper.properties
+  * .mvn/wrapper/MavenWrapperDownloader.java
+- Membuat berkas konfigurasi dependensi [pom.xml]:
+  * Target release compiler: Java 21 LTS
+  * JavaFX Controls, FXML, Graphics (versi 21.0.6)
+  * MySQL Connector/J (versi 8.4.0) untuk akses JDBC
+  * jBCrypt (versi 0.4) untuk enkripsi & hash kata sandi pengguna
+  * OpenPDF / LibrePDF (versi 1.3.43) untuk pencetakan dokumen laporan PDF resmi
+  * JUnit Jupiter (versi 5.10.2) untuk pengujian unit otomatis
+  * Plugin JavaFX Maven (javafx-maven-plugin) untuk menjalankan via terminal
+
+
+[2] BASIS DATA (MySQL / LARAGON)
+--------------------------------------------------------------------------------
+- Pembuatan skema tabel terstruktur (DDL) pada:
+  * src/main/resources/db/schema.sql
+  * setup_database.sql (berkas gabungan siap pakai di root folder)
+  Mencakup 8 tabel inti:
+  1. pengguna: Akun Admin dan Konservator beserta hak akses.
+  2. koleksi: Tabel induk data inti inventaris benda museum.
+  3. koleksi_lukisan: Sub-tabel relasional khusus kategori Lukisan (1:1).
+  4. koleksi_artefak: Sub-tabel relasional khusus kategori Artefak (1:1).
+  5. koleksi_naskah: Sub-tabel relasional khusus kategori Naskah Kuno (1:1).
+  6. koleksi_fosil: Sub-tabel relasional khusus kategori Fosil Paleontologi (1:1).
+  7. pemeriksaan: Riwayat catatan inspeksi kondisi fisik benda berkala.
+  8. jadwal_perawatan: Agenda rencana tindakan konservasi dan pelacakan status.
+
+- Pembuatan data awal (Seed Data Uji Awal) pada:
+  * src/main/resources/db/seed_data.sql
+  * setup_database.sql
+  Memuat 12 data koleksi realistis (Naskah Babad Tanah Jawi, Serat Centhini,
+  Lukisan Diponegoro Raden Saleh, Fosil Sangiran 17, Keris Majapahit, dll),
+  lengkap dengan data riwayat pemeriksaan historis untuk kalkulasi prioritas,
+  serta agenda jadwal perawatan mendatang maupun yang telah selesai.
+
+- Akun Pengguna Bawaan (Demo):
+  * Administrator: username 'admin' | password 'admin123'
+  * Konservator: username 'konservator' | password 'konservator123'
+  Semua kata sandi di-hash menggunakan algoritma BCrypt standar 60 karakter.
+
+- Fitur Auto-Initialization Basis Data:
+  * Diimplementasikan pada utilitas DatabaseConnection.java.
+  * Aplikasi akan secara otomatis membuat basis data 'museummate_db' dan
+    mengisi tabel serta seed data jika tabel belum ditemukan di MySQL Laragon.
+
+
+[3] PENERAPAN 4 PILAR PEMROGRAMAN BERORIENTASI OBJEK (OOP)
+--------------------------------------------------------------------------------
+Semua kelas domain ditempatkan pada package com.museummate.model:
+
+A. Abstraksi (Abstraction):
+   - Koleksi.java (Abstract Class): Memuat atribut umum (kode registrasi, nama,
+     kategori, asal, tahun perkiraan, bahan, lokasi penyimpanan, kondisi, dll).
+   - Method abstrak yang dideklarasikan:
+     * public abstract double getFaktorKategori();
+     * public abstract int getIntervalPemeriksaanHari();
+     * public abstract String getDeskripsiKhusus();
+
+B. Pewarisan (Inheritance):
+   - Lukisan.java extends Koleksi
+     Atribut tambahan: seniman, teknikMedia, dimensi, adaBingkai.
+   - Artefak.java extends Koleksi
+     Atribut tambahan: eraDinasti, fungsiObjek, inskripsiOrnamen.
+   - Naskah.java extends Koleksi
+     Atribut tambahan: bahasa, aksara, alasNaskah, jumlahHalaman.
+   - Fosil.java extends Koleksi
+     Atribut tambahan: namaIlmiahTaksa, bagianAnatomi, formasiGeologi.
+
+C. Polimorfisme (Polymorphism):
+   - Meng-override method getFaktorKategori() dengan nilai spesifik PRD 6.4:
+     * Naskah: Faktor 1.5 (risiko bahan organik tertinggi)
+     * Lukisan: Faktor 1.2
+     * Artefak: Faktor 1.0
+     * Fosil: Faktor 0.8
+   - Pemetaan polimorfik saat pemuatan dari database (KoleksiDAO.java).
+   - Method hitungSkorPrioritas() pada Koleksi menghasilkan skor yang berbeda-beda
+     secara otomatis sesuai objek turunan aslinya.
+
+D. Enkapsulasi (Encapsulation):
+   - Seluruh atribut dibuat 'private'.
+   - Akses melalui getter dan setter dengan validasi ketat (mencegah field wajib
+     kosong, pencegahan tanggal pemeriksaan di masa depan, dll).
+   - Dibuat Enum terstruktur:
+     * KategoriKoleksi.java
+     * KondisiKoleksi.java (Bobot: Baik=1, Cukup=2, Rusak Ringan=3, Rusak Berat=4)
+     * PeranPengguna.java (ADMIN, KONSERVATOR)
+     * StatusJadwal.java (DIRENCANAKAN, SELESAI, DIBATALKAN)
+   - DTO untuk antarmuka antrian: PrioritasItem.java.
+
+
+[4] LAPISAN AKSES BASIS DATA (DAO - JDBC)
+--------------------------------------------------------------------------------
+Package com.museummate.dao:
+- PenggunaDAO.java:
+  Autentikasi login, pencarian akun, pendaftaran, pembaruan, dan hapus akun.
+- KoleksiDAO.java:
+  Pengambilan data polimorfik relasional (JOIN ke tabel anak lukisan/artefak/
+  naskah/fosil), pencarian multi-kriteria dan filter satu aksi tanpa reload,
+  pengecekan jumlah riwayat sebelum penghapusan.
+- PemeriksaanDAO.java:
+  Pencatatan pemeriksaan fisik baru dalam 1 transaksi atomik (sekaligus otomatis
+  memperbarui kolom kondisi pada tabel koleksi terkait sesuai PRD F4).
+- JadwalPerawatanDAO.java:
+  Pengelolaan jadwal, perubahan status (Selesai/Dibatalkan), serta deteksi
+  jumlah jadwal yang berstatus terlambat (overdue).
+
+
+[5] LAPISAN LOGIKA BISNIS (SERVICE)
+--------------------------------------------------------------------------------
+Package com.museummate.service:
+- AuthService.java:
+  Validasi username & verifikasi hash password dengan jBCrypt, manajemen sesi aktif.
+- PrioritasService.java (Fitur Utama Pembeda MuseumMate - PRD F6 & 6.4):
+  Engine kalkulasi skor prioritas dinamis:
+  Skor = (Bobot Kondisi x 10) + (Hari Terlewat / 30) x Faktor Kategori
+  * Menghitung hari terlewat sejak pemeriksaan terakhir.
+  * Jika belum pernah diperiksa, menggunakan tanggal diterima sebagai acuan hitung.
+  * Mengurutkan seluruh koleksi dari skor tertinggi ke terendah secara dinamis.
+- KoleksiService.java:
+  Validasi data inti, pengecekan keunikan kode registrasi, pengecekan riwayat.
+- PemeriksaanService.java:
+  Validasi tanggal (tidak boleh di masa depan) dan pencatatan riwayat fisik.
+- JadwalService.java:
+  Penyusunan jadwal, pembaruan status, dan pelacakan jadwal lewat batas waktu.
+- DashboardService.java:
+  Agregasi metrik total koleksi, sebaran kategori, sebaran kondisi, dan top prioritas.
+- LaporanService.java:
+  Ekspor berkas PDF resmi (A4 Landscape) menggunakan OpenPDF untuk:
+  1. Laporan Inventaris Koleksi Museum
+  2. Laporan Daftar Prioritas Tindak Lanjut Konservasi
+
+
+[6] KELAS UTILITAS & PENDUKUNG
+--------------------------------------------------------------------------------
+Package com.museummate.util:
+- DatabaseConnection.java: Koneksi JDBC terpusat, pengujian koneksi, & auto-init.
+- PasswordUtil.java: Utilitas hashing & verifikasi jBCrypt dengan salt dinamis.
+- SessionManager.java: Singleton penyimpan sesi pengguna aktif yang sedang login.
+- DateUtil.java: Format tanggal standar Bahasa Indonesia (misal: "15 Oktober 2026").
+- AlertHelper.java: Dialog modal JavaFX terstandarisasi (Info, Warning, Error, Confirm).
+
+
+[7] ANTARMUKA PENGGUNA (JavaFX + FXML + CSS)
+--------------------------------------------------------------------------------
+Menerapkan standar desain "Anti-Slop Craftsmanship" bernuansa kuratorial museum:
+
+A. Stylesheet & Identitas Visual:
+   - src/main/resources/com/museummate/css/style.css
+   - Warna Heritage Bronze (#92400e), Slate Dark (#1e293b), Canvas Light (#f8fafc).
+   - Kontras warna teks memenuhi standar aksesibilitas WCAG AA (>= 4.5:1).
+   - Badge urgensi: Kritis (Merah), Tinggi (Oranye), Sedang (Biru), Rendah (Hijau).
+
+B. Berkas Tampilan FXML (src/main/resources/com/museummate/view/):
+   1. login.fxml: Kartu login elegan dengan tombol demo bawaan.
+   2. main_layout.fxml: Tata letak sidebar navigasi dan area konten dinamis.
+      Menu 'Kelola Akun' otomatis disembunyikan jika login sebagai Konservator.
+   3. dashboard.fxml: 4 kartu metrik utama, tabel sebaran kategori & kondisi,
+      dan preview 5 koleksi teratas yang paling mendesak dirawat.
+   4. koleksi_view.fxml: Tabel inventaris, kolom atribut khusus OOP, filter kategori/
+      kondisi langsung (live filtering), ekspor PDF, dan tombol aksi.
+   5. koleksi_form_dialog.fxml: Form tambah/ubah koleksi dengan subform atribut
+      yang berganti dinamis mengikuti kategori yang dipilih (Lukisan/Artefak/Naskah/Fosil).
+   6. prioritas_view.fxml: Antarmuka antrian prioritas otomatis dilengkapi kartu rumus
+      PRD 6.4, pemilih tanggal acuan, dan tombol ekspor laporan PDF.
+   7. pemeriksaan_view.fxml: Riwayat pemeriksaan fisik dan filter penelusuran per koleksi.
+   8. catat_pemeriksaan_dialog.fxml: Dialog form pencatatan inspeksi fisik.
+   9. jadwal_view.fxml: Tabel agenda perawatan dengan highlight visual untuk jadwal terlambat.
+   10. tambah_jadwal_dialog.fxml: Dialog penyusunan agenda perawatan baru.
+   11. pengguna_view.fxml: Tabel dan dialog manajemen akun pengguna khusus Administrator.
+
+C. Controllers (com.museummate.controller):
+   - LoginController.java
+   - MainLayoutController.java
+   - DashboardController.java
+   - KoleksiController.java
+   - KoleksiFormController.java
+   - PrioritasController.java
+   - PemeriksaanController.java
+   - CatatPemeriksaanController.java
+   - JadwalController.java
+   - TambahJadwalController.java
+   - PenggunaController.java
+   - MainApp.java: Titik masuk (main application) JavaFX.
+
+
+[8] PENGUJIAN UNIT (JUNIT 5)
+--------------------------------------------------------------------------------
+Dua kelas pengujian unit pada folder src/test/java/com/museummate/:
+1. PrioritasRumusTest.java (6 test case):
+   * Validasi PRD Contoh 1: Naskah Rusak Ringan (90 hari lalu) = 34.5 (LULUS)
+   * Validasi PRD Contoh 2: Lukisan Baik (30 hari lalu) = 11.2 (LULUS)
+   * Validasi Fosil Rusak Berat (60 hari lalu) = 41.6 (LULUS)
+   * Validasi Artefak Cukup (120 hari lalu) = 24.0 (LULUS)
+   * Validasi fallback jika belum pernah diperiksa (ke tanggal diterima) (LULUS)
+   * Validasi pemeringkatan skor koleksi mendesak vs aman (LULUS)
+
+2. OOPPrincipleTest.java (4 test case):
+   * Validasi Abstraksi: Koleksi adalah abstract class (LULUS)
+   * Validasi Pewarisan: 4 subclass mewarisi Koleksi (LULUS)
+   * Validasi Polimorfisme: Nilai faktor kategori dinamis per class turunan (LULUS)
+   * Validasi Enkapsulasi: Exception handling jika field wajib kosong (LULUS)
+
+HASIL AKHIR:
+Tests run: 10, Failures: 0, Errors: 0, Skipped: 0 -> BUILD SUCCESS (100% Pass)
+
+
+[9] PERBAIKAN MASALAH / BUG FIXING
+--------------------------------------------------------------------------------
+- Masalah: Login sempat memunculkan "Username atau password salah".
+- Analisis: Variabel tanda dolar ($2a$10$...) pada hash BCrypt di skrip SQL
+  sempat terpotong saat dieksekusi melalui powershell double-quoted string.
+- Solusi:
+  * Menghasilkan hash valid langsung menggunakan utilitas jBCrypt.
+  * Memperbarui tabel 'pengguna' di basis data aktif Laragon.
+  * Menyinkronkan hash permanen pada seed_data.sql, setup_database.sql, dan
+    DatabaseConnection.java. Akun demo admin & konservator kini dapat langsung
+    digunakan tanpa kendala.
+
+
+[10] DOKUMENTASI & PANDUAN PENGGUNA
+--------------------------------------------------------------------------------
+- README.md: Dokumentasi arsitektur, panduan menjalankan proyek via terminal,
+  rincian akun demo, serta langkah pengujian JUnit 5.
+- DESIGN.md: Spesifikasi identitas visual, dial parameter desain, dan palet warna.
+- GEMINI.md: Konfigurasi pedoman pengembangan dan instruksi anti-slop.
+- setup_summary.md: Laporan eksekutif ringkasan setup di folder artefak sistem.
+
+
+[11] INVENTARISASI RISET KOLEKSI MUSEUM SURABAYA (GEDUNG SIOLA)
+--------------------------------------------------------------------------------
+- Pembuatan dan pemekaran dokumen master katalog kuratorial:
+  [DOKUMEN_KOLEKSI_MUSEUM_SURABAYA_SIOLA.md] (96 KB).
+- Mengintegrasikan secara terperinci tepat 336 data koleksi individual:
+  * 188 Artefak (kendaraan bemo/angguna/helicak/becak, brankas 650 kg, mobil damkar
+    1982, alat medis CBZ, sabak sekolah, gamelan/biola/piano, wayang potehi,
+    senjata 1945, serta koin VOC & koin perak Gulden Belanda).
+  * 118 Naskah (register kematian Peneleh 1847, akta 1853, peta kartografi 1925,
+    blueprint trem OJS 1918, draf lirik asli Gombloh, partitur WR Supratman,
+    uang kertas De Javasche Bank, ORI, ORIDA Karesidenan Soerabaia, dan RIS).
+  * 26 Lukisan (3 lukisan kanvas sejarah + 23 potret resmi suksesi Walikota
+    Surabaya sejak 1916 s.d. era modern).
+  * 4 Spesimen Geologi & Fosil (cangkang moluska & sedimen delta Kalimas).
+- Setiap baris dari ke-336 data dilengkapi kode registrasi, spesifikasi material,
+  kondisi fisik, lokasi pameran di Gedung Siola, serta tautan sumber internet.
+
+
+
+[12] INJEKSI BASIS DATA: 336 KOLEKSI ASLI SIOLA KE APLIKASI
+--------------------------------------------------------------------------------
+- Migrasi data dari katalog kuratorial master ke basis data aktif MySQL Laragon:
+  * Tabel induk 'koleksi': 336 baris data inventaris riil Gedung Siola.
+  * Tabel pewarisan 'koleksi_artefak': 186 baris (lengkap era_dinasti & inskripsi).
+  * Tabel pewarisan 'koleksi_naskah': 120 baris (lengkap bahasa, aksara, & alas).
+  * Tabel pewarisan 'koleksi_lukisan': 26 baris (lengkap seniman, teknik, & dimensi).
+  * Tabel pewarisan 'koleksi_fosil': 4 baris (lengkap taksa, anatomi, & formasi).
+  * Tabel 'pemeriksaan': 9 catatan inspeksi historis untuk kalkulasi skor prioritas.
+  * Tabel 'jadwal_perawatan': 3 agenda konservasi (overdue & mendatang).
+  * Tabel 'pengguna': 2 akun default aktif ber-hash BCrypt valid.
+- Sinkronisasi permanen berkas:
+  * src/main/resources/db/seed_data.sql (dimutakhirkan dengan data 336 Siola).
+  * setup_database.sql (skema lengkap + seluruh data 336 Siola).
+- Verifikasi: Query relasional pada MySQL Laragon menghasilkan 336 total koleksi,
+  pengujian unit JUnit 5 tetap 100% BUILD SUCCESS, dan aplikasi JavaFX langsung
+  menampilkan seluruh inventaris asli Museum Surabaya Gedung Siola.
+
+================================================================================
+STATUS TERAKHIR:
+Proyek berhasil dikompilasi, pengujian unit 100% lulus, basis data terhubung,
+seluruh 336 koleksi autentik Museum Surabaya (Gedung Siola) telah aktif masuk
+ke dalam aplikasi dan dapat dijelajahi langsung pada antarmuka JavaFX.
+================================================================================
+
+

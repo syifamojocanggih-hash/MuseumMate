@@ -121,3 +121,6 @@ MuseumMate/
 Aplikasi mendukung ekspor laporan langsung berformat PDF resmi:
 1. **Laporan Inventaris Koleksi**: Daftar seluruh data koleksi museum beserta atribut dan lokasi simpan.
 2. **Laporan Prioritas Konservasi**: Daftar antrian perawatan terurut dari skor tertinggi untuk tindak lanjut petugas di laboratorium konservasi.
+
+
+
