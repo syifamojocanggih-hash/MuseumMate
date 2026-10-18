@@ -27,12 +27,6 @@
         <!-- Dark Gradient Overlay with Curatorial Brand Presentation -->
         <VBox alignment="BOTTOM_LEFT" spacing="14" styleClass="login-visual-overlay">
 
-            <!-- Top Heritage Capsule Badge -->
-            <HBox alignment="CENTER_LEFT" spacing="8" styleClass="museum-tag-pill" maxWidth="-Infinity">
-                <Label text="●" style="-fx-font-size: 9px; -fx-text-fill: #38bdf8;" />
-                <Label text="MUSEUM SURABAYA • GEDUNG SIOLA" styleClass="museum-tag-text" />
-            </HBox>
-
             <Region VBox.vgrow="ALWAYS" />
 
             <!-- Heritage Headline & Timeline Description -->
@@ -73,10 +67,7 @@
 
                     <!-- Brand Header with Rich Gradient Typography -->
                     <VBox alignment="CENTER" spacing="3" maxWidth="Infinity">
-                        <HBox alignment="CENTER" spacing="8">
-                            <Label text="MUSEUMMATE" styleClass="login-brand-title" />
-                            <Label text="Gedung Siola" styleClass="login-brand-tag" />
-                        </HBox>
+                        <Label text="MUSEUMMATE" styleClass="login-brand-title" />
                         <Label text="Sistem Manajemen Koleksi &amp; Konservasi Cagar Budaya"
                                styleClass="login-brand-sub" />
                         <HBox prefHeight="3.0" prefWidth="64.0" maxWidth="64.0"
