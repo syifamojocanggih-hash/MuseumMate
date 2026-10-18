@@ -19,11 +19,11 @@ public class MainApp extends Application {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/museummate/view/login.fxml"));
             Parent root = loader.load();
 
-            Scene scene = new Scene(root, 920, 620);
+            Scene scene = new Scene(root, 980, 640);
             primaryStage.setTitle("MuseumMate — Museum Surabaya (Gedung Siola)");
             primaryStage.setScene(scene);
-            primaryStage.setMinWidth(800);
-            primaryStage.setMinHeight(550);
+            primaryStage.setMinWidth(880);
+            primaryStage.setMinHeight(580);
             primaryStage.show();
         } catch (IOException e) {
             System.err.println("Gagal memulai aplikasi MuseumMate: " + e.getMessage());

@@ -147,7 +147,7 @@ public class MainLayoutController {
                 Parent root = loader.load();
 
                 Stage stage = (Stage) contentArea.getScene().getWindow();
-                Scene scene = new Scene(root, 900, 600);
+                Scene scene = new Scene(root, 980, 640);
                 stage.setTitle("MuseumMate — Masuk");
                 stage.setScene(scene);
                 stage.centerOnScreen();

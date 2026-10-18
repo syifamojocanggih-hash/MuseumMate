@@ -584,3 +584,200 @@
     -fx-padding: 8px 0 0 0;
 }
 
+/* ==========================================================================
+   Modern Split Login Screen
+   Left: Clean Form with Rich Gradient Branding
+   Right: Museum Surabaya (Gedung Siola) Exhibition Showcase
+   ========================================================================== */
+
+.login-split-root {
+    -fx-background-color: #ffffff;
+}
+
+.login-form-scroll {
+    -fx-background-color: #ffffff;
+    -fx-background: #ffffff;
+    -fx-border-color: transparent;
+}
+
+.login-form-scroll > .viewport {
+    -fx-background-color: #ffffff;
+}
+
+.login-brand-title {
+    -fx-font-family: "Segoe UI", "Inter", sans-serif;
+    -fx-font-size: 28px;
+    -fx-font-weight: 900;
+    -fx-text-fill: linear-gradient(to right, #0284c7 0%, #2563eb 50%, #4f46e5 100%);
+}
+
+.login-brand-sub {
+    -fx-font-size: 13px;
+    -fx-text-fill: #475569;
+    -fx-font-weight: 600;
+}
+
+.login-brand-tag {
+    -fx-font-size: 11px;
+    -fx-text-fill: #0284c7;
+    -fx-font-weight: bold;
+    -fx-background-color: #e0f2fe;
+    -fx-padding: 3px 8px;
+    -fx-background-radius: 6px;
+}
+
+.login-heading {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0f172a;
+}
+
+.login-subheading {
+    -fx-font-size: 12px;
+    -fx-text-fill: #64748b;
+}
+
+.login-field-label {
+    -fx-font-size: 12px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #334155;
+}
+
+.login-input-box {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 9px;
+    -fx-background-radius: 9px;
+    -fx-border-width: 1.5px;
+    -fx-padding: 2px 12px;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.login-input-box:hover {
+    -fx-border-color: #cbd5e1;
+}
+
+.login-input-box.focused {
+    -fx-border-color: #2563eb;
+    -fx-effect: dropshadow(three-pass-box, rgba(37, 99, 235, 0.20), 8, 0, 0, 0);
+}
+
+.login-input-icon {
+    -fx-font-size: 14px;
+    -fx-text-fill: #94a3b8;
+}
+
+.login-text-field {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 8px 6px;
+    -fx-font-size: 13px;
+    -fx-text-fill: #0f172a;
+    -fx-prompt-text-fill: #94a3b8;
+}
+
+.login-text-field:focused {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-prompt-text-fill: #cbd5e1;
+    -fx-effect: null;
+}
+
+.login-eye-btn {
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+    -fx-padding: 4px 6px;
+    -fx-text-fill: #64748b;
+    -fx-font-size: 13px;
+}
+
+.login-eye-btn:hover {
+    -fx-text-fill: #0f172a;
+}
+
+.login-submit-btn {
+    -fx-background-color: #2563eb;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 12px 20px;
+    -fx-background-radius: 9px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(37, 99, 235, 0.35), 10, 0, 0, 2);
+}
+
+.login-submit-btn:hover {
+    -fx-background-color: #1d4ed8;
+    -fx-effect: dropshadow(three-pass-box, rgba(29, 78, 216, 0.45), 14, 0, 0, 3);
+}
+
+.login-submit-btn:pressed {
+    -fx-background-color: #1e40af;
+}
+
+.login-demo-btn {
+    -fx-background-color: #f8fafc;
+    -fx-border-color: #e2e8f0;
+    -fx-border-width: 1.5px;
+    -fx-border-radius: 9px;
+    -fx-background-radius: 9px;
+    -fx-padding: 10px 14px;
+    -fx-cursor: hand;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.login-demo-btn:hover {
+    -fx-background-color: #eff6ff;
+    -fx-border-color: #bfdbfe;
+}
+
+/* Right Panel: Museum Visual */
+.login-visual-pane {
+    -fx-background-color: #0b0f19;
+}
+
+.login-visual-overlay {
+    -fx-background-color: linear-gradient(to top, rgba(11, 15, 25, 0.95) 0%, rgba(15, 23, 42, 0.75) 45%, rgba(15, 23, 42, 0.40) 100%);
+    -fx-padding: 40px 44px;
+}
+
+.museum-tag-pill {
+    -fx-background-color: rgba(255, 255, 255, 0.12);
+    -fx-border-color: rgba(255, 255, 255, 0.20);
+    -fx-border-radius: 20px;
+    -fx-background-radius: 20px;
+    -fx-padding: 6px 14px;
+}
+
+.museum-tag-text {
+    -fx-text-fill: #f8fafc;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-letter-spacing: 0.8px;
+}
+
+.login-visual-headline {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffffff;
+    -fx-line-spacing: 4px;
+}
+
+.login-visual-description {
+    -fx-font-size: 12.5px;
+    -fx-text-fill: #cbd5e1;
+    -fx-line-spacing: 3px;
+}
+
+.museum-category-chip {
+    -fx-background-color: rgba(255, 255, 255, 0.08);
+    -fx-border-color: rgba(255, 255, 255, 0.16);
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 4px 10px;
+    -fx-font-size: 11px;
+    -fx-text-fill: #e2e8f0;
+    -fx-font-weight: 500;
+}
+
+
