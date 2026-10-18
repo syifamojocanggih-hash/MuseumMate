@@ -107,6 +107,9 @@ public class CatatPemeriksaanController {
             );
 
             pemeriksaanService.catatPemeriksaan(p);
+            com.museummate.service.LogAktivitasService.catat("TAMBAH", "pemeriksaan", 
+                    "Mencatat pemeriksaan koleksi: " + selected.getKodeRegistrasi() + " - " + selected.getNama() + 
+                    " (Kondisi baru: " + kondisi.getLabel() + ")");
             AlertHelper.showInfo("Sukses", "Pemeriksaan berhasil dicatat dan kondisi koleksi telah diperbarui.");
 
             if (onSuccessCallback != null) {

@@ -101,6 +101,45 @@ public class PemeriksaanDAO {
     }
 
     /**
+     * Mengambil data agregasi tren perubahan kondisi koleksi dari waktu ke waktu per kategori (PRD F9 / UC-12).
+     */
+    public List<com.museummate.model.TrenKondisiItem> getTrenKondisi() throws SQLException {
+        List<com.museummate.model.TrenKondisiItem> list = new ArrayList<>();
+        String sql = "SELECT " +
+                     "    k.kategori, " +
+                     "    DATE_FORMAT(p.tanggal_pemeriksaan, '%Y-%m') AS periode, " +
+                     "    DATE_FORMAT(p.tanggal_pemeriksaan, '%b %Y') AS label_periode, " +
+                     "    AVG(CASE p.kondisi_hasil " +
+                     "        WHEN 'BAIK' THEN 1.0 " +
+                     "        WHEN 'CUKUP' THEN 2.0 " +
+                     "        WHEN 'RUSAK_RINGAN' THEN 3.0 " +
+                     "        WHEN 'RUSAK_BERAT' THEN 4.0 " +
+                     "        ELSE 1.0 END) AS skor_rata_kondisi, " +
+                     "    COUNT(*) AS jumlah_pemeriksaan " +
+                     "FROM pemeriksaan p " +
+                     "JOIN koleksi k ON p.id_koleksi = k.id_koleksi " +
+                     "GROUP BY k.kategori, periode, label_periode " +
+                     "ORDER BY periode ASC, k.kategori ASC";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                com.museummate.model.TrenKondisiItem item = new com.museummate.model.TrenKondisiItem(
+                        rs.getString("periode"),
+                        rs.getString("label_periode"),
+                        com.museummate.model.KategoriKoleksi.fromString(rs.getString("kategori")),
+                        rs.getDouble("skor_rata_kondisi"),
+                        rs.getInt("jumlah_pemeriksaan")
+                );
+                list.add(item);
+            }
+        }
+        return list;
+    }
+
+
+    /**
      * Menyimpan data pemeriksaan baru dan secara otomatis memperbarui kolom kondisi pada koleksi terkait (PRD F4).
      */
     public boolean save(Pemeriksaan p) throws SQLException {

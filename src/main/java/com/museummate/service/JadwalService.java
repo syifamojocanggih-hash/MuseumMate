@@ -33,6 +33,23 @@ public class JadwalService {
         return jadwalDAO.countOverdue();
     }
 
+    public List<JadwalPerawatan> getJadwalTerlambat() throws SQLException {
+        return jadwalDAO.findOverdue();
+    }
+
+    public List<JadwalPerawatan> getJadwalMendatang(int days) throws SQLException {
+        return jadwalDAO.findDueSoon(days);
+    }
+
+    public int getJumlahMendatang(int days) throws SQLException {
+        return jadwalDAO.countDueSoon(days);
+    }
+
+    public int getJumlahNotifikasiAktif() throws SQLException {
+        return jadwalDAO.countOverdue() + jadwalDAO.countDueSoon(7);
+    }
+
+
     public void tambahJadwal(JadwalPerawatan j) throws Exception {
         if (j == null) {
             throw new IllegalArgumentException("Data jadwal tidak boleh kosong.");

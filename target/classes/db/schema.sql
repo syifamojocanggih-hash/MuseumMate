@@ -101,3 +101,16 @@ CREATE TABLE IF NOT EXISTS jadwal_perawatan (
     FOREIGN KEY (id_koleksi) REFERENCES koleksi(id_koleksi) ON DELETE CASCADE,
     INDEX idx_jadwal_status (status, tanggal_rencana)
 ) ENGINE=InnoDB;
+
+-- 9. Tabel Log Audit Aktivitas Pengguna (PRD F10 / UC-13)
+CREATE TABLE IF NOT EXISTS log_aktivitas (
+    id_log INT AUTO_INCREMENT PRIMARY KEY,
+    id_pengguna INT,
+    jenis_aksi VARCHAR(50) NOT NULL,
+    tabel_terkait VARCHAR(50) NOT NULL,
+    keterangan TEXT NOT NULL,
+    waktu TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_pengguna) REFERENCES pengguna(id_pengguna) ON DELETE SET NULL,
+    INDEX idx_log_waktu (waktu)
+) ENGINE=InnoDB;
+

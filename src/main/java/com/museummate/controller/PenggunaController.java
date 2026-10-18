@@ -71,6 +71,8 @@ public class PenggunaController {
         result.ifPresent(user -> {
             try {
                 penggunaDAO.save(user);
+                com.museummate.service.LogAktivitasService.catat("TAMBAH", "pengguna", 
+                        "Menambahkan akun pengguna baru: " + user.getUsername() + " (" + user.getPeran().getLabel() + ")");
                 AlertHelper.showInfo("Sukses", "Pengguna baru '" + user.getUsername() + "' berhasil didaftarkan.");
                 loadDataPengguna();
             } catch (SQLException e) {
@@ -93,6 +95,8 @@ public class PenggunaController {
             try {
                 boolean updatePassword = user.getPasswordHash() != null && !user.getPasswordHash().isEmpty();
                 penggunaDAO.update(user, updatePassword);
+                com.museummate.service.LogAktivitasService.catat("UBAH", "pengguna", 
+                        "Memperbarui profil akun pengguna: " + user.getUsername() + " (" + user.getNamaLengkap() + ")");
                 AlertHelper.showInfo("Sukses", "Data akun pengguna berhasil diperbarui.");
                 loadDataPengguna();
             } catch (SQLException e) {
@@ -122,6 +126,8 @@ public class PenggunaController {
         if (konfirmasi) {
             try {
                 penggunaDAO.delete(selected.getIdPengguna());
+                com.museummate.service.LogAktivitasService.catat("HAPUS", "pengguna", 
+                        "Menghapus akun pengguna: " + selected.getUsername() + " (" + selected.getNamaLengkap() + ")");
                 AlertHelper.showInfo("Sukses", "Akun pengguna berhasil dihapus.");
                 loadDataPengguna();
             } catch (SQLException e) {

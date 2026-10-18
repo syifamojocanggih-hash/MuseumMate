@@ -712,33 +712,33 @@ INSERT INTO koleksi_fosil (id_koleksi, nama_ilmiah_taksa, bagian_anatomi, formas
 (145, 'Dipterocarpus petrificata', 'Fragmen batang kayu terkersikkan', 'Formasi Sedimentasi Pesisir Purba');
 
 -- 4. Seed Riwayat Pemeriksaan Awal untuk Kalkulasi Skor Prioritas Perawatan
+-- 4. Seed Riwayat Pemeriksaan Awal untuk Kalkulasi Skor Prioritas & Grafik Tren (PRD F6 & F9)
 INSERT INTO pemeriksaan (id_koleksi, id_pengguna, tanggal_pemeriksaan, kondisi_hasil, tindakan, catatan) VALUES
--- Koleksi 1 (Brankas Siola): Diperiksa 75 hari lalu, Rusak Ringan
-(1, 2, DATE_SUB(CURDATE(), INTERVAL 75 DAY), 'RUSAK_RINGAN', 'Pembersihan karat permukaan roda tuas & pelumasan minyak khusus baja', 'Oksidasi ringan pada bagian engsel pintu putar brankas.'),
+-- Periode 150 hari lalu (~5 bulan lalu)
+(87, 2, DATE_SUB(CURDATE(), INTERVAL 150 DAY), 'CUKUP', 'Inspeksi awal kelembaban ruang penyimpanan naskah', 'Kondisi fisik naskah kuno tergolong cukup.'),
+(118, 2, DATE_SUB(CURDATE(), INTERVAL 150 DAY), 'BAIK', 'Pembersihan debu awal kanvas lukisan', 'Cat dan kanvas dalam kondisi baik.'),
+(1, 2, DATE_SUB(CURDATE(), INTERVAL 150 DAY), 'BAIK', 'Pemeriksaan rutin pintu brankas baja', 'Kondisi mekanik stabil dan bebas karat.'),
+(142, 2, DATE_SUB(CURDATE(), INTERVAL 150 DAY), 'BAIK', 'Pengukuran mikroklimat vitrin fosil', 'Spesimen fosil purba sangat stabil.'),
 
--- Koleksi 15 (Mobil Damkar 1982): Diperiksa 30 hari lalu, Baik
-(15, 2, DATE_SUB(CURDATE(), INTERVAL 30 DAY), 'BAIK', 'Pengecekan tekanan hidrolik & pelapisan wax pelindung cat bodi', 'Kondisi mesin pompa stabil, cat bodi merah mengkilap dan bebas debu.'),
-
--- Koleksi 46 (Grand Piano 1895): Diperiksa 60 hari lalu, Rusak Berat
-(46, 2, DATE_SUB(CURDATE(), INTERVAL 60 DAY), 'RUSAK_BERAT', 'Pengeringan ruang humiditas & stabilisasi tuts gading yang lepas', 'Kayu rangka akustik mengalami serangan rayap mikro, butuh konservasi mendalam.'),
-
--- Koleksi 86 (Prasasti Canggu 1358 M): Diperiksa 90 hari lalu, Baik
-(86, 2, DATE_SUB(CURDATE(), INTERVAL 90 DAY), 'BAIK', 'Pembersihan debu sikat bulu halus & pemantauan oksidasi tembaga', 'Inskripsi huruf Kawi terbaca sangat jelas, plat tembaga stabil.'),
-
--- Koleksi 87 (Dodenregister Peneleh 1847): Diperiksa 110 hari lalu, Rusak Ringan
+-- Periode 120 hari lalu (~4 bulan lalu)
+(118, 2, DATE_SUB(CURDATE(), INTERVAL 120 DAY), 'CUKUP', 'Pelapisan ulang pernis damar pelindung cat minyak', 'Terdapat retak seribu halus pada cat merah bendera, kanvas masih kencang.'),
 (87, 2, DATE_SUB(CURDATE(), INTERVAL 110 DAY), 'RUSAK_RINGAN', 'Fumigasi thymol & penggantian amplop kertas bebas asam (acid-free)', 'Kertas katun mulai menunjukkan gejala foxing pada lembar awal halaman 1-15.'),
 
--- Koleksi 102 (Draf Lirik Gombloh): Diperiksa 45 hari lalu, Baik
-(102, 2, DATE_SUB(CURDATE(), INTERVAL 45 DAY), 'BAIK', 'Inspeksi vitrin akrilik UV filter & silika gel', 'Tinta bolpoin asli terbaca jelas tanpa pemudaran.'),
+-- Periode 90 hari lalu (~3 bulan lalu)
+(86, 2, DATE_SUB(CURDATE(), INTERVAL 90 DAY), 'BAIK', 'Pembersihan debu sikat bulu halus & pemantauan oksidasi tembaga', 'Inskripsi huruf Kawi terbaca sangat jelas, plat tembaga stabil.'),
+(1, 2, DATE_SUB(CURDATE(), INTERVAL 75 DAY), 'RUSAK_RINGAN', 'Pembersihan karat permukaan roda tuas & pelumasan minyak khusus baja', 'Oksidasi ringan pada bagian engsel pintu putar brankas.'),
+(116, 2, DATE_SUB(CURDATE(), INTERVAL 80 DAY), 'CUKUP', 'Pemeriksaan ketegangan kanvas', 'Kanvas agak mengendur akibat fluktuasi kelembaban.'),
 
--- Koleksi 116 (Lukisan Meyroos 1916): Diperiksa 40 hari lalu, Baik
+-- Periode 60 hari lalu (~2 bulan lalu)
+(46, 2, DATE_SUB(CURDATE(), INTERVAL 60 DAY), 'RUSAK_BERAT', 'Pengeringan ruang humiditas & stabilisasi tuts gading yang lepas', 'Kayu rangka akustik mengalami serangan rayap mikro, butuh konservasi mendalam.'),
+(102, 2, DATE_SUB(CURDATE(), INTERVAL 45 DAY), 'BAIK', 'Inspeksi vitrin akrilik UV filter & silika gel', 'Tinta bolpoin asli terbaca jelas tanpa pemudaran.'),
 (116, 2, DATE_SUB(CURDATE(), INTERVAL 40 DAY), 'BAIK', 'Pembersihan debu mikrofiber & inspeksi ketegangan kanvas', 'Pigura kayu jati lapis prada emas dalam kondisi sangat terawat.'),
 
--- Koleksi 118 (Lukisan Pertempuran Siola 1965): Diperiksa 120 hari lalu, Cukup
-(118, 2, DATE_SUB(CURDATE(), INTERVAL 120 DAY), 'CUKUP', 'Pelapisan ulang pernis damar pelindung cat minyak', 'Terdapat retak seribu halus pada cat merah bendera, kanvas masih kencang.'),
-
--- Koleksi 142 (Fosil Cangkang Kerang Purba): Diperiksa 25 hari lalu, Baik
-(142, 2, DATE_SUB(CURDATE(), INTERVAL 25 DAY), 'BAIK', 'Pemeriksaan kelembaban vitrin kaca tertutup', 'Bebas dari kelembaban dan guncangan mekanis.');
+-- Periode 30 hari lalu (~1 bulan lalu)
+(15, 2, DATE_SUB(CURDATE(), INTERVAL 30 DAY), 'BAIK', 'Pengecekan tekanan hidrolik & pelapisan wax pelindung cat bodi', 'Kondisi mesin pompa stabil, cat bodi merah mengkilap dan bebas debu.'),
+(142, 2, DATE_SUB(CURDATE(), INTERVAL 25 DAY), 'BAIK', 'Pemeriksaan kelembaban vitrin kaca tertutup', 'Bebas dari kelembaban dan guncangan mekanis.'),
+(87, 2, DATE_SUB(CURDATE(), INTERVAL 15 DAY), 'BAIK', 'Verifikasi pasca restorasi lembar foxing', 'Naskah berhasil distabilkan ke kondisi prima.'),
+(1, 2, DATE_SUB(CURDATE(), INTERVAL 10 DAY), 'BAIK', 'Pengecekan akhir tuas brankas pasca pembersihan karat', 'Karat berhasil dihilangkan sepenuhnya, tuas brankas berfungsi lancar.');
 
 -- 5. Seed Jadwal Perawatan Konservasi
 INSERT INTO jadwal_perawatan (id_koleksi, tanggal_rencana, kegiatan, keterangan, status) VALUES
@@ -747,3 +747,13 @@ INSERT INTO jadwal_perawatan (id_koleksi, tanggal_rencana, kegiatan, keterangan,
 -- Mendatang
 (87, DATE_ADD(CURDATE(), INTERVAL 7 DAY), 'Laminasi Kertas Jepang pada Lembaran Dodenregister Peneleh', 'Pengerjaan sterilisasi di laboratorium kuratorial.', 'DIRENCANAKAN'),
 (1, DATE_ADD(CURDATE(), INTERVAL 15 DAY), 'Aplikasi Rust Converter pada Roda Pasak Brankas Whiteaway Laidlaw', 'Perawatan mekanik berkala roda kombinasi baja.', 'DIRENCANAKAN');
+
+-- 6. Seed Log Audit Aktivitas Pengguna (PRD F10 / UC-13)
+INSERT INTO log_aktivitas (id_pengguna, jenis_aksi, tabel_terkait, keterangan, waktu) VALUES
+(1, 'LOGIN', 'pengguna', 'Administrator Ahmad Syifa berhasil masuk ke sistem MuseumMate.', DATE_SUB(NOW(), INTERVAL 5 DAY)),
+(1, 'TAMBAH', 'koleksi', 'Pendaftaran master koleksi SIOLA-ART-001 s.d SIOLA-FOS-145 dari dokumen kuratorial Siola.', DATE_SUB(NOW(), INTERVAL 5 DAY)),
+(1, 'TAMBAH', 'jadwal_perawatan', 'Menambahkan jadwal perawatan untuk SIOLA-ART-046 (Grand Piano 1895).', DATE_SUB(NOW(), INTERVAL 4 DAY)),
+(2, 'LOGIN', 'pengguna', 'Konservator Amanda Eka berhasil masuk ke sistem MuseumMate.', DATE_SUB(NOW(), INTERVAL 3 DAY)),
+(2, 'TAMBAH', 'pemeriksaan', 'Mencatat hasil inspeksi fisik berkala koleksi SIOLA-ART-001 (Kondisi Rusak Ringan).', DATE_SUB(NOW(), INTERVAL 2 DAY)),
+(1, 'UBAH', 'jadwal_perawatan', 'Memperbarui rincian kegiatan perawatan SIOLA-ART-087 ke status Terencana.', DATE_SUB(NOW(), INTERVAL 1 DAY));
+

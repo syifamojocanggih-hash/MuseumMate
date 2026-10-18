@@ -163,6 +163,8 @@ public class JadwalController {
 
         try {
             jadwalService.ubahStatus(selected.getIdJadwal(), StatusJadwal.SELESAI);
+            com.museummate.service.LogAktivitasService.catat("UBAH", "jadwal_perawatan", 
+                    "Menandai SELESAI jadwal perawatan ID #" + selected.getIdJadwal() + " (" + selected.getNamaKoleksi() + ")");
             AlertHelper.showInfo("Sukses", "Status jadwal berhasil diperbarui menjadi SELESAI.");
             loadDataJadwal();
         } catch (SQLException e) {
@@ -180,6 +182,8 @@ public class JadwalController {
 
         try {
             jadwalService.ubahStatus(selected.getIdJadwal(), StatusJadwal.DIBATALKAN);
+            com.museummate.service.LogAktivitasService.catat("UBAH", "jadwal_perawatan", 
+                    "Membatalkan jadwal perawatan ID #" + selected.getIdJadwal() + " (" + selected.getNamaKoleksi() + ")");
             AlertHelper.showInfo("Sukses", "Jadwal berhasil dibatalkan.");
             loadDataJadwal();
         } catch (SQLException e) {
@@ -200,6 +204,8 @@ public class JadwalController {
         if (konfirmasi) {
             try {
                 jadwalService.hapusJadwal(selected.getIdJadwal());
+                com.museummate.service.LogAktivitasService.catat("HAPUS", "jadwal_perawatan", 
+                        "Menghapus jadwal perawatan ID #" + selected.getIdJadwal() + " (" + selected.getNamaKoleksi() + ")");
                 AlertHelper.showInfo("Sukses", "Jadwal perawatan berhasil dihapus.");
                 loadDataJadwal();
             } catch (SQLException e) {

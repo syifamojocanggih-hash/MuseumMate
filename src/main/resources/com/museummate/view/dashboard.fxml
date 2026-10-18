@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
@@ -13,9 +14,19 @@
         <HBox alignment="CENTER_LEFT" spacing="16">
             <VBox spacing="3" HBox.hgrow="ALWAYS">
                 <Label text="Dashboard Ringkasan Operasional" styleClass="page-title" />
-                <Label text="Pemantauan kondisi fisik koleksi museum, status perawatan, dan kalkulasi prioritas otomatis." styleClass="page-subtitle" />
+                <Label text="Pemantauan kondisi fisik koleksi museum, status perawatan, grafik tren, dan kalkulasi prioritas otomatis." styleClass="page-subtitle" />
             </VBox>
             <Button text="🔄 Segarkan Data" onAction="#refreshDashboard" styleClass="btn-secondary" />
+        </HBox>
+
+        <!-- Notification Alert Banner (PRD F8 / UC-11) -->
+        <HBox fx:id="boxNotifikasiBanner" alignment="CENTER_LEFT" spacing="14" styleClass="formula-banner" style="-fx-background-color: #fffbeb; -fx-border-color: #fde68a;">
+            <Label text="🔔" style="-fx-font-size: 22px;" />
+            <VBox spacing="2" HBox.hgrow="ALWAYS">
+                <Label text="Peringatan Jadwal Konservasi Aktif (PRD F8 / UC-11)" style="-fx-font-weight: bold; -fx-text-fill: #92400e; -fx-font-size: 13px;" />
+                <Label fx:id="lblNotifikasiBannerText" text="Memeriksa status keterlambatan dan jadwal perawatan..." style="-fx-text-fill: #78350f; -fx-font-size: 12px;" />
+            </VBox>
+            <Button text="Lihat Notifikasi Detail 🔔" onAction="#handleBukaNotifikasi" styleClass="btn-secondary" />
         </HBox>
 
         <!-- Metric Stat Cards -->
@@ -44,6 +55,26 @@
                 <Label text="Stabil dalam ruang vitrin/galeri" style="-fx-font-size: 11px; -fx-text-fill: #15803d;" />
             </VBox>
         </HBox>
+
+        <!-- Condition Trend Line Chart (PRD F9 / UC-12) -->
+        <VBox styleClass="card" spacing="12">
+            <HBox alignment="CENTER_LEFT">
+                <VBox spacing="2" HBox.hgrow="ALWAYS">
+                    <Label text="📈 Grafik Tren Kondisi Koleksi dari Waktu ke Waktu (PRD F9 / UC-12)" styleClass="card-title" />
+                    <Label text="Pola perubahan kondisi fisik per kategori berdasarkan riwayat pemeriksaan (1.0 = Baik, 2.0 = Cukup, 3.0 = Rusak Ringan, 4.0 = Rusak Berat). Garis menurun menandakan keberhasilan konservasi."
+                           style="-fx-font-size: 12px; -fx-text-fill: #64748b;" />
+                </VBox>
+            </HBox>
+            <LineChart fx:id="chartTrenKondisi" prefHeight="260.0" legendSide="TOP" animated="false">
+                <xAxis>
+                    <CategoryAxis fx:id="axisXWaktu" label="Periode Bulan Pemeriksaan" />
+                </xAxis>
+                <yAxis>
+                    <NumberAxis fx:id="axisYSkor" label="Indeks Kerusakan (1: Baik → 4: Rusak Berat)"
+                                lowerBound="1.0" upperBound="4.0" tickUnit="0.5" autoRanging="false" />
+                </yAxis>
+            </LineChart>
+        </VBox>
 
         <!-- Two Columns: Category Breakdown & Condition Breakdown -->
         <HBox spacing="16">
@@ -105,6 +136,7 @@
                 </GridPane>
             </VBox>
         </HBox>
+
 
         <!-- Top Urgent Priority Table Preview -->
         <VBox styleClass="card" spacing="12">

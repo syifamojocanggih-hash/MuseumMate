@@ -493,3 +493,94 @@
     -fx-padding: 14px 18px;
     -fx-effect: dropshadow(gaussian, rgba(37, 99, 235, 0.05), 10, 0, 0, 2);
 }
+
+/* ==========================================================================
+   Audit Log Action Badges (PRD F10)
+   ========================================================================== */
+.badge-tambah {
+    -fx-background-color: #ecfdf5;
+    -fx-text-fill: #065f46;
+    -fx-border-color: #a7f3d0;
+    -fx-border-radius: 14px;
+    -fx-background-radius: 14px;
+    -fx-padding: 3px 10px;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+
+.badge-ubah {
+    -fx-background-color: #eff6ff;
+    -fx-text-fill: #1e40af;
+    -fx-border-color: #bfdbfe;
+    -fx-border-radius: 14px;
+    -fx-background-radius: 14px;
+    -fx-padding: 3px 10px;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+
+.badge-hapus {
+    -fx-background-color: #fff1f2;
+    -fx-text-fill: #9f1239;
+    -fx-border-color: #fecdd3;
+    -fx-border-radius: 14px;
+    -fx-background-radius: 14px;
+    -fx-padding: 3px 10px;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+
+.badge-login {
+    -fx-background-color: #f5f3ff;
+    -fx-text-fill: #5b21b6;
+    -fx-border-color: #ddd6fe;
+    -fx-border-radius: 14px;
+    -fx-background-radius: 14px;
+    -fx-padding: 3px 10px;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+
+.badge-default {
+    -fx-background-color: #f1f5f9;
+    -fx-text-fill: #475569;
+    -fx-border-color: #cbd5e1;
+    -fx-border-radius: 14px;
+    -fx-background-radius: 14px;
+    -fx-padding: 3px 10px;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+
+.badge-upcoming {
+    -fx-background-color: #fffbeb;
+    -fx-text-fill: #92400e;
+    -fx-border-color: #fde68a;
+    -fx-border-radius: 14px;
+    -fx-background-radius: 14px;
+    -fx-padding: 3px 10px;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+
+/* ==========================================================================
+   Dashboard Trend Chart Styles (PRD F9)
+   ========================================================================== */
+.chart-plot-background {
+    -fx-background-color: #ffffff;
+}
+
+.chart-vertical-grid-lines {
+    -fx-stroke: #f1f5f9;
+}
+
+.chart-horizontal-grid-lines {
+    -fx-stroke: #e2e8f0;
+    -fx-stroke-dash-array: 3 3;
+}
+
+.chart-legend {
+    -fx-background-color: transparent;
+    -fx-padding: 8px 0 0 0;
+}
+

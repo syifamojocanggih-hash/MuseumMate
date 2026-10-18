@@ -19,17 +19,20 @@ import java.util.Map;
 public class DashboardService {
     private final KoleksiDAO koleksiDAO;
     private final JadwalPerawatanDAO jadwalDAO;
+    private final com.museummate.dao.PemeriksaanDAO pemeriksaanDAO;
     private final PrioritasService prioritasService;
 
     public DashboardService() {
         this.koleksiDAO = new KoleksiDAO();
         this.jadwalDAO = new JadwalPerawatanDAO();
+        this.pemeriksaanDAO = new com.museummate.dao.PemeriksaanDAO();
         this.prioritasService = new PrioritasService();
     }
 
     public DashboardService(KoleksiDAO koleksiDAO, JadwalPerawatanDAO jadwalDAO, PrioritasService prioritasService) {
         this.koleksiDAO = koleksiDAO;
         this.jadwalDAO = jadwalDAO;
+        this.pemeriksaanDAO = new com.museummate.dao.PemeriksaanDAO();
         this.prioritasService = prioritasService;
     }
 
@@ -53,6 +56,7 @@ public class DashboardService {
         }
 
         int jumlahTerlambat = jadwalDAO.countOverdue();
+        int jumlahMendatang = jadwalDAO.countDueSoon(7);
 
         List<PrioritasItem> listPrioritas = prioritasService.getDaftarPrioritas(LocalDate.now());
         int jumlahKritis = 0;
@@ -62,7 +66,9 @@ public class DashboardService {
             }
         }
 
-        return new DashboardStats(totalKoleksi, perKategori, perKondisi, jumlahTerlambat, jumlahKritis, listPrioritas);
+        List<com.museummate.model.TrenKondisiItem> trenKondisi = pemeriksaanDAO.getTrenKondisi();
+
+        return new DashboardStats(totalKoleksi, perKategori, perKondisi, jumlahTerlambat, jumlahMendatang, jumlahKritis, listPrioritas, trenKondisi);
     }
 
     public record DashboardStats(
@@ -70,7 +76,10 @@ public class DashboardService {
             Map<KategoriKoleksi, Integer> perKategori,
             Map<KondisiKoleksi, Integer> perKondisi,
             int jumlahJadwalTerlambat,
+            int jumlahJadwalMendatang,
             int jumlahPrioritasMendesak,
-            List<PrioritasItem> topPrioritas
+            List<PrioritasItem> topPrioritas,
+            List<com.museummate.model.TrenKondisiItem> trenKondisi
     ) {}
 }
+

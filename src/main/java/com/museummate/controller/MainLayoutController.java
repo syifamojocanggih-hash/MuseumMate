@@ -29,11 +29,14 @@ public class MainLayoutController {
     @FXML private Button btnNavPrioritas;
     @FXML private Button btnNavPemeriksaan;
     @FXML private Button btnNavJadwal;
+    @FXML private Button btnNavNotifikasi;
+    @FXML private Button btnNavLogAudit;
     @FXML private Button btnNavPengguna;
 
     @FXML private StackPane contentArea;
 
     private Button activeButton;
+    private final com.museummate.service.JadwalService jadwalService = new com.museummate.service.JadwalService();
 
     @FXML
     public void initialize() {
@@ -42,44 +45,85 @@ public class MainLayoutController {
             lblNamaPengguna.setText(user.getNamaLengkap());
             lblPeranPengguna.setText(user.getPeran().getLabel().toUpperCase());
 
-            // Menu Pengguna hanya untuk Admin (PRD F1)
+            // Menu Pengguna dan Log Audit hanya untuk Admin (PRD F1 / F10)
             boolean isAdmin = user.isAdmin();
             btnNavPengguna.setVisible(isAdmin);
             btnNavPengguna.setManaged(isAdmin);
+
+            btnNavLogAudit.setVisible(isAdmin);
+            btnNavLogAudit.setManaged(isAdmin);
         }
+
+        updateNotifikasiBadge();
 
         // Tampilkan Dashboard sebagai halaman awal
         showDashboard();
+    }
+
+    private void updateNotifikasiBadge() {
+        try {
+            int notifCount = jadwalService.getJumlahNotifikasiAktif();
+            if (notifCount > 0) {
+                btnNavNotifikasi.setText("🔔  Notifikasi Jadwal (" + notifCount + ")");
+            } else {
+                btnNavNotifikasi.setText("🔔  Notifikasi Jadwal (F8)");
+            }
+        } catch (Exception e) {
+            btnNavNotifikasi.setText("🔔  Notifikasi Jadwal (F8)");
+        }
     }
 
     @FXML
     public void showDashboard() {
         setActiveNav(btnNavDashboard);
         loadView("/com/museummate/view/dashboard.fxml");
+        updateNotifikasiBadge();
     }
 
     @FXML
     public void showKoleksi() {
         setActiveNav(btnNavKoleksi);
         loadView("/com/museummate/view/koleksi_view.fxml");
+        updateNotifikasiBadge();
     }
 
     @FXML
     public void showPrioritas() {
         setActiveNav(btnNavPrioritas);
         loadView("/com/museummate/view/prioritas_view.fxml");
+        updateNotifikasiBadge();
     }
 
     @FXML
     public void showPemeriksaan() {
         setActiveNav(btnNavPemeriksaan);
         loadView("/com/museummate/view/pemeriksaan_view.fxml");
+        updateNotifikasiBadge();
     }
 
     @FXML
     public void showJadwal() {
         setActiveNav(btnNavJadwal);
         loadView("/com/museummate/view/jadwal_view.fxml");
+        updateNotifikasiBadge();
+    }
+
+    @FXML
+    public void showNotifikasi() {
+        setActiveNav(btnNavNotifikasi);
+        loadView("/com/museummate/view/notifikasi_view.fxml");
+        updateNotifikasiBadge();
+    }
+
+    @FXML
+    public void showLogAudit() {
+        if (!SessionManager.getInstance().isAdmin()) {
+            AlertHelper.showWarning("Akses Ditolak", "Hanya Administrator yang memiliki akses ke log audit aktivitas.");
+            return;
+        }
+        setActiveNav(btnNavLogAudit);
+        loadView("/com/museummate/view/log_audit_view.fxml");
+        updateNotifikasiBadge();
     }
 
     @FXML
@@ -90,6 +134,7 @@ public class MainLayoutController {
         }
         setActiveNav(btnNavPengguna);
         loadView("/com/museummate/view/pengguna_view.fxml");
+        updateNotifikasiBadge();
     }
 
     @FXML

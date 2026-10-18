@@ -51,10 +51,15 @@ public class AuthService {
 
         // Simpan sesi aktif
         SessionManager.getInstance().login(user);
+        LogAktivitasService.catat("LOGIN", "pengguna", "Pengguna '" + user.getUsername() + "' (" + user.getNamaLengkap() + ") berhasil masuk ke sistem.");
         return user;
     }
 
     public void logout() {
+        Pengguna user = SessionManager.getInstance().getCurrentUser();
+        if (user != null) {
+            LogAktivitasService.catat("LOGOUT", "pengguna", "Pengguna '" + user.getUsername() + "' keluar dari sistem.");
+        }
         SessionManager.getInstance().logout();
     }
 }

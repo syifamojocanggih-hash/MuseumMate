@@ -68,13 +68,27 @@ Semua 10 pengujian unit akan dieksekusi:
 
 ---
 
+### 10 Fitur Utama Sesuai Dokumen PRD Terbaru
+1. **F1 (UC-01 & UC-05)**: Login & Pengelolaan Pengguna (Role-based access: Admin & Konservator, jBCrypt hash).
+2. **F2 (UC-02 & UC-03)**: Manajemen Data Koleksi (CRUD koleksi, pencarian real-time, filter kategori & kondisi).
+3. **F3 (bagian dari UC-03)**: Pengelompokan Kategori Berbasis OOP (Lukisan, Artefak, Naskah, Fosil dengan atribut khusus).
+4. **F4 (UC-06 & UC-07)**: Pencatatan Pemeriksaan & Riwayat Fisik (Auto-update kondisi koleksi).
+5. **F5 (UC-04)**: Jadwal Perawatan Konservasi (Rencana tindakan, status DIRENCANAKAN, SELESAI, DIBATALKAN).
+6. **F6 (UC-08 & UC-09)**: Prioritas Perawatan Otomatis (Perhitungan skor urgensi dinamis berbasis bobot & faktor kerentanan).
+7. **F7 (UC-10)**: Dashboard & Laporan Statistik (Metrik ringkasan, sebaran kategori & kondisi, ekspor PDF).
+8. **F8 (UC-11)**: Peringatan & Notifikasi Jadwal Perawatan (Deteksi jadwal terlambat / overdue dan jadwal jatuh tempo dalam 7 hari).
+9. **F9 (UC-12)**: Grafik Tren Kondisi Koleksi (Visualisasi perubahan kondisi fisik dari waktu ke waktu per kategori).
+10. **F10 (UC-13)**: Log Audit Aktivitas Sistem (Pencatatan riwayat tambah, ubah, hapus data dan login ke tabel `log_aktivitas` untuk pengawasan dan akuntabilitas).
+
+---
+
 ## 🏗️ Struktur Arsitektur & Penerapan OOP
 
 ```
 MuseumMate/
 ├── pom.xml                               # Konfigurasi Maven & dependensi
 ├── mvnw & mvnw.cmd                       # Maven Wrapper lintas platform
-├── setup_database.sql                    # Skrip DDL & seed data uji awal
+├── setup_database.sql                    # Skrip DDL & seed data uji awal (termasuk log_aktivitas)
 ├── DESIGN.md                             # Pedoman sistem desain & warna
 ├── GEMINI.md                             # Konfigurasi antislop & panduan agen
 └── src/
@@ -90,29 +104,45 @@ MuseumMate/
     │   │   │   ├── Pengguna.java         # [Enkapsulasi] Akun & peran
     │   │   │   ├── Pemeriksaan.java      # Riwayat inspeksi fisik
     │   │   │   ├── JadwalPerawatan.java  # Jadwal rencana & status keterlambatan
-    │   │   │   └── PrioritasItem.java    # DTO antarmuka antrian prioritas
+    │   │   │   ├── PrioritasItem.java    # DTO antarmuka antrian prioritas
+    │   │   │   ├── LogAktivitas.java     # [F10] DTO jejak audit aktivitas sistem
+    │   │   │   └── TrenKondisiItem.java  # [F9] DTO agregasi tren kondisi berkala
     │   │   ├── dao/                      # Lapisan Akses Basis Data (JDBC)
     │   │   │   ├── KoleksiDAO.java       # Polimorfik CRUD koleksi
     │   │   │   ├── PenggunaDAO.java      # CRUD akun & peran
-    │   │   │   ├── PemeriksaanDAO.java   # Auto-update kondisi koleksi
-    │   │   │   └── JadwalPerawatanDAO.java
+    │   │   │   ├── PemeriksaanDAO.java   # Auto-update kondisi koleksi & data tren
+    │   │   │   ├── JadwalPerawatanDAO.java # Query jadwal, overdue, & upcoming 7 hari
+    │   │   │   └── LogAktivitasDAO.java  # [F10] CRUD riwayat audit log
     │   │   ├── service/                  # Logika Bisnis
-    │   │   │   ├── AuthService.java      # jBCrypt login verifier
+    │   │   │   ├── AuthService.java      # jBCrypt login verifier & audit logger
     │   │   │   ├── PrioritasService.java # Engine hitung skor PRD 6.4
     │   │   │   ├── KoleksiService.java   # Validasi data & kode unik
     │   │   │   ├── PemeriksaanService.java
-    │   │   │   ├── JadwalService.java
-    │   │   │   ├── DashboardService.java
+    │   │   │   ├── JadwalService.java    # Notifikasi jadwal terlambat & mendatang
+    │   │   │   ├── DashboardService.java # Agregasi statistik, metrik, & tren
+    │   │   │   ├── LogAktivitasService.java # [F10] Service audit logger otomatis
     │   │   │   └── LaporanService.java   # Generator berkas PDF OpenPDF
     │   │   ├── controller/               # JavaFX Event Handlers
-    │   │   └── util/                     # DatabaseConnection, PasswordUtil, AlertHelper
+    │   │   │   ├── DashboardController.java # Dashboard metrik, notifikasi banner, & LineChart
+    │   │   │   ├── KoleksiController.java
+    │   │   │   ├── KoleksiFormController.java
+    │   │   │   ├── PrioritasController.java
+    │   │   │   ├── PemeriksaanController.java
+    │   │   │   ├── CatatPemeriksaanController.java
+    │   │   │   ├── JadwalController.java
+    │   │   │   ├── TambahJadwalController.java
+    │   │   │   ├── NotifikasiController.java # [F8] Controller modul notifikasi jadwal
+    │   │   │   ├── LogAuditController.java   # [F10] Controller modul log audit
+    │   │   │   ├── PenggunaController.java
+    │   │   │   └── MainLayoutController.java
+    │   │   └── util/                     # DatabaseConnection, PasswordUtil, AlertHelper, DateUtil
     │   └── resources/
     │       ├── com/museummate/
-    │       │   ├── view/                 # FXML layouts
+    │       │   ├── view/                 # FXML layouts (termasuk notifikasi & log_audit)
     │       │   └── css/style.css         # Desain tampilan berstandar museum
     │       └── db/                       # schema.sql & seed_data.sql
     └── test/
-        └── java/com/museummate/          # Unit tests JUnit 5
+        └── java/com/museummate/          # Unit tests JUnit 5 (19 pengujian)
 ```
 
 ---
@@ -121,6 +151,7 @@ MuseumMate/
 Aplikasi mendukung ekspor laporan langsung berformat PDF resmi:
 1. **Laporan Inventaris Koleksi**: Daftar seluruh data koleksi museum beserta atribut dan lokasi simpan.
 2. **Laporan Prioritas Konservasi**: Daftar antrian perawatan terurut dari skor tertinggi untuk tindak lanjut petugas di laboratorium konservasi.
+
 
 
 

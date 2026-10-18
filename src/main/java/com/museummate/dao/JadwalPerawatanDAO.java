@@ -80,6 +80,51 @@ public class JadwalPerawatanDAO {
         return 0;
     }
 
+    public List<JadwalPerawatan> findOverdue() throws SQLException {
+        List<JadwalPerawatan> list = new ArrayList<>();
+        String sql = BASE_SELECT_SQL + "WHERE j.status = 'DIRENCANAKAN' AND j.tanggal_rencana < CURDATE() ORDER BY j.tanggal_rencana ASC";
+        try (Connection conn = DatabaseConnection.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                list.add(mapResultSetToJadwal(rs));
+            }
+        }
+        return list;
+    }
+
+    public List<JadwalPerawatan> findDueSoon(int days) throws SQLException {
+        List<JadwalPerawatan> list = new ArrayList<>();
+        String sql = BASE_SELECT_SQL + "WHERE j.status = 'DIRENCANAKAN' AND j.tanggal_rencana >= CURDATE() " +
+                     "AND j.tanggal_rencana <= DATE_ADD(CURDATE(), INTERVAL ? DAY) ORDER BY j.tanggal_rencana ASC";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, days);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    list.add(mapResultSetToJadwal(rs));
+                }
+            }
+        }
+        return list;
+    }
+
+    public int countDueSoon(int days) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM jadwal_perawatan WHERE status = 'DIRENCANAKAN' AND tanggal_rencana >= CURDATE() " +
+                     "AND tanggal_rencana <= DATE_ADD(CURDATE(), INTERVAL ? DAY)";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, days);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        }
+        return 0;
+    }
+
+
     public boolean save(JadwalPerawatan j) throws SQLException {
         String sql = "INSERT INTO jadwal_perawatan (id_koleksi, tanggal_rencana, kegiatan, keterangan, status) " +
                      "VALUES (?, ?, ?, ?, ?)";

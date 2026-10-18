@@ -221,9 +221,13 @@ public class KoleksiFormController {
             // Simpan ke Basis Data
             if (isEdit) {
                 koleksiService.ubahKoleksi(koleksi);
+                com.museummate.service.LogAktivitasService.catat("UBAH", "koleksi", 
+                        "Memperbarui koleksi: " + koleksi.getKodeRegistrasi() + " - " + koleksi.getNama());
                 AlertHelper.showInfo("Sukses", "Data koleksi berhasil diperbarui.");
             } else {
                 koleksiService.tambahKoleksi(koleksi);
+                com.museummate.service.LogAktivitasService.catat("TAMBAH", "koleksi", 
+                        "Menambahkan koleksi baru: " + koleksi.getKodeRegistrasi() + " - " + koleksi.getNama());
                 AlertHelper.showInfo("Sukses", "Koleksi baru berhasil disimpan.");
             }
 

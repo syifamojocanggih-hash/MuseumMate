@@ -87,6 +87,8 @@ public class TambahJadwalController {
             );
 
             jadwalService.tambahJadwal(j);
+            com.museummate.service.LogAktivitasService.catat("TAMBAH", "jadwal_perawatan", 
+                    "Menambahkan jadwal perawatan untuk " + selected.getKodeRegistrasi() + " (" + selected.getNama() + "): " + kegiatan.trim());
             AlertHelper.showInfo("Sukses", "Jadwal perawatan berhasil disimpan.");
 
             if (onSuccessCallback != null) {

@@ -203,6 +203,8 @@ public class KoleksiController {
             if (konfirmasi) {
                 boolean success = koleksiService.hapusKoleksi(selected.getIdKoleksi());
                 if (success) {
+                    com.museummate.service.LogAktivitasService.catat("HAPUS", "koleksi", 
+                            "Menghapus koleksi: " + selected.getKodeRegistrasi() + " - " + selected.getNama());
                     AlertHelper.showInfo("Sukses", "Data koleksi berhasil dihapus.");
                     loadDataKoleksi();
                 } else {

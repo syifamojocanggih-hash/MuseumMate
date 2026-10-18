@@ -42,9 +42,16 @@
             <Button fx:id="btnNavJadwal" text="📅  Jadwal Perawatan (F5)" onAction="#showJadwal"
                     maxWidth="Infinity" styleClass="nav-button" />
 
-            <!-- Admin Only Nav Link -->
+            <Button fx:id="btnNavNotifikasi" text="🔔  Notifikasi Jadwal (F8)" onAction="#showNotifikasi"
+                    maxWidth="Infinity" styleClass="nav-button" />
+
+            <!-- Admin Only Nav Links -->
+            <Button fx:id="btnNavLogAudit" text="📜  Log Audit (F10)" onAction="#showLogAudit"
+                    maxWidth="Infinity" styleClass="nav-button" />
+
             <Button fx:id="btnNavPengguna" text="👥  Kelola Akun (F1)" onAction="#showPengguna"
                     maxWidth="Infinity" styleClass="nav-button" />
+
 
             <!-- Spacer -->
             <Region VBox.vgrow="ALWAYS" />

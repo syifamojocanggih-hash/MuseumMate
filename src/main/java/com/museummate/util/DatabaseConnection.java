@@ -75,6 +75,28 @@ public class DatabaseConnection {
                 // Pastikan akun bawaan memiliki hash BCrypt yang valid
                 stmt.executeUpdate("UPDATE pengguna SET password_hash = '$2a$10$X5n4R/yuL10Mh.BtxxXctOO05edLPDZ6ofQDEZyBTxkLud2ObNzRC' WHERE username = 'admin'");
                 stmt.executeUpdate("UPDATE pengguna SET password_hash = '$2a$10$EpwndmY6IelLsj9hUCFR1e9v5j7CvB2Ao/LJm0v0kVNO/Jek9EIbe' WHERE username = 'konservator'");
+                
+                // Pastikan tabel log_aktivitas (PRD F10) dibuat jika database sudah ada sebelumnya
+                ResultSet rsLog = stmt.executeQuery("SHOW TABLES LIKE 'log_aktivitas'");
+                if (!rsLog.next()) {
+                    stmt.executeUpdate("CREATE TABLE IF NOT EXISTS log_aktivitas (" +
+                            "id_log INT AUTO_INCREMENT PRIMARY KEY, " +
+                            "id_pengguna INT, " +
+                            "jenis_aksi VARCHAR(50) NOT NULL, " +
+                            "tabel_terkait VARCHAR(50) NOT NULL, " +
+                            "keterangan TEXT NOT NULL, " +
+                            "waktu TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
+                            "FOREIGN KEY (id_pengguna) REFERENCES pengguna(id_pengguna) ON DELETE SET NULL, " +
+                            "INDEX idx_log_waktu (waktu)" +
+                            ") ENGINE=InnoDB;");
+                    stmt.executeUpdate("INSERT INTO log_aktivitas (id_pengguna, jenis_aksi, tabel_terkait, keterangan, waktu) VALUES " +
+                            "(1, 'LOGIN', 'pengguna', 'Administrator Ahmad Syifa berhasil masuk ke sistem MuseumMate.', DATE_SUB(NOW(), INTERVAL 5 DAY)), " +
+                            "(1, 'TAMBAH', 'koleksi', 'Pendaftaran master koleksi SIOLA-ART-001 s.d SIOLA-FOS-145 dari dokumen kuratorial Siola.', DATE_SUB(NOW(), INTERVAL 5 DAY)), " +
+                            "(1, 'TAMBAH', 'jadwal_perawatan', 'Menambahkan jadwal perawatan untuk SIOLA-ART-046 (Grand Piano 1895).', DATE_SUB(NOW(), INTERVAL 4 DAY)), " +
+                            "(2, 'LOGIN', 'pengguna', 'Konservator Amanda Eka berhasil masuk ke sistem MuseumMate.', DATE_SUB(NOW(), INTERVAL 3 DAY)), " +
+                            "(2, 'TAMBAH', 'pemeriksaan', 'Mencatat hasil inspeksi fisik berkala koleksi SIOLA-ART-001 (Kondisi Rusak Ringan).', DATE_SUB(NOW(), INTERVAL 2 DAY)), " +
+                            "(1, 'UBAH', 'jadwal_perawatan', 'Memperbarui rincian kegiatan perawatan SIOLA-ART-087 ke status Terencana.', DATE_SUB(NOW(), INTERVAL 1 DAY));");
+                }
             }
         } catch (SQLException e) {
             System.err.println("Gagal memverifikasi skema tabel: " + e.getMessage());
