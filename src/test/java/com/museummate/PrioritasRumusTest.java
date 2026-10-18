@@ -2,7 +2,6 @@ package com.museummate;
 
 import com.museummate.model.Artefak;
 import com.museummate.model.Fosil;
-import com.museummate.model.KategoriKoleksi;
 import com.museummate.model.Koleksi;
 import com.museummate.model.KondisiKoleksi;
 import com.museummate.model.Lukisan;

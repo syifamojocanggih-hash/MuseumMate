@@ -196,7 +196,10 @@ public class DashboardController {
             }
         }
 
-        chartTrenKondisi.getData().addAll(seriesNaskah, seriesLukisan, seriesArtefak, seriesFosil);
+        chartTrenKondisi.getData().add(seriesNaskah);
+        chartTrenKondisi.getData().add(seriesLukisan);
+        chartTrenKondisi.getData().add(seriesArtefak);
+        chartTrenKondisi.getData().add(seriesFosil);
     }
 
     @FXML

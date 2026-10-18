@@ -3,7 +3,6 @@ package com.museummate.controller;
 import com.museummate.model.LogAktivitas;
 import com.museummate.service.LogAktivitasService;
 import com.museummate.util.AlertHelper;
-import com.museummate.util.SessionManager;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

@@ -3,7 +3,6 @@ package com.museummate.controller;
 import com.museummate.model.Pengguna;
 import com.museummate.service.AuthService;
 import com.museummate.util.AlertHelper;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
