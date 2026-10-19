@@ -67,8 +67,9 @@ public class DashboardService {
         }
 
         List<com.museummate.model.TrenKondisiItem> trenKondisi = pemeriksaanDAO.getTrenKondisi();
+        List<com.museummate.model.JadwalPerawatan> upcomingJadwal = jadwalDAO.findUpcoming(5);
 
-        return new DashboardStats(totalKoleksi, perKategori, perKondisi, jumlahTerlambat, jumlahMendatang, jumlahKritis, listPrioritas, trenKondisi);
+        return new DashboardStats(totalKoleksi, perKategori, perKondisi, jumlahTerlambat, jumlahMendatang, jumlahKritis, listPrioritas, trenKondisi, upcomingJadwal);
     }
 
     public record DashboardStats(
@@ -79,7 +80,8 @@ public class DashboardService {
             int jumlahJadwalMendatang,
             int jumlahPrioritasMendesak,
             List<PrioritasItem> topPrioritas,
-            List<com.museummate.model.TrenKondisiItem> trenKondisi
+            List<com.museummate.model.TrenKondisiItem> trenKondisi,
+            List<com.museummate.model.JadwalPerawatan> upcomingJadwal
     ) {}
 }
 

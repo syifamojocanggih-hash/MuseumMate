@@ -24,6 +24,13 @@ public class MainLayoutController {
     @FXML private Label lblNamaPengguna;
     @FXML private Label lblPeranPengguna;
 
+    @FXML private TextField txtGlobalSearch;
+    @FXML private Label lblTanggalHariIni;
+    @FXML private Button btnTopNotifikasi;
+    @FXML private Label lblAvatarInitials;
+    @FXML private Label lblHeaderUserName;
+    @FXML private Label lblHeaderUserRole;
+
     @FXML private Button btnNavDashboard;
     @FXML private Button btnNavKoleksi;
     @FXML private Button btnNavPrioritas;
@@ -44,6 +51,9 @@ public class MainLayoutController {
         if (user != null) {
             lblNamaPengguna.setText(user.getNamaLengkap());
             lblPeranPengguna.setText(user.getPeran().getLabel().toUpperCase());
+            if (lblHeaderUserName != null) lblHeaderUserName.setText(user.getNamaLengkap());
+            if (lblHeaderUserRole != null) lblHeaderUserRole.setText(user.getPeran().getLabel().toUpperCase());
+            if (lblAvatarInitials != null) lblAvatarInitials.setText(hitungInisial(user.getNamaLengkap()));
 
             // Menu Pengguna dan Log Audit hanya untuk Admin (PRD F1 / F10)
             boolean isAdmin = user.isAdmin();
@@ -54,10 +64,23 @@ public class MainLayoutController {
             btnNavLogAudit.setManaged(isAdmin);
         }
 
+        if (lblTanggalHariIni != null) {
+            java.time.LocalDate now = java.time.LocalDate.now();
+            java.time.format.DateTimeFormatter dtf = java.time.format.DateTimeFormatter.ofPattern("EEEE, d MMMM yyyy", java.util.Locale.forLanguageTag("id-ID"));
+            lblTanggalHariIni.setText(now.format(dtf));
+        }
+
         updateNotifikasiBadge();
 
         // Tampilkan Dashboard sebagai halaman awal
         showDashboard();
+    }
+
+    private String hitungInisial(String nama) {
+        if (nama == null || nama.isBlank()) return "MM";
+        String[] parts = nama.trim().split("\\s+");
+        if (parts.length == 1) return parts[0].substring(0, Math.min(2, parts[0].length())).toUpperCase();
+        return ("" + parts[0].charAt(0) + parts[1].charAt(0)).toUpperCase();
     }
 
     private void updateNotifikasiBadge() {
@@ -65,11 +88,26 @@ public class MainLayoutController {
             int notifCount = jadwalService.getJumlahNotifikasiAktif();
             if (notifCount > 0) {
                 btnNavNotifikasi.setText("🔔  Notifikasi Jadwal (" + notifCount + ")");
+                if (btnTopNotifikasi != null) btnTopNotifikasi.setText("🔔 Notifikasi (" + notifCount + ")");
             } else {
                 btnNavNotifikasi.setText("🔔  Notifikasi Jadwal (F8)");
+                if (btnTopNotifikasi != null) btnTopNotifikasi.setText("🔔 Notifikasi");
             }
         } catch (Exception e) {
             btnNavNotifikasi.setText("🔔  Notifikasi Jadwal (F8)");
+            if (btnTopNotifikasi != null) btnTopNotifikasi.setText("🔔 Notifikasi");
+        }
+    }
+
+    @FXML
+    public void handleGlobalSearch() {
+        String query = txtGlobalSearch != null ? txtGlobalSearch.getText() : null;
+        showKoleksi();
+        if (query != null && !query.isBlank() && contentArea != null) {
+            Node searchField = contentArea.lookup("#txtSearch");
+            if (searchField instanceof TextField tf) {
+                tf.setText(query);
+            }
         }
     }
 

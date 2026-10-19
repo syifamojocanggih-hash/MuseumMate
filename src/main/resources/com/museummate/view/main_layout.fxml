@@ -65,7 +65,35 @@
 
     <!-- Main Content Area -->
     <center>
-        <StackPane fx:id="contentArea" styleClass="content-area" />
+        <VBox styleClass="main-container">
+            <!-- Top Navbar (Search, Date, Notification, User Profile) -->
+            <HBox styleClass="top-navbar" alignment="CENTER_LEFT" spacing="16">
+                <!-- Search Box -->
+                <HBox styleClass="search-box" alignment="CENTER_LEFT" spacing="8" HBox.hgrow="ALWAYS">
+                    <Label text="🔍" style="-fx-text-fill: #94a3b8; -fx-font-size: 12px;" />
+                    <TextField fx:id="txtGlobalSearch" promptText="Cari koleksi, nomor registrasi, kategori..."
+                               styleClass="search-input" HBox.hgrow="ALWAYS" onAction="#handleGlobalSearch" />
+                </HBox>
+
+                <!-- Right Info & Actions -->
+                <HBox alignment="CENTER_RIGHT" spacing="14">
+                    <Label fx:id="lblTanggalHariIni" text="Senin, 19 Okt 2026" styleClass="header-date-badge" />
+                    <Button fx:id="btnTopNotifikasi" text="🔔 Notifikasi" onAction="#showNotifikasi" styleClass="icon-btn-header" />
+                    <HBox alignment="CENTER" spacing="10" styleClass="header-user-profile">
+                        <StackPane styleClass="avatar-circle">
+                            <Label fx:id="lblAvatarInitials" text="AS" styleClass="avatar-text" />
+                        </StackPane>
+                        <VBox alignment="CENTER_LEFT" spacing="1">
+                            <Label fx:id="lblHeaderUserName" text="Nama Pengguna" styleClass="header-user-name" />
+                            <Label fx:id="lblHeaderUserRole" text="ADMINISTRATOR" styleClass="header-user-role" />
+                        </VBox>
+                    </HBox>
+                </HBox>
+            </HBox>
+
+            <!-- Dynamic View StackPane -->
+            <StackPane fx:id="contentArea" styleClass="content-area" VBox.vgrow="ALWAYS" />
+        </VBox>
     </center>
 
 </BorderPane>
