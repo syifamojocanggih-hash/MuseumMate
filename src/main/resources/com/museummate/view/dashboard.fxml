@@ -38,7 +38,7 @@
             <!-- Visual Emblem Badge -->
             <VBox styleClass="hero-visual-card" alignment="CENTER" spacing="6" minWidth="220" maxWidth="220">
                 <Label text="🏛️" style="-fx-font-size: 32px;" />
-                <Label text="Museum Surabaya" style="-fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #1e3a8a;" />
+                <Label text="Museum Surabaya" style="-fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #174C78;" />
                 <Label text="Gedung Siola" style="-fx-font-size: 11px; -fx-text-fill: #3b82f6; -fx-font-weight: 600;" />
                 <Label text="● Preservasi Aktif" style="-fx-font-size: 10px; -fx-text-fill: #16a34a; -fx-font-weight: bold; -fx-padding: 2px 8px; -fx-background-color: #dcfce7; -fx-background-radius: 10px;" />
             </VBox>
@@ -121,7 +121,7 @@
                             <VBox spacing="4">
                                 <HBox alignment="CENTER_LEFT">
                                     <Label text="📜 Naskah Kuno (Faktor 1.5)" style="-fx-text-fill: #1e293b; -fx-font-size: 12px; -fx-font-weight: 600;" HBox.hgrow="ALWAYS" />
-                                    <Label fx:id="lblNaskahCount" text="0 item (0%)" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #3b5cee;" />
+                                    <Label fx:id="lblNaskahCount" text="0 item (0%)" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #174C78;" />
                                 </HBox>
                                 <ProgressBar fx:id="progressNaskah" progress="0.0" maxWidth="Infinity" styleClass="metric-progress-bar, progress-bar-blue" />
                             </VBox>
@@ -130,7 +130,7 @@
                             <VBox spacing="4">
                                 <HBox alignment="CENTER_LEFT">
                                     <Label text="🎨 Lukisan Tradisional/Modern (Faktor 1.2)" style="-fx-text-fill: #1e293b; -fx-font-size: 12px; -fx-font-weight: 600;" HBox.hgrow="ALWAYS" />
-                                    <Label fx:id="lblLukisanCount" text="0 item (0%)" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #3b5cee;" />
+                                    <Label fx:id="lblLukisanCount" text="0 item (0%)" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #174C78;" />
                                 </HBox>
                                 <ProgressBar fx:id="progressLukisan" progress="0.0" maxWidth="Infinity" styleClass="metric-progress-bar, progress-bar-blue" />
                             </VBox>
@@ -139,7 +139,7 @@
                             <VBox spacing="4">
                                 <HBox alignment="CENTER_LEFT">
                                     <Label text="🏺 Artefak &amp; Senjata Sejarah (Faktor 1.0)" style="-fx-text-fill: #1e293b; -fx-font-size: 12px; -fx-font-weight: 600;" HBox.hgrow="ALWAYS" />
-                                    <Label fx:id="lblArtefakCount" text="0 item (0%)" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #3b5cee;" />
+                                    <Label fx:id="lblArtefakCount" text="0 item (0%)" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #174C78;" />
                                 </HBox>
                                 <ProgressBar fx:id="progressArtefak" progress="0.0" maxWidth="Infinity" styleClass="metric-progress-bar, progress-bar-blue" />
                             </VBox>
@@ -148,7 +148,7 @@
                             <VBox spacing="4">
                                 <HBox alignment="CENTER_LEFT">
                                     <Label text="🦴 Fosil &amp; Paleontologi (Faktor 0.8)" style="-fx-text-fill: #1e293b; -fx-font-size: 12px; -fx-font-weight: 600;" HBox.hgrow="ALWAYS" />
-                                    <Label fx:id="lblFosilCount" text="0 item (0%)" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #3b5cee;" />
+                                    <Label fx:id="lblFosilCount" text="0 item (0%)" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #174C78;" />
                                 </HBox>
                                 <ProgressBar fx:id="progressFosil" progress="0.0" maxWidth="Infinity" styleClass="metric-progress-bar, progress-bar-blue" />
                             </VBox>
@@ -171,8 +171,8 @@
                             <!-- Cukup -->
                             <VBox spacing="4">
                                 <HBox alignment="CENTER_LEFT">
-                                    <Label text="● Cukup (Bobot 2)" style="-fx-text-fill: #3b5cee; -fx-font-size: 12px; -fx-font-weight: 600;" HBox.hgrow="ALWAYS" />
-                                    <Label fx:id="lblDetilCukup" text="0 (0%)" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #3b5cee;" />
+                                    <Label text="● Cukup (Bobot 2)" style="-fx-text-fill: #174C78; -fx-font-size: 12px; -fx-font-weight: 600;" HBox.hgrow="ALWAYS" />
+                                    <Label fx:id="lblDetilCukup" text="0 (0%)" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #174C78;" />
                                 </HBox>
                                 <ProgressBar fx:id="progressCukup" progress="0.0" maxWidth="Infinity" styleClass="metric-progress-bar, progress-bar-blue" />
                             </VBox>
@@ -244,7 +244,7 @@
                             <Label fx:id="lblFeaturedTanggal" text="20 Okt 2026" style="-fx-text-fill: #dbeafe; -fx-font-size: 11px; -fx-font-weight: bold;" />
                         </HBox>
                         <Label fx:id="lblFeaturedKegiatan" text="Pembersihan Jamur &amp; Konsolidasi" style="-fx-text-fill: #ffffff; -fx-font-weight: bold; -fx-font-size: 14px;" wrapText="true" />
-                        <Label fx:id="lblFeaturedKoleksi" text="Koleksi Target: Kitab Kuno Pegon" style="-fx-text-fill: #bfdbfe; -fx-font-size: 12px;" wrapText="true" />
+                        <Label fx:id="lblFeaturedKoleksi" text="Koleksi Target: Kitab Kuno Pegon" style="-fx-text-fill: #c8dcee; -fx-font-size: 12px;" wrapText="true" />
                     </VBox>
 
                     <!-- Upcoming List -->

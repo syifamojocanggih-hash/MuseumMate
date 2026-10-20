@@ -2,6 +2,7 @@ com\museummate\dao\KoleksiDAO$1.class
 com\museummate\controller\PenggunaController.class
 com\museummate\service\LaporanService.class
 com\museummate\model\Naskah.class
+com\museummate\controller\MainLayoutController.class
 com\museummate\model\KondisiKoleksi.class
 com\museummate\controller\KoleksiController$1.class
 com\museummate\dao\PenggunaDAO.class

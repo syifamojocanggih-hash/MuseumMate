@@ -15,7 +15,7 @@
             <!-- Brand Header -->
             <VBox spacing="3" style="-fx-padding: 0 0 18px 0;">
                 <Label text="MuseumMate" styleClass="sidebar-brand-title" />
-                <Label text="Museum Surabaya (Gedung Siola)" styleClass="sidebar-brand-subtitle" style="-fx-text-fill: #38bdf8; -fx-font-size: 11px; -fx-font-weight: bold;" />
+                <Label text="Museum Surabaya (Gedung Siola)" styleClass="sidebar-brand-subtitle" style="-fx-text-fill: #c8dcee; -fx-font-size: 11px; -fx-font-weight: bold;" />
             </VBox>
 
             <!-- User Session Card -->

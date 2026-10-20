@@ -318,7 +318,7 @@ public class DashboardController {
             topRow.setAlignment(Pos.CENTER_LEFT);
 
             Label lblTgl = new Label(j.getTanggalRencana() != null ? DateUtil.formatIndonesian(j.getTanggalRencana()) : "-");
-            lblTgl.setStyle("-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #3b5cee;");
+            lblTgl.setStyle("-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #174C78;");
 
             Region spacer = new Region();
             HBox.setHgrow(spacer, Priority.ALWAYS);

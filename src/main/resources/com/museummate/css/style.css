@@ -80,13 +80,13 @@
 }
 
 /* ==========================================================================
-   Sidebar Navigation (Vibrant Royal Indigo Theme inspired by modern clean UI)
+   Sidebar Navigation (Deep Slate Blue Theme #174C78)
    ========================================================================== */
 .sidebar {
-    -fx-background-color: linear-gradient(to bottom, #3b5cee, #4361ee);
+    -fx-background-color: linear-gradient(to bottom, #174C78, #113A5C);
     -fx-pref-width: 255px;
     -fx-padding: 24px 16px;
-    -fx-border-color: #3552d0;
+    -fx-border-color: #103554;
     -fx-border-width: 0 1px 0 0;
 }
 
@@ -98,7 +98,7 @@
 }
 
 .sidebar-brand-subtitle {
-    -fx-text-fill: #dbeafe;
+    -fx-text-fill: #c8dcee;
     -fx-font-size: 11px;
     -fx-font-weight: 600;
     -fx-padding: 2px 0 16px 0;
@@ -121,7 +121,7 @@
 }
 
 .user-role-badge {
-    -fx-text-fill: #bfdbfe;
+    -fx-text-fill: #c8dcee;
     -fx-font-size: 11px;
     -fx-font-weight: bold;
 }
@@ -129,7 +129,7 @@
 /* Nav Buttons */
 .nav-button {
     -fx-background-color: transparent;
-    -fx-text-fill: #e0e7ff;
+    -fx-text-fill: #e5eff8;
     -fx-alignment: BASELINE_LEFT;
     -fx-font-size: 13px;
     -fx-padding: 11px 16px;
@@ -145,7 +145,7 @@
 
 .nav-button.active {
     -fx-background-color: #ffffff;
-    -fx-text-fill: #3b5cee;
+    -fx-text-fill: #174C78;
     -fx-font-weight: bold;
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.08), 10, 0, 0, 3);
 }
@@ -176,8 +176,8 @@
 
 .search-box:focused-within {
     -fx-background-color: #ffffff;
-    -fx-border-color: #3b5cee;
-    -fx-effect: dropshadow(gaussian, rgba(59, 92, 238, 0.18), 8, 0, 0, 2);
+    -fx-border-color: #174C78;
+    -fx-effect: dropshadow(gaussian, rgba(23, 76, 120, 0.20), 8, 0, 0, 2);
 }
 
 .search-input {
@@ -223,7 +223,7 @@
 }
 
 .avatar-circle {
-    -fx-background-color: #3b5cee;
+    -fx-background-color: #174C78;
     -fx-background-radius: 20px;
     -fx-min-width: 34px;
     -fx-max-width: 34px;
@@ -247,7 +247,7 @@
 .header-user-role {
     -fx-font-size: 10px;
     -fx-font-weight: 700;
-    -fx-text-fill: #3b5cee;
+    -fx-text-fill: #174C78;
 }
 
 .header-bar {
@@ -342,9 +342,9 @@
 }
 
 .hero-visual-card {
-    -fx-background-color: linear-gradient(to bottom right, #eff6ff, #dbeafe);
+    -fx-background-color: linear-gradient(to bottom right, #f0f5fa, #dce8f2);
     -fx-background-radius: 14px;
-    -fx-border-color: #bfdbfe;
+    -fx-border-color: #b8d2e8;
     -fx-border-radius: 14px;
     -fx-border-width: 1px;
     -fx-padding: 14px 18px;
@@ -352,10 +352,10 @@
 
 /* Agenda & Schedule (Right Column) */
 .agenda-featured-card {
-    -fx-background-color: linear-gradient(to bottom right, #3b5cee, #4f46e5);
+    -fx-background-color: linear-gradient(to bottom right, #174C78, #113A5C);
     -fx-background-radius: 14px;
     -fx-padding: 16px 18px;
-    -fx-effect: dropshadow(gaussian, rgba(59, 92, 238, 0.25), 14, 0, 0, 3);
+    -fx-effect: dropshadow(gaussian, rgba(23, 76, 120, 0.25), 14, 0, 0, 3);
 }
 
 .agenda-item-card {
@@ -385,7 +385,7 @@
 }
 
 .progress-bar-blue > .bar {
-    -fx-background-color: #3b5cee;
+    -fx-background-color: #174C78;
     -fx-background-radius: 6px;
 }
 
@@ -405,25 +405,25 @@
 }
 
 /* ==========================================================================
-   Buttons (Modern Sleek Sapphire Standard)
+   Buttons (Deep Slate Blue Standard #174C78)
    ========================================================================== */
 .btn-primary {
-    -fx-background-color: #2563eb;
+    -fx-background-color: #174C78;
     -fx-text-fill: #ffffff;
     -fx-font-weight: bold;
     -fx-padding: 9px 18px;
     -fx-background-radius: 8px;
     -fx-cursor: hand;
-    -fx-effect: dropshadow(three-pass-box, rgba(37, 99, 235, 0.25), 6, 0, 0, 1);
+    -fx-effect: dropshadow(three-pass-box, rgba(23, 76, 120, 0.25), 6, 0, 0, 1);
 }
 
 .btn-primary:hover {
-    -fx-background-color: #1d4ed8;
-    -fx-effect: dropshadow(three-pass-box, rgba(29, 78, 216, 0.4), 10, 0, 0, 3);
+    -fx-background-color: #123C5E;
+    -fx-effect: dropshadow(three-pass-box, rgba(18, 60, 94, 0.4), 10, 0, 0, 3);
 }
 
 .btn-primary:pressed {
-    -fx-background-color: #1e40af;
+    -fx-background-color: #0D2C46;
 }
 
 .btn-secondary {
@@ -523,13 +523,13 @@
 }
 
 .table-row-cell:selected {
-    -fx-background-color: #eff6ff;
-    -fx-text-fill: #1e3a8a;
-    -fx-border-color: transparent transparent #bfdbfe transparent;
+    -fx-background-color: #eaf1f7;
+    -fx-text-fill: #174C78;
+    -fx-border-color: transparent transparent #b8d2e8 transparent;
 }
 
 .table-row-cell:selected .text {
-    -fx-fill: #1e3a8a;
+    -fx-fill: #174C78;
     -fx-font-weight: 500;
 }
 
@@ -553,8 +553,8 @@
 }
 
 .text-field:focused, .password-field:focused, .combo-box:focused, .date-picker:focused {
-    -fx-border-color: #2563eb;
-    -fx-effect: dropshadow(three-pass-box, rgba(37, 99, 235, 0.22), 6, 0, 0, 0);
+    -fx-border-color: #174C78;
+    -fx-effect: dropshadow(three-pass-box, rgba(23, 76, 120, 0.22), 6, 0, 0, 0);
 }
 
 .combo-box .list-cell {
@@ -600,9 +600,9 @@
 }
 
 .badge-sedang {
-    -fx-background-color: #dbeafe;
-    -fx-text-fill: #1e40af;
-    -fx-border-color: #93c5fd;
+    -fx-background-color: #eaf1f7;
+    -fx-text-fill: #174C78;
+    -fx-border-color: #b8d2e8;
     -fx-border-radius: 14px;
     -fx-background-radius: 14px;
     -fx-padding: 4px 10px;
@@ -644,9 +644,9 @@
 }
 
 .badge-rencana {
-    -fx-background-color: #dbeafe;
-    -fx-text-fill: #1e40af;
-    -fx-border-color: #93c5fd;
+    -fx-background-color: #eaf1f7;
+    -fx-text-fill: #174C78;
+    -fx-border-color: #b8d2e8;
     -fx-border-radius: 14px;
     -fx-background-radius: 14px;
     -fx-padding: 4px 10px;
@@ -669,12 +669,12 @@
    Formula Information Banner (Clean Royal Slate)
    ========================================================================== */
 .formula-banner {
-    -fx-background-color: #eff6ff;
-    -fx-border-color: #bfdbfe;
+    -fx-background-color: #f0f5fa;
+    -fx-border-color: #b8d2e8;
     -fx-border-radius: 10px;
     -fx-background-radius: 10px;
     -fx-padding: 14px 18px;
-    -fx-effect: dropshadow(gaussian, rgba(37, 99, 235, 0.05), 10, 0, 0, 2);
+    -fx-effect: dropshadow(gaussian, rgba(23, 76, 120, 0.05), 10, 0, 0, 2);
 }
 
 /* ==========================================================================
@@ -692,9 +692,9 @@
 }
 
 .badge-ubah {
-    -fx-background-color: #eff6ff;
-    -fx-text-fill: #1e40af;
-    -fx-border-color: #bfdbfe;
+    -fx-background-color: #eaf1f7;
+    -fx-text-fill: #174C78;
+    -fx-border-color: #b8d2e8;
     -fx-border-radius: 14px;
     -fx-background-radius: 14px;
     -fx-padding: 3px 10px;
@@ -791,7 +791,7 @@
     -fx-font-family: "Segoe UI", "Inter", sans-serif;
     -fx-font-size: 28px;
     -fx-font-weight: 900;
-    -fx-text-fill: linear-gradient(to right, #0284c7 0%, #2563eb 50%, #4f46e5 100%);
+    -fx-text-fill: #174C78;
 }
 
 .login-brand-sub {
@@ -802,9 +802,9 @@
 
 .login-brand-tag {
     -fx-font-size: 11px;
-    -fx-text-fill: #0284c7;
+    -fx-text-fill: #174C78;
     -fx-font-weight: bold;
-    -fx-background-color: #e0f2fe;
+    -fx-background-color: #eaf1f7;
     -fx-padding: 3px 8px;
     -fx-background-radius: 6px;
 }
@@ -841,8 +841,8 @@
 }
 
 .login-input-box.focused {
-    -fx-border-color: #2563eb;
-    -fx-effect: dropshadow(three-pass-box, rgba(37, 99, 235, 0.20), 8, 0, 0, 0);
+    -fx-border-color: #174C78;
+    -fx-effect: dropshadow(three-pass-box, rgba(23, 76, 120, 0.20), 8, 0, 0, 0);
 }
 
 .login-input-icon {
@@ -879,23 +879,23 @@
 }
 
 .login-submit-btn {
-    -fx-background-color: #2563eb;
+    -fx-background-color: #174C78;
     -fx-text-fill: #ffffff;
     -fx-font-size: 14px;
     -fx-font-weight: bold;
     -fx-padding: 12px 20px;
     -fx-background-radius: 9px;
     -fx-cursor: hand;
-    -fx-effect: dropshadow(three-pass-box, rgba(37, 99, 235, 0.35), 10, 0, 0, 2);
+    -fx-effect: dropshadow(three-pass-box, rgba(23, 76, 120, 0.35), 10, 0, 0, 2);
 }
 
 .login-submit-btn:hover {
-    -fx-background-color: #1d4ed8;
-    -fx-effect: dropshadow(three-pass-box, rgba(29, 78, 216, 0.45), 14, 0, 0, 3);
+    -fx-background-color: #123C5E;
+    -fx-effect: dropshadow(three-pass-box, rgba(18, 60, 94, 0.45), 14, 0, 0, 3);
 }
 
 .login-submit-btn:pressed {
-    -fx-background-color: #1e40af;
+    -fx-background-color: #0D2C46;
 }
 
 .login-demo-btn {
@@ -910,8 +910,8 @@
 }
 
 .login-demo-btn:hover {
-    -fx-background-color: #eff6ff;
-    -fx-border-color: #bfdbfe;
+    -fx-background-color: #f0f5fa;
+    -fx-border-color: #b8d2e8;
 }
 
 /* Right Panel: Museum Visual */

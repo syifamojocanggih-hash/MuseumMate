@@ -32,7 +32,7 @@
             <!-- Heritage Headline & Timeline Description -->
             <VBox spacing="8" maxWidth="430.0">
                 <Label text="GALERI TIMELINE &amp; SEJARAH KOTA"
-                       style="-fx-font-size: 11.5px; -fx-text-fill: #38bdf8; -fx-font-weight: 800; -fx-letter-spacing: 1px;" />
+                       style="-fx-font-size: 11.5px; -fx-text-fill: #7EAED4; -fx-font-weight: 800; -fx-letter-spacing: 1px;" />
 
                 <Label text="Menjaga Jejak Peradaban&#10;Sejak Abad Ke-10"
                        styleClass="login-visual-headline" />
@@ -71,7 +71,7 @@
                         <Label text="Sistem Manajemen Koleksi &amp; Konservasi Cagar Budaya"
                                styleClass="login-brand-sub" />
                         <HBox prefHeight="3.0" prefWidth="64.0" maxWidth="64.0"
-                              style="-fx-background-color: linear-gradient(to right, #0284c7, #2563eb, #4f46e5); -fx-background-radius: 2px;">
+                              style="-fx-background-color: #174C78; -fx-background-radius: 2px;">
                             <VBox.margin>
                                 <Insets top="4" bottom="10" />
                             </VBox.margin>
@@ -140,7 +140,7 @@
                                 styleClass="login-demo-btn">
                             <graphic>
                                 <VBox spacing="2">
-                                    <Label text="Admin" style="-fx-font-weight: bold; -fx-font-size: 12px; -fx-text-fill: #1d4ed8;" />
+                                    <Label text="Admin" style="-fx-font-weight: bold; -fx-font-size: 12px; -fx-text-fill: #174C78;" />
                                     <Label text="admin / admin123" style="-fx-font-size: 11px; -fx-text-fill: #64748b;" />
                                 </VBox>
                             </graphic>
