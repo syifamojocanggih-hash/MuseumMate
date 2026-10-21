@@ -1,3 +1,27 @@
+# Java & Maven Build Artifacts
+target/
+*.class
+
+# Package Files
+*.jar
+*.war
+*.ear
+
+# Java VM crash logs
+hs_err_pid*
+replay_pid*
+
+# IDEs and Editors
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/
+.settings/
+.classpath
+.project
+bin/
+
 # Logs
 logs
 *.log
