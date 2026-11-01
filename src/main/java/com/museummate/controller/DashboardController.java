@@ -38,6 +38,18 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.ArrayList;
+import java.io.InputStream;
+import javafx.animation.Animation;
+import javafx.animation.FadeTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.ParallelTransition;
+import javafx.animation.Timeline;
+import javafx.animation.TranslateTransition;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 
 /**
  * Controller untuk Dashboard operasional (PRD F7, F8, F9).
@@ -47,6 +59,17 @@ import java.util.List;
 public class DashboardController {
 
     @FXML private ScrollPane rootPane;
+
+    // Welcome Hero Banner Carousel (Figma Frame 489)
+    @FXML private StackPane heroBannerPane;
+    @FXML private StackPane heroImageContainer;
+    @FXML private ImageView heroImgCurrent;
+    @FXML private ImageView heroImgNext;
+
+    private final List<Image> heroSlideImages = new ArrayList<>();
+    private int currentHeroSlide = 0;
+    private boolean isHeroAnimating = false;
+    private Timeline heroSlideTimeline;
 
     @FXML private Label lblHeroGreetingTitle;
     @FXML private Label lblHeroGreetingSub;
@@ -103,6 +126,7 @@ public class DashboardController {
     public void initialize() {
         setupTableColumns();
         refreshDashboard();
+        initHeroCarousel();
     }
 
     private void setupTableColumns() {
@@ -402,6 +426,125 @@ public class DashboardController {
             }
         } catch (Exception e) {
             AlertHelper.showError("Ekspor Gagal", "Gagal menyimpan laporan PDF: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Inisialisasi carousel foto pameran Siola pada Hero Banner (Figma Frame 489).
+     */
+    private void initHeroCarousel() {
+        if (heroBannerPane == null) return;
+
+        setupHeroBannerClip();
+        loadHeroImages();
+
+        if (heroImgCurrent != null && heroImgNext != null) {
+            heroImgCurrent.fitHeightProperty().bind(heroBannerPane.heightProperty());
+            heroImgNext.fitHeightProperty().bind(heroBannerPane.heightProperty());
+            heroImgCurrent.setPreserveRatio(true);
+            heroImgNext.setPreserveRatio(true);
+        }
+
+        if (!heroSlideImages.isEmpty() && heroImgCurrent != null) {
+            heroImgCurrent.setImage(heroSlideImages.get(0));
+            heroImgCurrent.setOpacity(1.0);
+            heroImgCurrent.setTranslateX(0.0);
+        }
+
+        // Auto slide setiap 4 detik
+        heroSlideTimeline = new Timeline(new KeyFrame(Duration.seconds(4), e -> handleNextHeroSlide()));
+        heroSlideTimeline.setCycleCount(Animation.INDEFINITE);
+        heroSlideTimeline.play();
+
+        heroBannerPane.setOnMouseEntered(e -> {
+            if (heroSlideTimeline != null) heroSlideTimeline.pause();
+        });
+        heroBannerPane.setOnMouseExited(e -> {
+            if (heroSlideTimeline != null) heroSlideTimeline.play();
+        });
+    }
+
+    private void setupHeroBannerClip() {
+        if (heroBannerPane == null) return;
+        Rectangle clip = new Rectangle(1400, 175);
+        clip.setArcWidth(36);
+        clip.setArcHeight(36);
+        heroBannerPane.layoutBoundsProperty().addListener((obs, oldBounds, newBounds) -> {
+            if (newBounds.getWidth() > 0 && newBounds.getHeight() > 0) {
+                clip.setWidth(newBounds.getWidth());
+                clip.setHeight(newBounds.getHeight());
+            }
+        });
+        heroBannerPane.setClip(clip);
+    }
+
+    private void loadHeroImages() {
+        heroSlideImages.clear();
+        String[] paths = {
+            "/com/museummate/images/siola_banner_1.jpg",
+            "/com/museummate/images/siola_banner_2.jpg",
+            "/com/museummate/images/siola_banner_3.jpg"
+        };
+        for (String p : paths) {
+            try {
+                java.net.URL url = getClass().getResource(p);
+                if (url != null) {
+                    heroSlideImages.add(new Image(url.toExternalForm(), false));
+                } else {
+                    System.err.println("Resource pameran Siola tidak ditemukan: " + p);
+                }
+            } catch (Exception e) {
+                System.err.println("Gagal memuat slide hero: " + p + " : " + e.getMessage());
+            }
+        }
+    }
+
+    private void handleNextHeroSlide() {
+        if (isHeroAnimating || heroSlideImages.isEmpty()) return;
+        int next = (currentHeroSlide + 1) % heroSlideImages.size();
+        goToHeroSlide(next);
+    }
+
+    private void goToHeroSlide(int targetIdx) {
+        if (isHeroAnimating || heroSlideImages.isEmpty() || heroImgCurrent == null || heroImgNext == null) return;
+        isHeroAnimating = true;
+
+        Image nextImage = heroSlideImages.get(targetIdx);
+        heroImgNext.setImage(nextImage);
+        heroImgNext.setTranslateX(50.0);
+        heroImgNext.setOpacity(0.0);
+
+        TranslateTransition ttCurr = new TranslateTransition(Duration.millis(420), heroImgCurrent);
+        ttCurr.setToX(-50.0);
+
+        FadeTransition ftCurr = new FadeTransition(Duration.millis(420), heroImgCurrent);
+        ftCurr.setToValue(0.0);
+
+        TranslateTransition ttNext = new TranslateTransition(Duration.millis(420), heroImgNext);
+        ttNext.setToX(0.0);
+
+        FadeTransition ftNext = new FadeTransition(Duration.millis(420), heroImgNext);
+        ftNext.setToValue(1.0);
+
+        ParallelTransition pt = new ParallelTransition(ttCurr, ftCurr, ttNext, ftNext);
+        pt.setOnFinished(e -> {
+            heroImgCurrent.setImage(nextImage);
+            heroImgCurrent.setTranslateX(0.0);
+            heroImgCurrent.setOpacity(1.0);
+
+            heroImgNext.setOpacity(0.0);
+            heroImgNext.setTranslateX(0.0);
+
+            currentHeroSlide = targetIdx;
+            isHeroAnimating = false;
+        });
+        pt.play();
+    }
+
+    private void resetHeroTimer() {
+        if (heroSlideTimeline != null) {
+            heroSlideTimeline.stop();
+            heroSlideTimeline.play();
         }
     }
 }
