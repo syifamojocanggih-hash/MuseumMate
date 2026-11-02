@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+<head>
+<meta charset='utf-8'>
+<title>Panduan Presentasi dan Matriks Status PRD MuseumMate</title>
+<style>
+body { font-family: 'Calibri', 'Segoe UI', Arial, sans-serif; font-size: 11pt; line-height: 1.5; color: #1e293b; margin: 20mm; }
+h1 { font-size: 20pt; color: #0f172a; border-bottom: 2pt solid #0284c7; padding-bottom: 6px; margin-top: 0; }
+h2 { font-size: 14pt; color: #0369a1; border-bottom: 1pt solid #cbd5e1; padding-bottom: 4px; margin-top: 18pt; }
+h3 { font-size: 12pt; color: #334155; margin-top: 12pt; }
+table { border-collapse: collapse; width: 100%; margin-top: 10pt; margin-bottom: 12pt; }
+th, td { border: 1pt solid #cbd5e1; padding: 6pt 8pt; text-align: left; vertical-align: top; }
+th { background-color: #f1f5f9; font-weight: bold; color: #0f172a; }
+tr:nth-child(even) { background-color: #f8fafc; }
+.badge-done { color: #166534; font-weight: bold; }
+.badge-info { color: #0369a1; font-weight: bold; }
+blockquote { border-left: 3pt solid #0284c7; padding-left: 10pt; margin-left: 0; color: #475569; background-color: #f8fafc; padding-top: 6pt; padding-bottom: 6pt; }
+code { font-family: 'Consolas', 'Courier New', monospace; background-color: #f1f5f9; padding: 2pt 4pt; border-radius: 3pt; font-size: 10pt; }
+.highlight-box { background-color: #f0fdf4; border: 1pt solid #bbf7d0; padding: 10pt; border-radius: 4pt; margin: 10pt 0; }
+</style>
+</head>
+<body>
+<h1>🏛️ PANDUAN MASTER PRESENTASI &amp; MATRIKS STATUS PRD MUSEUMMATE</h1>
+<p style='font-size: 13pt; font-weight: bold; color: #0369a1;'>Sistem Manajemen Koleksi dan Konservasi Museum dengan Prioritas Perawatan Otomatis</p>
+<div class='highlight-box'>
+<strong>Status Evaluasi Kesiapan UAS: ~95%</strong><br>
+Seluruh Kategori <em>Must Have</em> (F1, F2, F3, F4, F6) dan <em>Should Have</em> (F5, F7, F8, F9, F10) telah 100% tuntas dan teruji secara otomatis (19 Unit Test lulus).
+</div>
+
+<blockquote>
+<strong>Mata Kuliah</strong>: Praktikum Pemrograman Berbasis Objek (PBO) — D3 Teknik Informatika PSDKU Lamongan, PENS (2026)<br>
+<strong>Dosen Pengampu</strong>: Yunia Ikawati, S.ST., M.Tr.Kom.<br>
+<strong>Team 8</strong>: Amanda Eka Faraghita (3125521031), Ahmad Syifa'ul Falakhul Khayyi (3125521037), Aimatus Sholiha (3125521045)
+</blockquote>
+
+<h2>1. Ringkasan Eksekutif &amp; Latar Belakang Masalah</h2>
+<ul>
+<li><strong>Lokus Riset Konkret</strong>: Museum Surabaya, Lantai 1 Gedung Siola (Jl. Tunjungan No. 1–3, Surabaya) di bawah UPTD Pengelolaan Museum dan Gedung Seni Budaya Disbudporapar Kota Surabaya.</li>
+<li><strong>Basis Data Terintegrasi</strong>: Mengelola <strong>336 data koleksi riil</strong> terverifikasi (Brankas Baja 1877, Becak Sif Siang/Malam, Angguna, Mobil Damkar 1972, hingga Naskah Resolusi Jihad).</li>
+<li><strong>Masalah Konvensional</strong>:
+  <ol>
+    <li>Pencatatan inventaris masih terpisah-pisah di spreadsheet atau buku besar manual.</li>
+    <li>Kebutaan prioritas (<em>priority blindness</em>): sumber daya konservator terbatas, tidak ada alat bantu objektif menentukan benda mana yang harus diselamatkan terlebih dahulu.</li>
+    <li>Jadwal perawatan preventif kerap terlewat (<em>overdue</em>).</li>
+    <li>Ketiadaan jejak audit digital (<em>audit trail</em>) untuk mengawasi akuntabilitas pemeliharaan.</li>
+  </ol>
+</li>
+</ul>
+
+<h2>2. Solusi &amp; Rumus Prioritas Perawatan Otomatis (PRD Bagian 6.4)</h2>
+<p>Skor dihitung secara murni dinamis (<em>on-the-fly</em>) setiap kali antrean dibuka tanpa disimpan statis di basis data agar tidak usang:</p>
+<p style='text-align: center; font-size: 12pt; background-color: #f1f5f9; padding: 10pt; border: 1pt solid #cbd5e1;'>
+<strong>Skor Prioritas = (Bobot Kondisi &times; 10) + ((Hari sejak Pemeriksaan Terakhir) / 30) &times; Faktor Kategori</strong>
+</p>
+<ul>
+<li><strong>Bobot Kondisi Fisik</strong>: Baik = 1, Cukup = 2, Rusak Ringan = 3, Rusak Berat = 4</li>
+<li><strong>Faktor Kerentanan Kategori</strong>: Naskah = 1.5, Lukisan = 1.2, Artefak = 1.0, Fosil = 0.8</li>
+<li><strong>Acuan Jika Belum Diperiksa</strong>: Dihitung dari tanggal diterima koleksi.</li>
+<li><strong>Klasifikasi Urgensi</strong>: Kritis (&ge; 40), Tinggi (30–39.9), Sedang (20–29.9), Rendah (&lt; 20).</li>
+</ul>
+
+<h2>3. Matriks Perbandingan: Status PRD vs Implementasi Aktual</h2>
+<table>
+<thead>
+<tr>
+  <th style='width: 25%;'>Fitur / Kebutuhan PRD</th>
+  <th style='width: 15%;'>Kategori PRD</th>
+  <th style='width: 18%;'>Status Aktual</th>
+  <th style='width: 42%;'>Bukti Implementasi &amp; Catatan Teknis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>F1 — Login &amp; Multi-Role</strong></td>
+  <td>Must Have</td>
+  <td><span class='badge-done'>✅ 100% Selesai</span></td>
+  <td><code>AuthService.java</code>. Login Admin &amp; Konservator dengan enkripsi satu arah BCrypt.</td>
+</tr>
+<tr>
+  <td><strong>Dua Peran (Admin vs Konservator)</strong></td>
+  <td>Must Have</td>
+  <td><span class='badge-done'>✅ 100% Selesai</span></td>
+  <td>Dibatasi di 3 controller: <code>MainLayoutController</code>, <code>KoleksiController</code>, <code>JadwalController</code>. Tombol manipulasi data disembunyikan untuk Konservator.</td>
+</tr>
+<tr>
+  <td><strong>F2 — Manajemen Koleksi (CRUD)</strong></td>
+  <td>Must Have</td>
+  <td><span class='badge-done'>✅ 100% Selesai</span></td>
+  <td><code>KoleksiDAO.java</code> &amp; <code>KoleksiController.java</code>. CRUD lengkap dengan real-time filter search.</td>
+</tr>
+<tr>
+  <td><strong>Validasi Kode Registrasi Unik</strong></td>
+  <td>Must Have</td>
+  <td><span class='badge-done'>✅ 100% Selesai</span></td>
+  <td>Validasi 3 lapis: DB UNIQUE constraint, <code>KoleksiService.java</code>, dan pesan error ramah di Form UI.</td>
+</tr>
+<tr>
+  <td><strong>Konfirmasi Hapus Koleksi Ber-riwayat</strong></td>
+  <td>Must Have</td>
+  <td><span class='badge-done'>✅ 100% Selesai</span></td>
+  <td><code>KoleksiController.java</code> baris 186-201. Menghitung jumlah riwayat; jika ada, memunculkan konfirmasi khusus.</td>
+</tr>
+<tr>
+  <td><strong>F3 — Pengelompokan Kategori OOP</strong></td>
+  <td>Must Have</td>
+  <td><span class='badge-done'>✅ 100% Selesai</span></td>
+  <td>Formulir dinamis berubah otomatis sesuai kategori (Lukisan, Artefak, Naskah, Fosil).</td>
+</tr>
+<tr>
+  <td><strong>F4 — Pencatatan Pemeriksaan &amp; Riwayat</strong></td>
+  <td>Must Have</td>
+  <td><span class='badge-done'>✅ 100% Selesai</span></td>
+  <td><code>CatatPemeriksaanController.java</code>. Tiap pemeriksaan baru otomatis memperbarui kondisi terkini master koleksi.</td>
+</tr>
+<tr>
+  <td><strong>Validasi Tanggal Tidak di Masa Depan</strong></td>
+  <td>Must Have</td>
+  <td><span class='badge-done'>✅ 100% Selesai</span></td>
+  <td>Divalidasi di UI, Service, dan Model entity menggunakan <code>isAfter(LocalDate.now())</code>.</td>
+</tr>
+<tr>
+  <td><strong>F5 — Jadwal Perawatan Konservasi</strong></td>
+  <td>Should Have</td>
+  <td><span class='badge-done'>✅ 100% Selesai</span></td>
+  <td><code>JadwalController.java</code>. Pemantauan agenda (DIRENCANAKAN, SELESAI, DIBATALKAN).</td>
+</tr>
+<tr>
+  <td><strong>Update Status Jadwal Manual</strong></td>
+  <td>Should Have</td>
+  <td><span class='badge-done'>✅ 100% Selesai</span></td>
+  <td>Tombol <em>Tandai Selesai</em> dan <em>Batalkan Jadwal</em> berfungsi penuh dan mencatat ke audit log.</td>
+</tr>
+<tr>
+  <td><strong>F6 — Prioritas Perawatan Otomatis</strong></td>
+  <td>Must Have</td>
+  <td><span class='badge-done'>✅ 100% Selesai</span></td>
+  <td><code>PrioritasService.java</code>. Kalkulasi dinamis sesuai rumus PRD 6.4 dengan badge warna urgensi.</td>
+</tr>
+<tr>
+  <td><strong>F7 — Dashboard &amp; Metrik Statistik</strong></td>
+  <td>Should Have</td>
+  <td><span class='badge-done'>✅ 100% Selesai</span></td>
+  <td><code>DashboardController.java</code>. 4 kartu ringkasan, hero banner slider 4 detik, dan quick agenda.</td>
+</tr>
+<tr>
+  <td><strong>F8 — Notifikasi &amp; Peringatan Dini</strong></td>
+  <td>Should Have</td>
+  <td><span class='badge-done'>✅ 100% Selesai</span></td>
+  <td><code>NotifikasiController.java</code>. Deteksi otomatis jadwal overdue dan jadwal 7 hari ke depan.</td>
+</tr>
+<tr>
+  <td><strong>F9 — Grafik Tren Kondisi Koleksi</strong></td>
+  <td>Should Have</td>
+  <td><span class='badge-done'>✅ 100% Selesai</span></td>
+  <td>Visualisasi <code>LineChart</code> JavaFX kondisi fisik per kategori dari waktu ke waktu.</td>
+</tr>
+<tr>
+  <td><strong>F10 — Log Audit Aktivitas Sistem</strong></td>
+  <td>Should Have</td>
+  <td><span class='badge-done'>✅ 100% Selesai</span></td>
+  <td><code>LogAuditController.java</code>. Pencatatan otomatis riwayat penambahan, modifikasi, penghapusan, dan login.</td>
+</tr>
+<tr>
+  <td><strong>Ekspor Laporan Resmi (PDF)</strong></td>
+  <td>Could Have</td>
+  <td><span class='badge-done'>✅ 100% Selesai</span></td>
+  <td><code>LaporanService.java</code> via OpenPDF. Ekspor Laporan Inventaris dan Laporan Prioritas Perawatan.</td>
+</tr>
+<tr>
+  <td><strong>Metrik Pengujian Unit (JUnit 5)</strong></td>
+  <td>Kriteria Uji</td>
+  <td><span class='badge-done'>✅ 100% Selesai</span></td>
+  <td>19 pengujian unit otomatis di <code>src/test/java/</code> lulus 100% (<code>BUILD SUCCESS</code>).</td>
+</tr>
+<tr>
+  <td><strong>Histori Perubahan Skor Prioritas</strong></td>
+  <td>Could Have</td>
+  <td><span class='badge-info'>ℹ️ Ditiadakan</span></td>
+  <td>Keputusan desain: skor dihitung murni real-time agar tidak basi. Digantikan oleh Grafik Tren Kondisi Fisik.</td>
+</tr>
+</tbody>
+</table>
+
+<h2>4. Resolusi Pertanyaan Terbuka PRD (Bagian 11 PRD)</h2>
+<ol>
+  <li><strong>Bobot Kondisi &amp; Faktor Kategori</strong>: Telah difinalkan dan divalidasi keabsahannya melalui 6 unit test di <code>PrioritasRumusTest.java</code>.</li>
+  <li><strong>Ekspor Laporan ke PDF</strong>: <strong>SUDAH DIBUAT</strong> menggunakan pustaka OpenPDF di <code>LaporanService.java</code>.</li>
+  <li><strong>Dua Peran Pengguna (Admin vs Konservator)</strong>: <strong>DIPERTAHANKAN PENUH</strong> dengan pemisahan hak akses nyata (RBAC).</li>
+  <li><strong>Akun Bawaan Demo</strong>: Disediakan akun <code>admin/admin123</code> dan <code>konservator/konservator123</code> dengan 336 koleksi konkret Gedung Siola.</li>
+</ol>
+
+<h2>5. Panduan Skenario Demo Presentasi UAS</h2>
+<ol>
+  <li><strong>Langkah 1 (Login &amp; RBAC)</strong>: Masuk sebagai <code>konservator</code> (menu akun &amp; audit tersembunyi, tombol edit koleksi tersembunyi). Lalu login ulang sebagai <code>admin</code> (akses penuh terbuka).</li>
+  <li><strong>Langkah 2 (Dashboard &amp; Carousel)</strong>: Tunjukkan hero banner berganti tiap 4 detik, 4 metrik ringkasan, grafik tren kondisi, dan icon notifikasi bel.</li>
+  <li><strong>Langkah 3 (Katalog Koleksi &amp; OOP)</strong>: Demonstrasikan pencarian instan dan klik <em>Tambah Koleksi</em> untuk memperlihatkan subform berganti dinamis sesuai kategori (Bukti Abstraksi, Pewarisan, Polimorfisme).</li>
+  <li><strong>Langkah 4 (Prioritas Perawatan &amp; Cetak PDF)</strong>: Buka antrean prioritas otomatis, jelaskan perhitungan rumus dinamis, dan klik <em>Cetak Laporan PDF</em>.</li>
+  <li><strong>Langkah 5 (Pemeriksaan &amp; Jadwal)</strong>: Catat pemeriksaan baru, tunjukkan validasi tanggal masa depan, perlihatkan kondisi master terupdate, lalu buka Jadwal dan klik <em>Tandai Selesai</em>.</li>
+  <li><strong>Langkah 6 (Audit Trail &amp; Unit Test)</strong>: Buka Log Audit untuk memperlihatkan rekaman detik aktivitas, lalu jalankan <code>.\mvnw test</code> di terminal untuk membuktikan 19 unit test sukses (<code>BUILD SUCCESS</code>).</li>
+</ol>
+</body>
+</html>
