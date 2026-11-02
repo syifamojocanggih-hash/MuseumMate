@@ -60,13 +60,14 @@ public class PenggunaDAO {
     }
 
     public boolean save(Pengguna user) throws SQLException {
-        String sql = "INSERT INTO pengguna (username, password_hash, nama_lengkap, peran) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO pengguna (username, password_hash, nama_lengkap, peran, is_aktif) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, user.getUsername());
             ps.setString(2, user.getPasswordHash());
             ps.setString(3, user.getNamaLengkap());
             ps.setString(4, user.getPeran().name());
+            ps.setBoolean(5, user.isAktif());
 
             int affected = ps.executeUpdate();
             if (affected > 0) {
@@ -84,9 +85,9 @@ public class PenggunaDAO {
     public boolean update(Pengguna user, boolean updatePassword) throws SQLException {
         String sql;
         if (updatePassword) {
-            sql = "UPDATE pengguna SET username = ?, password_hash = ?, nama_lengkap = ?, peran = ? WHERE id_pengguna = ?";
+            sql = "UPDATE pengguna SET username = ?, password_hash = ?, nama_lengkap = ?, peran = ?, is_aktif = ? WHERE id_pengguna = ?";
         } else {
-            sql = "UPDATE pengguna SET username = ?, nama_lengkap = ?, peran = ? WHERE id_pengguna = ?";
+            sql = "UPDATE pengguna SET username = ?, nama_lengkap = ?, peran = ?, is_aktif = ? WHERE id_pengguna = ?";
         }
 
         try (Connection conn = DatabaseConnection.getConnection();
@@ -98,8 +99,19 @@ public class PenggunaDAO {
             }
             ps.setString(idx++, user.getNamaLengkap());
             ps.setString(idx++, user.getPeran().name());
+            ps.setBoolean(idx++, user.isAktif());
             ps.setInt(idx, user.getIdPengguna());
 
+            return ps.executeUpdate() > 0;
+        }
+    }
+
+    public boolean updateStatusAktif(int idPengguna, boolean aktif) throws SQLException {
+        String sql = "UPDATE pengguna SET is_aktif = ? WHERE id_pengguna = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setBoolean(1, aktif);
+            ps.setInt(2, idPengguna);
             return ps.executeUpdate() > 0;
         }
     }
@@ -120,6 +132,11 @@ public class PenggunaDAO {
         p.setPasswordHash(rs.getString("password_hash"));
         p.setNamaLengkap(rs.getString("nama_lengkap"));
         p.setPeran(PeranPengguna.fromString(rs.getString("peran")));
+        try {
+            p.setAktif(rs.getBoolean("is_aktif"));
+        } catch (SQLException ignored) {
+            p.setAktif(true);
+        }
         Timestamp ts = rs.getTimestamp("dibuat_pada");
         if (ts != null) {
             p.setDibuatPada(ts.toLocalDateTime());

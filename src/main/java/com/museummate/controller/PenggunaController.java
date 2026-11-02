@@ -12,12 +12,15 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -37,7 +40,9 @@ public class PenggunaController {
     @FXML private TableColumn<Pengguna, String> colUsername;
     @FXML private TableColumn<Pengguna, String> colNamaLengkap;
     @FXML private TableColumn<Pengguna, String> colPeran;
+    @FXML private TableColumn<Pengguna, String> colStatus;
     @FXML private TableColumn<Pengguna, String> colDibuatPada;
+    @FXML private Button btnToggleStatus;
 
     private final PenggunaDAO penggunaDAO = new PenggunaDAO();
     private final ObservableList<Pengguna> userList = FXCollections.observableArrayList();
@@ -48,7 +53,35 @@ public class PenggunaController {
         colUsername.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getUsername()));
         colNamaLengkap.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getNamaLengkap()));
         colPeran.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getPeran().getLabel()));
+        colStatus.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getStatusLabel()));
+        colStatus.setCellFactory(col -> new TableCell<Pengguna, String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                    setStyle("");
+                } else {
+                    setText(item);
+                    if ("Aktif".equals(item)) {
+                        setStyle("-fx-text-fill: #16a34a; -fx-font-weight: bold; -fx-alignment: CENTER;");
+                    } else {
+                        setStyle("-fx-text-fill: #dc2626; -fx-font-weight: bold; -fx-alignment: CENTER;");
+                    }
+                }
+            }
+        });
         colDibuatPada.setCellValueFactory(c -> new SimpleStringProperty(DateUtil.formatDateTime(c.getValue().getDibuatPada())));
+
+        tablePengguna.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if (btnToggleStatus != null) {
+                if (newVal != null) {
+                    btnToggleStatus.setText(newVal.isAktif() ? "⛔ Nonaktifkan Akun" : "✅ Aktifkan Akun");
+                } else {
+                    btnToggleStatus.setText("🔄 Nonaktifkan / Aktifkan");
+                }
+            }
+        });
 
         tablePengguna.setItems(userList);
         loadDataPengguna();
@@ -113,6 +146,41 @@ public class PenggunaController {
     }
 
     @FXML
+    public void handleToggleStatusPengguna() {
+        Pengguna selected = tablePengguna.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            AlertHelper.showWarning("Peringatan", "Pilih akun yang ingin diubah statusnya.");
+            return;
+        }
+
+        // Cegah menonaktifkan akun sendiri
+        if (SessionManager.getInstance().isLoggedIn() &&
+            SessionManager.getInstance().getCurrentUser().getIdPengguna() == selected.getIdPengguna()) {
+            AlertHelper.showWarning("Operasi Dilarang", "Anda tidak dapat menonaktifkan akun Anda sendiri yang sedang aktif digunakan.");
+            return;
+        }
+
+        boolean baruAktif = !selected.isAktif();
+        String pesan = baruAktif 
+                ? "Apakah Anda yakin ingin mengaktifkan kembali akun '" + selected.getUsername() + "' (" + selected.getNamaLengkap() + ")?"
+                : "Apakah Anda yakin ingin menonaktifkan akun '" + selected.getUsername() + "' (" + selected.getNamaLengkap() + ")?\n" +
+                  "Pengguna ini tidak akan dapat masuk ke sistem sampai diaktifkan kembali oleh Administrator (PRD F1).";
+
+        boolean konfirmasi = AlertHelper.showConfirmation("Konfirmasi Ubah Status Akun", "Status Akun Pengguna", pesan);
+        if (konfirmasi) {
+            try {
+                penggunaDAO.updateStatusAktif(selected.getIdPengguna(), baruAktif);
+                com.museummate.service.LogAktivitasService.catat("UBAH", "pengguna", 
+                        (baruAktif ? "Mengaktifkan kembali" : "Menonaktifkan") + " akun pengguna: " + selected.getUsername() + " (" + selected.getNamaLengkap() + ")");
+                AlertHelper.showInfo("Sukses", "Akun pengguna '" + selected.getUsername() + "' berhasil " + (baruAktif ? "diaktifkan." : "dinonaktifkan."));
+                loadDataPengguna();
+            } catch (SQLException e) {
+                AlertHelper.showError("Gagal Mengubah Status", "Terjadi kesalahan: " + e.getMessage());
+            }
+        }
+    }
+
+    @FXML
     public void handleHapusPengguna() {
         Pengguna selected = tablePengguna.getSelectionModel().getSelectedItem();
         if (selected == null) {
@@ -165,6 +233,9 @@ public class PenggunaController {
         cmbPeran.getItems().addAll(PeranPengguna.values());
         cmbPeran.setValue(toEdit != null ? toEdit.getPeran() : PeranPengguna.KONSERVATOR);
 
+        CheckBox chkAktif = new CheckBox("Akun Aktif (Dapat Login ke Sistem)");
+        chkAktif.setSelected(toEdit != null ? toEdit.isAktif() : true);
+
         grid.add(new Label("Username:"), 0, 0);
         grid.add(txtUsername, 1, 0);
         grid.add(new Label("Nama Lengkap:"), 0, 1);
@@ -173,6 +244,8 @@ public class PenggunaController {
         grid.add(txtPassword, 1, 2);
         grid.add(new Label("Hak Akses / Peran:"), 0, 3);
         grid.add(cmbPeran, 1, 3);
+        grid.add(new Label("Status Akun:"), 0, 4);
+        grid.add(chkAktif, 1, 4);
 
         dialog.getDialogPane().setContent(grid);
 
@@ -191,6 +264,7 @@ public class PenggunaController {
                 target.setUsername(u);
                 target.setNamaLengkap(n);
                 target.setPeran(cmbPeran.getValue());
+                target.setAktif(chkAktif.isSelected());
 
                 if (!p.isEmpty()) {
                     target.setPasswordHash(PasswordUtil.hashPassword(p));

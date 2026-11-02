@@ -49,6 +49,11 @@ public class AuthService {
             throw new IllegalArgumentException("Username atau password salah.");
         }
 
+        // Periksa status keaktifan akun (PRD F1)
+        if (!user.isAktif()) {
+            throw new IllegalArgumentException("Akun Anda telah dinonaktifkan oleh Administrator. Silakan hubungi pihak pengelola.");
+        }
+
         // Simpan sesi aktif
         SessionManager.getInstance().login(user);
         LogAktivitasService.catat("LOGIN", "pengguna", "Pengguna '" + user.getUsername() + "' (" + user.getNamaLengkap() + ") berhasil masuk ke sistem.");

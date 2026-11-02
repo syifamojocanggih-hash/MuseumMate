@@ -11,17 +11,24 @@ public class Pengguna {
     private String passwordHash;
     private String namaLengkap;
     private PeranPengguna peran;
+    private boolean aktif = true;
     private LocalDateTime dibuatPada;
 
     public Pengguna() {
         this.peran = PeranPengguna.KONSERVATOR;
+        this.aktif = true;
     }
 
     public Pengguna(String username, String passwordHash, String namaLengkap, PeranPengguna peran) {
+        this(username, passwordHash, namaLengkap, peran, true);
+    }
+
+    public Pengguna(String username, String passwordHash, String namaLengkap, PeranPengguna peran, boolean aktif) {
         this.username = username;
         this.passwordHash = passwordHash;
         this.namaLengkap = namaLengkap;
         this.peran = peran != null ? peran : PeranPengguna.KONSERVATOR;
+        this.aktif = aktif;
     }
 
     public int getIdPengguna() {
@@ -74,6 +81,18 @@ public class Pengguna {
 
     public boolean isAdmin() {
         return this.peran == PeranPengguna.ADMIN;
+    }
+
+    public boolean isAktif() {
+        return aktif;
+    }
+
+    public void setAktif(boolean aktif) {
+        this.aktif = aktif;
+    }
+
+    public String getStatusLabel() {
+        return aktif ? "Aktif" : "Nonaktif";
     }
 
     @Override
