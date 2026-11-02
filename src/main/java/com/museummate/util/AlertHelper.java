@@ -9,8 +9,6 @@ import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -23,8 +21,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Utilitas modal dialog modern dan terstandarisasi untuk MuseumMate.
- * Menghadirkan tampilan kartu modal elegan dengan ikon badge berwarna,
- * tipografi rapi, dan tombol aksi bergaya kontemporer.
+ * Mengadopsi desain modal card floating dengan concentric glowing badge,
+ * tipografi centered yang bersih, dan tombol aksi terstruktur sesuai UI modern.
  */
 public class AlertHelper {
 
@@ -82,158 +80,225 @@ public class AlertHelper {
             stage.initOwner(owner);
         }
 
-        // Palette & badge icons based on dialog type
+        boolean isDelete = false;
+        if (type == DialogType.CONFIRMATION) {
+            isDelete = (title != null && title.toLowerCase().contains("hapus")) ||
+                       (header != null && header.toLowerCase().contains("hapus")) ||
+                       (message != null && message.toLowerCase().contains("hapus"));
+        }
+
+        // Concentric glow ring colors & symbols based on dialog type
+        String outerColor;
+        String midColor;
+        String solidColor;
         String iconChar;
-        String iconBg;
-        String iconColor;
-        String primaryBtnText = "Mengerti";
-        String primaryBtnColor = "#174C78"; // Royal Navy
+        String primaryBtnColor;
+        String primaryBtnHover;
 
         switch (type) {
             case INFO -> {
-                iconChar = "✓";
-                iconBg = "#dcfce7";   // soft emerald green
-                iconColor = "#16a34a";
+                boolean isSuccess = (title != null && (title.toLowerCase().contains("sukses") || title.toLowerCase().contains("berhasil"))) ||
+                                    (header != null && (header.toLowerCase().contains("sukses") || header.toLowerCase().contains("berhasil")));
+                if (isSuccess) {
+                    outerColor = "rgba(16, 185, 129, 0.15)"; // emerald
+                    midColor = "rgba(16, 185, 129, 0.28)";
+                    solidColor = "#10b981";
+                    iconChar = "✓";
+                    primaryBtnColor = "#10b981";
+                    primaryBtnHover = "#059669";
+                } else {
+                    outerColor = "rgba(37, 99, 235, 0.12)"; // blue
+                    midColor = "rgba(37, 99, 235, 0.24)";
+                    solidColor = "#2563eb";
+                    iconChar = "i";
+                    primaryBtnColor = "#2563eb";
+                    primaryBtnHover = "#1d4ed8";
+                }
             }
             case WARNING -> {
-                iconChar = "⚠";
-                iconBg = "#fef3c7";   // soft amber
-                iconColor = "#d97706";
+                outerColor = "rgba(245, 158, 11, 0.15)"; // amber
+                midColor = "rgba(245, 158, 11, 0.28)";
+                solidColor = "#f59e0b";
+                iconChar = "!";
+                primaryBtnColor = "#f59e0b";
+                primaryBtnHover = "#d97706";
             }
             case ERROR -> {
-                iconChar = "✕";
-                iconBg = "#fee2e2";   // soft red
-                iconColor = "#dc2626";
-                primaryBtnColor = "#dc2626";
+                outerColor = "rgba(239, 68, 68, 0.15)"; // red
+                midColor = "rgba(239, 68, 68, 0.28)";
+                solidColor = "#ef4444";
+                iconChar = "!";
+                primaryBtnColor = "#ef4444";
+                primaryBtnHover = "#dc2626";
             }
             case CONFIRMATION -> {
-                boolean isDelete = (title != null && title.toLowerCase().contains("hapus")) ||
-                                   (header != null && header.toLowerCase().contains("hapus"));
                 if (isDelete) {
-                    iconChar = "🗑";
-                    iconBg = "#fee2e2";
-                    iconColor = "#dc2626";
-                    primaryBtnText = "Ya, Hapus";
+                    outerColor = "rgba(239, 68, 68, 0.15)"; // red
+                    midColor = "rgba(239, 68, 68, 0.28)";
+                    solidColor = "#ef4444";
+                    iconChar = "!";
                     primaryBtnColor = "#dc2626";
+                    primaryBtnHover = "#b91c1c";
                 } else {
+                    outerColor = "rgba(37, 99, 235, 0.12)"; // blue
+                    midColor = "rgba(37, 99, 235, 0.24)";
+                    solidColor = "#2563eb";
                     iconChar = "?";
-                    iconBg = "#e0f2fe";
-                    iconColor = "#0284c7";
-                    primaryBtnText = "Ya, Lanjutkan";
-                    primaryBtnColor = "#174C78";
+                    primaryBtnColor = "#2563eb";
+                    primaryBtnHover = "#1d4ed8";
                 }
             }
             default -> {
+                outerColor = "rgba(37, 99, 235, 0.12)";
+                midColor = "rgba(37, 99, 235, 0.24)";
+                solidColor = "#2563eb";
                 iconChar = "i";
-                iconBg = "#e0f2fe";
-                iconColor = "#0284c7";
+                primaryBtnColor = "#2563eb";
+                primaryBtnHover = "#1d4ed8";
             }
         }
 
-        // Circular Icon Badge
-        Label lblIcon = new Label(iconChar);
-        lblIcon.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: " + iconColor + ";");
-        StackPane iconCircle = new StackPane(lblIcon);
-        iconCircle.setMinSize(44, 44);
-        iconCircle.setMaxSize(44, 44);
-        iconCircle.setStyle("-fx-background-color: " + iconBg + "; -fx-background-radius: 22px;");
+        // 1. Concentric Glowing Badge
+        Label lblSymbol = new Label(iconChar);
+        lblSymbol.setStyle("-fx-font-size: 13px; -fx-font-weight: 900; -fx-text-fill: #ffffff;");
 
-        // Close '✕' Button
-        Button btnClose = new Button("✕");
-        btnClose.setStyle("-fx-background-color: transparent; -fx-text-fill: #94a3b8; -fx-font-size: 13px; -fx-font-weight: bold; -fx-cursor: hand; -fx-padding: 4px 8px; -fx-background-radius: 6px;");
-        btnClose.setOnMouseEntered(e -> btnClose.setStyle("-fx-background-color: #f1f5f9; -fx-text-fill: #334155; -fx-font-size: 13px; -fx-font-weight: bold; -fx-cursor: hand; -fx-padding: 4px 8px; -fx-background-radius: 6px;"));
-        btnClose.setOnMouseExited(e -> btnClose.setStyle("-fx-background-color: transparent; -fx-text-fill: #94a3b8; -fx-font-size: 13px; -fx-font-weight: bold; -fx-cursor: hand; -fx-padding: 4px 8px; -fx-background-radius: 6px;"));
-        btnClose.setOnAction(e -> stage.close());
+        StackPane innerCircle = new StackPane(lblSymbol);
+        innerCircle.setMinSize(28, 28);
+        innerCircle.setMaxSize(28, 28);
+        innerCircle.setStyle("-fx-background-color: " + solidColor + "; -fx-background-radius: 14px;");
 
-        Region topSpacer = new Region();
-        HBox.setHgrow(topSpacer, Priority.ALWAYS);
+        StackPane midCircle = new StackPane(innerCircle);
+        midCircle.setMinSize(40, 40);
+        midCircle.setMaxSize(40, 40);
+        midCircle.setStyle("-fx-background-color: " + midColor + "; -fx-background-radius: 20px;");
 
-        HBox topBar = new HBox(iconCircle, topSpacer, btnClose);
-        topBar.setAlignment(Pos.CENTER_LEFT);
+        StackPane outerCircle = new StackPane(midCircle);
+        outerCircle.setMinSize(52, 52);
+        outerCircle.setMaxSize(52, 52);
+        outerCircle.setStyle("-fx-background-color: " + outerColor + "; -fx-background-radius: 26px;");
 
-        // Text Group
+        // 2. Top Bar: Centered Badge + Top-Right Close Button
+        final AtomicBoolean confirmed = new AtomicBoolean(false);
+
+        Button btnClose = new Button("\u2715");
+        btnClose.setStyle("-fx-background-color: transparent; -fx-text-fill: #1e293b; -fx-font-size: 13px; -fx-font-weight: bold; -fx-cursor: hand; -fx-padding: 3px 6px; -fx-background-radius: 6px;");
+        btnClose.setOnMouseEntered(e -> btnClose.setStyle("-fx-background-color: #f1f5f9; -fx-text-fill: #0f172a; -fx-font-size: 13px; -fx-font-weight: bold; -fx-cursor: hand; -fx-padding: 3px 6px; -fx-background-radius: 6px;"));
+        btnClose.setOnMouseExited(e -> btnClose.setStyle("-fx-background-color: transparent; -fx-text-fill: #1e293b; -fx-font-size: 13px; -fx-font-weight: bold; -fx-cursor: hand; -fx-padding: 3px 6px; -fx-background-radius: 6px;"));
+        btnClose.setOnAction(e -> {
+            confirmed.set(false);
+            stage.close();
+        });
+
+        StackPane topBar = new StackPane(outerCircle, btnClose);
+        StackPane.setAlignment(outerCircle, Pos.CENTER);
+        StackPane.setAlignment(btnClose, Pos.TOP_RIGHT);
+        StackPane.setMargin(btnClose, new Insets(-6, -10, 0, 0));
+
+        // 3. Text Group (Centered Title & Description)
         VBox textGroup = new VBox(6);
-        Label lblTitle = new Label(title != null ? title : "Informasi");
-        lblTitle.setStyle("-fx-font-size: 16px; -fx-font-weight: 800; -fx-text-fill: #0f172a;");
+        textGroup.setAlignment(Pos.CENTER);
+
+        String mainTitle = (header != null && !header.isBlank()) ? header : (title != null ? title : "Pemberitahuan");
+        Label lblTitle = new Label(mainTitle);
+        lblTitle.setStyle("-fx-font-size: 18px; -fx-font-weight: 800; -fx-text-fill: #0f172a; -fx-text-alignment: center;");
+        lblTitle.setWrapText(true);
+        lblTitle.setMaxWidth(340);
+        lblTitle.setAlignment(Pos.CENTER);
         textGroup.getChildren().add(lblTitle);
 
-        if (header != null && !header.isBlank()) {
-            Label lblHeader = new Label(header);
-            lblHeader.setStyle("-fx-font-size: 13px; -fx-font-weight: 700; -fx-text-fill: #334155;");
-            lblHeader.setWrapText(true);
-            lblHeader.setMaxWidth(380);
-            textGroup.getChildren().add(lblHeader);
-        }
-
         if (message != null && !message.isBlank()) {
-            Label lblMsg = new Label(message);
-            lblMsg.setStyle("-fx-font-size: 13px; -fx-text-fill: #475569; -fx-line-spacing: 3px;");
-            lblMsg.setWrapText(true);
-            lblMsg.setMaxWidth(380);
-            textGroup.getChildren().add(lblMsg);
+            Label lblMessage = new Label(message);
+            lblMessage.setStyle("-fx-font-size: 12.5px; -fx-text-fill: #64748b; -fx-text-alignment: center; -fx-line-spacing: 2.5px;");
+            lblMessage.setWrapText(true);
+            lblMessage.setMaxWidth(340);
+            lblMessage.setAlignment(Pos.CENTER);
+            textGroup.getChildren().add(lblMessage);
         }
 
-        // Action Buttons
-        HBox buttonBar = new HBox(10);
-        buttonBar.setAlignment(Pos.CENTER_RIGHT);
+        // 4. Action Buttons
+        HBox buttonBar = new HBox(12);
+        buttonBar.setAlignment(Pos.CENTER);
         buttonBar.setPadding(new Insets(10, 0, 0, 0));
 
-        AtomicBoolean confirmed = new AtomicBoolean(false);
+        String cancelNormal = "-fx-background-color: #ffffff; -fx-border-color: #e2e8f0; -fx-border-width: 1.5px; -fx-border-radius: 12px; -fx-background-radius: 12px; -fx-text-fill: #374151; -fx-font-weight: bold; -fx-font-size: 13px; -fx-cursor: hand;";
+        String cancelHover = "-fx-background-color: #f8fafc; -fx-border-color: #cbd5e1; -fx-border-width: 1.5px; -fx-border-radius: 12px; -fx-background-radius: 12px; -fx-text-fill: #1f2937; -fx-font-weight: bold; -fx-font-size: 13px; -fx-cursor: hand;";
+
+        String primaryNormal = "-fx-background-color: " + primaryBtnColor + "; -fx-text-fill: #ffffff; -fx-font-weight: bold; -fx-font-size: 13px; -fx-background-radius: 12px; -fx-cursor: hand;";
+        String primaryHover = "-fx-background-color: " + primaryBtnHover + "; -fx-text-fill: #ffffff; -fx-font-weight: bold; -fx-font-size: 13px; -fx-background-radius: 12px; -fx-cursor: hand;";
 
         if (type == DialogType.CONFIRMATION) {
             Button btnCancel = new Button("Batal");
-            btnCancel.setStyle("-fx-background-color: #f1f5f9; -fx-text-fill: #475569; -fx-font-weight: 600; -fx-font-size: 12.5px; -fx-padding: 9px 18px; -fx-background-radius: 8px; -fx-border-color: #cbd5e1; -fx-border-radius: 8px; -fx-cursor: hand;");
-            btnCancel.setOnMouseEntered(e -> btnCancel.setStyle("-fx-background-color: #e2e8f0; -fx-text-fill: #1e293b; -fx-font-weight: 600; -fx-font-size: 12.5px; -fx-padding: 9px 18px; -fx-background-radius: 8px; -fx-border-color: #94a3b8; -fx-border-radius: 8px; -fx-cursor: hand;"));
-            btnCancel.setOnMouseExited(e -> btnCancel.setStyle("-fx-background-color: #f1f5f9; -fx-text-fill: #475569; -fx-font-weight: 600; -fx-font-size: 12.5px; -fx-padding: 9px 18px; -fx-background-radius: 8px; -fx-border-color: #cbd5e1; -fx-border-radius: 8px; -fx-cursor: hand;"));
+            btnCancel.setMinWidth(135);
+            btnCancel.setPrefWidth(145);
+            btnCancel.setMinHeight(42);
+            setupHover(btnCancel, cancelNormal, cancelHover);
             btnCancel.setOnAction(e -> {
                 confirmed.set(false);
                 stage.close();
             });
 
-            Button btnConfirm = new Button(primaryBtnText);
-            btnConfirm.setStyle("-fx-background-color: " + primaryBtnColor + "; -fx-text-fill: #ffffff; -fx-font-weight: bold; -fx-font-size: 12.5px; -fx-padding: 9px 20px; -fx-background-radius: 8px; -fx-cursor: hand;");
+            String confirmText = isDelete ? "Ya, Hapus" : "Konfirmasi";
+            Button btnConfirm = new Button(confirmText);
+            btnConfirm.setMinWidth(135);
+            btnConfirm.setPrefWidth(145);
+            btnConfirm.setMinHeight(42);
+            setupHover(btnConfirm, primaryNormal, primaryHover);
             btnConfirm.setOnAction(e -> {
                 confirmed.set(true);
                 stage.close();
             });
 
-            buttonBar.getChildren().addAll(btnCancel, btnConfirm);
+            // If Delete: [ Delete (Red) ] [ Cancel (Outline) ] exactly like top modal in reference
+            // If Other:  [ Cancel (Outline) ] [ Confirm (Blue) ] exactly like bottom modal in reference
+            if (isDelete) {
+                buttonBar.getChildren().addAll(btnConfirm, btnCancel);
+            } else {
+                buttonBar.getChildren().addAll(btnCancel, btnConfirm);
+            }
         } else {
             Button btnOk = new Button("Mengerti");
-            btnOk.setStyle("-fx-background-color: " + primaryBtnColor + "; -fx-text-fill: #ffffff; -fx-font-weight: bold; -fx-font-size: 12.5px; -fx-padding: 9px 24px; -fx-background-radius: 8px; -fx-cursor: hand;");
+            btnOk.setMinWidth(150);
+            btnOk.setPrefWidth(165);
+            btnOk.setMinHeight(42);
+            setupHover(btnOk, primaryNormal, primaryHover);
             btnOk.setOnAction(e -> stage.close());
             buttonBar.getChildren().add(btnOk);
         }
 
-        // Card Container
-        VBox card = new VBox(14);
-        card.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 16px; -fx-border-radius: 16px; -fx-border-color: #e2e8f0; -fx-border-width: 1px; -fx-padding: 24px;");
-        card.setMinWidth(420);
-        card.setMaxWidth(440);
-        card.getChildren().addAll(topBar, textGroup, buttonBar);
+        // 5. Inner Card Container
+        VBox innerCard = new VBox(14);
+        innerCard.setAlignment(Pos.CENTER);
+        innerCard.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 20px; -fx-border-color: #f1f5f9; -fx-border-width: 1px; -fx-border-radius: 20px; -fx-padding: 22px 28px 26px 28px;");
+        innerCard.setMinWidth(380);
+        innerCard.setMaxWidth(410);
+        innerCard.getChildren().addAll(topBar, textGroup, buttonBar);
+
+        // 6. Outer Translucent Rounded Frame (matching the double-pill / soft outer rim in reference image)
+        StackPane outerFrame = new StackPane(innerCard);
+        outerFrame.setStyle("-fx-background-color: rgba(255, 255, 255, 0.75); -fx-background-radius: 28px; -fx-padding: 8px;");
 
         // Soft elevated Drop Shadow
         DropShadow shadow = new DropShadow();
-        shadow.setRadius(24);
-        shadow.setSpread(0.12);
-        shadow.setColor(Color.rgb(0, 0, 0, 0.22));
-        shadow.setOffsetY(8);
-        card.setEffect(shadow);
+        shadow.setRadius(32);
+        shadow.setSpread(0.04);
+        shadow.setColor(Color.rgb(15, 23, 42, 0.16));
+        shadow.setOffsetY(10);
+        outerFrame.setEffect(shadow);
 
         // Allow dragging dialog window smoothly
         final double[] dragDelta = new double[2];
-        card.setOnMousePressed(mouseEvent -> {
+        outerFrame.setOnMousePressed(mouseEvent -> {
             dragDelta[0] = stage.getX() - mouseEvent.getScreenX();
             dragDelta[1] = stage.getY() - mouseEvent.getScreenY();
         });
-        card.setOnMouseDragged(mouseEvent -> {
+        outerFrame.setOnMouseDragged(mouseEvent -> {
             stage.setX(mouseEvent.getScreenX() + dragDelta[0]);
             stage.setY(mouseEvent.getScreenY() + dragDelta[1]);
         });
 
         // Root container with transparent padding for drop shadow
-        StackPane root = new StackPane(card);
-        root.setStyle("-fx-background-color: transparent; -fx-padding: 20px;");
+        StackPane root = new StackPane(outerFrame);
+        root.setStyle("-fx-background-color: transparent; -fx-padding: 24px;");
         root.setAlignment(Pos.CENTER);
 
         Scene scene = new Scene(root);
@@ -265,5 +330,11 @@ public class AlertHelper {
 
         stage.showAndWait();
         return confirmed.get();
+    }
+
+    private static void setupHover(Button btn, String normalStyle, String hoverStyle) {
+        btn.setStyle(normalStyle);
+        btn.setOnMouseEntered(e -> btn.setStyle(hoverStyle));
+        btn.setOnMouseExited(e -> btn.setStyle(normalStyle));
     }
 }
