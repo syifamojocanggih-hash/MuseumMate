@@ -102,7 +102,7 @@
                 <VBox styleClass="card" spacing="12">
                     <HBox alignment="CENTER_LEFT">
                         <VBox spacing="2" HBox.hgrow="ALWAYS">
-                            <Label text="Grafik Tren Kondisi Koleksi dari Waktu ke Waktu (PRD F9 / UC-12)" styleClass="card-title" />
+                            <Label text="Grafik Tren Kondisi Koleksi dari Waktu ke Waktu" styleClass="card-title" />
                             <Label text="Pola perubahan kondisi fisik per kategori berdasarkan riwayat pemeriksaan (1.0 = Baik, 2.0 = Cukup, 3.0 = Rusak Ringan, 4.0 = Rusak Berat). Garis menurun menandakan keberhasilan konservasi."
                                    style="-fx-font-size: 12px; -fx-text-fill: #64748b;" wrapText="true" />
                         </VBox>
@@ -127,7 +127,7 @@
                             <!-- Naskah Kuno -->
                             <VBox spacing="4">
                                 <HBox alignment="CENTER_LEFT">
-                                    <Label text="Naskah Kuno (Faktor 1.5)" style="-fx-text-fill: #1e293b; -fx-font-size: 12px; -fx-font-weight: 600;" HBox.hgrow="ALWAYS" />
+                                    <Label text="Naskah Kuno" style="-fx-text-fill: #1e293b; -fx-font-size: 12px; -fx-font-weight: 600;" maxWidth="Infinity" HBox.hgrow="ALWAYS" />
                                     <Label fx:id="lblNaskahCount" text="0 item (0%)" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #174C78;" />
                                 </HBox>
                                 <ProgressBar fx:id="progressNaskah" progress="0.0" maxWidth="Infinity" styleClass="metric-progress-bar, progress-bar-blue" />
@@ -136,7 +136,7 @@
                             <!-- Lukisan -->
                             <VBox spacing="4">
                                 <HBox alignment="CENTER_LEFT">
-                                    <Label text="Lukisan Tradisional/Modern (Faktor 1.2)" style="-fx-text-fill: #1e293b; -fx-font-size: 12px; -fx-font-weight: 600;" HBox.hgrow="ALWAYS" />
+                                    <Label text="Lukisan Tradisional/Modern" style="-fx-text-fill: #1e293b; -fx-font-size: 12px; -fx-font-weight: 600;" maxWidth="Infinity" HBox.hgrow="ALWAYS" />
                                     <Label fx:id="lblLukisanCount" text="0 item (0%)" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #174C78;" />
                                 </HBox>
                                 <ProgressBar fx:id="progressLukisan" progress="0.0" maxWidth="Infinity" styleClass="metric-progress-bar, progress-bar-blue" />
@@ -145,7 +145,7 @@
                             <!-- Artefak -->
                             <VBox spacing="4">
                                 <HBox alignment="CENTER_LEFT">
-                                    <Label text="Artefak &amp; Senjata Sejarah (Faktor 1.0)" style="-fx-text-fill: #1e293b; -fx-font-size: 12px; -fx-font-weight: 600;" HBox.hgrow="ALWAYS" />
+                                    <Label text="Artefak &amp; Senjata Sejarah" style="-fx-text-fill: #1e293b; -fx-font-size: 12px; -fx-font-weight: 600;" maxWidth="Infinity" HBox.hgrow="ALWAYS" />
                                     <Label fx:id="lblArtefakCount" text="0 item (0%)" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #174C78;" />
                                 </HBox>
                                 <ProgressBar fx:id="progressArtefak" progress="0.0" maxWidth="Infinity" styleClass="metric-progress-bar, progress-bar-blue" />
@@ -154,7 +154,7 @@
                             <!-- Fosil -->
                             <VBox spacing="4">
                                 <HBox alignment="CENTER_LEFT">
-                                    <Label text="Fosil &amp; Paleontologi (Faktor 0.8)" style="-fx-text-fill: #1e293b; -fx-font-size: 12px; -fx-font-weight: 600;" HBox.hgrow="ALWAYS" />
+                                    <Label text="Fosil &amp; Paleontologi" style="-fx-text-fill: #1e293b; -fx-font-size: 12px; -fx-font-weight: 600;" maxWidth="Infinity" HBox.hgrow="ALWAYS" />
                                     <Label fx:id="lblFosilCount" text="0 item (0%)" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #174C78;" />
                                 </HBox>
                                 <ProgressBar fx:id="progressFosil" progress="0.0" maxWidth="Infinity" styleClass="metric-progress-bar, progress-bar-blue" />
@@ -169,7 +169,7 @@
                             <!-- Baik -->
                             <VBox spacing="4">
                                 <HBox alignment="CENTER_LEFT">
-                                    <Label text="● Baik (Bobot 1)" style="-fx-text-fill: #16a34a; -fx-font-size: 12px; -fx-font-weight: 600;" HBox.hgrow="ALWAYS" />
+                                    <Label text="● Kondisi Baik" style="-fx-text-fill: #16a34a; -fx-font-size: 12px; -fx-font-weight: 600;" maxWidth="Infinity" HBox.hgrow="ALWAYS" />
                                     <Label fx:id="lblDetilBaik" text="0 (0%)" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #16a34a;" />
                                 </HBox>
                                 <ProgressBar fx:id="progressBaik" progress="0.0" maxWidth="Infinity" styleClass="metric-progress-bar, progress-bar-green" />
@@ -178,7 +178,7 @@
                             <!-- Cukup -->
                             <VBox spacing="4">
                                 <HBox alignment="CENTER_LEFT">
-                                    <Label text="● Cukup (Bobot 2)" style="-fx-text-fill: #174C78; -fx-font-size: 12px; -fx-font-weight: 600;" HBox.hgrow="ALWAYS" />
+                                    <Label text="● Kondisi Cukup" style="-fx-text-fill: #174C78; -fx-font-size: 12px; -fx-font-weight: 600;" maxWidth="Infinity" HBox.hgrow="ALWAYS" />
                                     <Label fx:id="lblDetilCukup" text="0 (0%)" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #174C78;" />
                                 </HBox>
                                 <ProgressBar fx:id="progressCukup" progress="0.0" maxWidth="Infinity" styleClass="metric-progress-bar, progress-bar-blue" />
@@ -187,7 +187,7 @@
                             <!-- Rusak Ringan -->
                             <VBox spacing="4">
                                 <HBox alignment="CENTER_LEFT">
-                                    <Label text="● Rusak Ringan (Bobot 3)" style="-fx-text-fill: #d97706; -fx-font-size: 12px; -fx-font-weight: 600;" HBox.hgrow="ALWAYS" />
+                                    <Label text="● Rusak Ringan" style="-fx-text-fill: #d97706; -fx-font-size: 12px; -fx-font-weight: 600;" maxWidth="Infinity" HBox.hgrow="ALWAYS" />
                                     <Label fx:id="lblDetilRingan" text="0 (0%)" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #d97706;" />
                                 </HBox>
                                 <ProgressBar fx:id="progressRingan" progress="0.0" maxWidth="Infinity" styleClass="metric-progress-bar, progress-bar-amber" />
@@ -196,7 +196,7 @@
                             <!-- Rusak Berat -->
                             <VBox spacing="4">
                                 <HBox alignment="CENTER_LEFT">
-                                    <Label text="● Rusak Berat (Bobot 4)" style="-fx-text-fill: #dc2626; -fx-font-size: 12px; -fx-font-weight: 600;" HBox.hgrow="ALWAYS" />
+                                    <Label text="● Rusak Berat" style="-fx-text-fill: #dc2626; -fx-font-size: 12px; -fx-font-weight: 600;" maxWidth="Infinity" HBox.hgrow="ALWAYS" />
                                     <Label fx:id="lblDetilBerat" text="0 (0%)" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #dc2626;" />
                                 </HBox>
                                 <ProgressBar fx:id="progressBerat" progress="0.0" maxWidth="Infinity" styleClass="metric-progress-bar, progress-bar-red" />
@@ -213,7 +213,7 @@
                             <Label text="Dihitung secara real-time dari kombinasi bobot kondisi, hari terlewat, dan faktor kerentanan kategori."
                                    style="-fx-font-size: 12px; -fx-text-fill: #64748b;" />
                         </VBox>
-                        <Button text="Lihat Seluruh Prioritas (F6) →" onAction="#handleBukaPrioritas" styleClass="btn-secondary, btn-sm" />
+                        <Button text="Lihat Seluruh Prioritas →" onAction="#handleBukaPrioritas" styleClass="btn-secondary, btn-sm" />
                     </HBox>
 
                     <TableView fx:id="tableTopPrioritas" prefHeight="220.0">
@@ -237,8 +237,9 @@
             <VBox spacing="18" prefWidth="340.0" minWidth="320.0">
                 <!-- Agenda & Jadwal Konservasi Card -->
                 <VBox styleClass="card" spacing="14">
-                    <HBox alignment="CENTER_LEFT">
-                        <Label text="Agenda Konservasi" styleClass="card-title" HBox.hgrow="ALWAYS" />
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <Label text="Agenda Konservasi" styleClass="card-title" />
+                        <Region HBox.hgrow="ALWAYS" />
                         <Button text="Semua Jadwal" onAction="#handleBukaJadwal" styleClass="btn-secondary, btn-sm" />
                     </HBox>
 
@@ -260,17 +261,17 @@
                     <Label fx:id="lblEmptyUpcoming" text="Tidak ada jadwal perawatan mendatang dalam waktu dekat."
                            style="-fx-text-fill: #94a3b8; -fx-font-size: 12px; -fx-font-style: italic; -fx-padding: 8px 0;" visible="false" managed="false" />
 
-                    <Button text="Kelola Seluruh Jadwal (F5) →" onAction="#handleBukaJadwal" maxWidth="Infinity" styleClass="btn-secondary" />
+                    <Button text="Kelola Seluruh Jadwal →" onAction="#handleBukaJadwal" maxWidth="Infinity" styleClass="btn-secondary" />
                 </VBox>
 
                 <!-- Quick Action Shortcuts -->
                 <VBox styleClass="card" spacing="12">
                     <Label text="Aksi Cepat Konservator" styleClass="card-title" />
                     <VBox spacing="8">
-                        <Button text="Catat Pemeriksaan Fisik (F4)" onAction="#handleBukaPemeriksaan" maxWidth="Infinity" styleClass="btn-secondary" style="-fx-alignment: BASELINE_LEFT;" />
-                        <Button text="Buat Jadwal Perawatan Baru (F5)" onAction="#handleBukaJadwal" maxWidth="Infinity" styleClass="btn-secondary" style="-fx-alignment: BASELINE_LEFT;" />
-                        <Button text="Tinjau Kalkulasi Prioritas (F6)" onAction="#handleBukaPrioritas" maxWidth="Infinity" styleClass="btn-secondary" style="-fx-alignment: BASELINE_LEFT;" />
-                        <Button text="Telusuri Inventaris Koleksi (F2)" onAction="#handleBukaKoleksi" maxWidth="Infinity" styleClass="btn-secondary" style="-fx-alignment: BASELINE_LEFT;" />
+                        <Button text="Catat Pemeriksaan Fisik" onAction="#handleBukaPemeriksaan" maxWidth="Infinity" styleClass="btn-secondary" style="-fx-alignment: BASELINE_LEFT;" />
+                        <Button text="Buat Jadwal Perawatan Baru" onAction="#handleBukaJadwal" maxWidth="Infinity" styleClass="btn-secondary" style="-fx-alignment: BASELINE_LEFT;" />
+                        <Button text="Tinjau Kalkulasi Prioritas" onAction="#handleBukaPrioritas" maxWidth="Infinity" styleClass="btn-secondary" style="-fx-alignment: BASELINE_LEFT;" />
+                        <Button text="Telusuri Inventaris Koleksi" onAction="#handleBukaKoleksi" maxWidth="Infinity" styleClass="btn-secondary" style="-fx-alignment: BASELINE_LEFT;" />
                         <Button text="Unduh Laporan Prioritas (PDF)" onAction="#handleCetakLaporanPdf" maxWidth="Infinity" styleClass="btn-secondary" style="-fx-alignment: BASELINE_LEFT;" />
                     </VBox>
                 </VBox>

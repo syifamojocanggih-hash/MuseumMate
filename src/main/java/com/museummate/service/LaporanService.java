@@ -158,7 +158,7 @@ public class LaporanService {
         title.setAlignment(Element.ALIGN_CENTER);
         document.add(title);
 
-        Paragraph sub = new Paragraph("Algoritma Prioritas Otomatis PRD 6.4 | Dicetak pada: " + DateUtil.formatIndonesian(LocalDate.now()) + " | Total Antrean: " + daftarPrioritas.size() + " Koleksi", subtitleFont);
+        Paragraph sub = new Paragraph("Algoritma Prioritas Otomatis | Dicetak pada: " + DateUtil.formatIndonesian(LocalDate.now()) + " | Total Antrean: " + daftarPrioritas.size() + " Koleksi", subtitleFont);
         sub.setAlignment(Element.ALIGN_CENTER);
         sub.setSpacingAfter(14);
         document.add(sub);

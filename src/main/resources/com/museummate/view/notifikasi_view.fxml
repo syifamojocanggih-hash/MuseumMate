@@ -11,7 +11,7 @@
     <!-- Page Header -->
     <HBox alignment="CENTER_LEFT" spacing="16">
         <VBox spacing="3" HBox.hgrow="ALWAYS">
-            <Label text="Peringatan &amp; Notifikasi Jadwal Perawatan (PRD F8 / UC-11)" styleClass="page-title" />
+            <Label text="Peringatan &amp; Notifikasi Jadwal Perawatan" styleClass="page-title" />
             <Label text="Peringatan dini jadwal konservasi yang telah melewati tanggal rencana atau akan jatuh tempo dalam 7 hari ke depan."
                    styleClass="page-subtitle" />
         </VBox>

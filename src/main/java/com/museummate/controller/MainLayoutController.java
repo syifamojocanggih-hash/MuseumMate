@@ -28,6 +28,7 @@ public class MainLayoutController {
     @FXML private TextField txtGlobalSearch;
     @FXML private Label lblTanggalHariIni;
     @FXML private Button btnTopNotifikasi;
+    @FXML private Label lblTopNotifBadge;
     @FXML private Label lblAvatarInitials;
     @FXML private Label lblHeaderUserName;
     @FXML private Label lblHeaderUserRole;
@@ -89,14 +90,27 @@ public class MainLayoutController {
             int notifCount = jadwalService.getJumlahNotifikasiAktif();
             if (notifCount > 0) {
                 btnNavNotifikasi.setText("🔔  Notifikasi Jadwal (" + notifCount + ")");
-                if (btnTopNotifikasi != null) btnTopNotifikasi.setText("🔔 Notifikasi (" + notifCount + ")");
+                if (btnTopNotifikasi != null) btnTopNotifikasi.setText("🔔");
+                if (lblTopNotifBadge != null) {
+                    lblTopNotifBadge.setText(String.valueOf(notifCount));
+                    lblTopNotifBadge.setVisible(true);
+                    lblTopNotifBadge.setManaged(true);
+                }
             } else {
-                btnNavNotifikasi.setText("🔔  Notifikasi Jadwal (F8)");
-                if (btnTopNotifikasi != null) btnTopNotifikasi.setText("🔔 Notifikasi");
+                btnNavNotifikasi.setText("🔔  Notifikasi Jadwal");
+                if (btnTopNotifikasi != null) btnTopNotifikasi.setText("🔔");
+                if (lblTopNotifBadge != null) {
+                    lblTopNotifBadge.setVisible(false);
+                    lblTopNotifBadge.setManaged(false);
+                }
             }
         } catch (Exception e) {
-            btnNavNotifikasi.setText("🔔  Notifikasi Jadwal (F8)");
-            if (btnTopNotifikasi != null) btnTopNotifikasi.setText("🔔 Notifikasi");
+            btnNavNotifikasi.setText("🔔  Notifikasi Jadwal");
+            if (btnTopNotifikasi != null) btnTopNotifikasi.setText("🔔");
+            if (lblTopNotifBadge != null) {
+                lblTopNotifBadge.setVisible(false);
+                lblTopNotifBadge.setManaged(false);
+            }
         }
     }
 

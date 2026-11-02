@@ -80,7 +80,7 @@ public class CatatPemeriksaanController {
         }
 
         if (tgl.isAfter(LocalDate.now())) {
-            AlertHelper.showWarning("Validasi", "Tanggal pemeriksaan tidak boleh di masa depan (PRD F4).");
+            AlertHelper.showWarning("Validasi", "Tanggal pemeriksaan tidak boleh di masa depan.");
             return;
         }
 

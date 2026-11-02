@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Controller untuk pengelolaan akun pengguna khusus Administrator (PRD F1).
+ * Controller untuk pengelolaan akun pengguna khusus Administrator.
  */
 public class PenggunaController {
 

@@ -11,7 +11,7 @@
     <!-- Page Header -->
     <HBox alignment="CENTER_LEFT" spacing="16">
         <VBox spacing="3" HBox.hgrow="ALWAYS">
-            <Label text="Log Audit Aktivitas Sistem (PRD F10 / UC-13)" styleClass="page-title" />
+            <Label text="Log Audit Aktivitas Sistem" styleClass="page-title" />
             <Label text="Penelusuran jejak rekam aktivitas tambah, ubah, dan hapus data untuk pengawasan dan akuntabilitas."
                    styleClass="page-subtitle" />
         </VBox>

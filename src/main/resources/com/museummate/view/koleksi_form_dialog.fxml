@@ -93,7 +93,7 @@
 
         <!-- Bagian Atribut Spesifik Sesuai Kategori (OOP) -->
         <VBox spacing="12">
-            <Label fx:id="lblSpesifikTitle" text="2. Atribut Khusus Kategori (OOP Subclass)" styleClass="card-title" />
+            <Label fx:id="lblSpesifikTitle" text="2. Atribut Khusus Kategori" styleClass="card-title" />
 
             <!-- Subform Lukisan -->
             <GridPane fx:id="gridLukisan" hgap="12" vgap="12" visible="false" managed="false">

@@ -45,7 +45,7 @@
                 <TableColumn fx:id="colAsal" text="Asal / Budaya" prefWidth="140.0" />
                 <TableColumn fx:id="colBahan" text="Bahan" prefWidth="130.0" />
                 <TableColumn fx:id="colLokasi" text="Lokasi Simpan" prefWidth="160.0" />
-                <TableColumn fx:id="colAtributKhusus" text="Atribut Khusus (OOP)" prefWidth="220.0" />
+                <TableColumn fx:id="colAtributKhusus" text="Atribut Khusus" prefWidth="220.0" />
             </columns>
             <placeholder>
                 <Label text="Tidak ada data koleksi yang cocok dengan filter pencarian." />

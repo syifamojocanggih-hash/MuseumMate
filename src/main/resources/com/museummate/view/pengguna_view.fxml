@@ -11,8 +11,8 @@
     <!-- Header Section -->
     <HBox alignment="CENTER_LEFT" spacing="16">
         <VBox spacing="3" HBox.hgrow="ALWAYS">
-            <Label text="Pengelolaan Akun Pengguna (Khusus Administrator)" styleClass="page-title" />
-            <Label text="Kelola hak akses sistem antara peran Administrator dan Konservator (PRD F1)." styleClass="page-subtitle" />
+            <Label text="Pengelolaan Akun Pengguna" styleClass="page-title" />
+            <Label text="Kelola hak akses sistem antara peran Administrator dan Konservator." styleClass="page-subtitle" />
         </VBox>
         <Button text="+ Tambah Akun Baru" onAction="#handleTambahPengguna" styleClass="btn-primary" />
     </HBox>

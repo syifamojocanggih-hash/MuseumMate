@@ -38,7 +38,7 @@ public class PemeriksaanService {
             throw new IllegalArgumentException("ID Koleksi tidak valid.");
         }
         if (p.getTanggalPemeriksaan() != null && p.getTanggalPemeriksaan().isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException("Tanggal pemeriksaan tidak boleh di masa depan (PRD F4).");
+            throw new IllegalArgumentException("Tanggal pemeriksaan tidak boleh di masa depan.");
         }
         if (p.getKondisiHasil() == null) {
             throw new IllegalArgumentException("Kondisi hasil pemeriksaan wajib ditentukan.");

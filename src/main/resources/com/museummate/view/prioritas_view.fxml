@@ -11,7 +11,7 @@
     <!-- Header Section -->
     <HBox alignment="CENTER_LEFT" spacing="16">
         <VBox spacing="3" HBox.hgrow="ALWAYS">
-            <Label text="Prioritas Perawatan Otomatis (Fitur Pembeda Utama)" styleClass="page-title" />
+            <Label text="Prioritas Perawatan Otomatis" styleClass="page-title" />
             <Label text="Pengurutan dinamis tindak lanjut konservasi berdasarkan rumus bobot kondisi, hari terlewat, dan faktor kerentanan kategori." styleClass="page-subtitle" />
         </VBox>
         <HBox spacing="10">
@@ -24,7 +24,7 @@
     <HBox styleClass="formula-banner" alignment="CENTER_LEFT" spacing="16">
         <Label text="💡" style="-fx-font-size: 22px;" />
         <VBox spacing="3" HBox.hgrow="ALWAYS">
-            <Label text="Rumus Perhitungan Skor Prioritas (PRD Bagian 6.4):" style="-fx-font-weight: bold; -fx-text-fill: #174C78; -fx-font-size: 13px;" />
+            <Label text="Rumus Perhitungan Skor Prioritas:" style="-fx-font-weight: bold; -fx-text-fill: #174C78; -fx-font-size: 13px;" />
             <Label text="Skor Prioritas = (Bobot Kondisi × 10) + (Hari sejak Pemeriksaan Terakhir ÷ 30) × Faktor Kategori"
                    style="-fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #174C78;" />
             <Label text="Bobot: Baik = 1, Cukup = 2, Rusak Ringan = 3, Rusak Berat = 4 | Faktor: Naskah = 1.5, Lukisan = 1.2, Artefak = 1.0, Fosil = 0.8"
@@ -43,7 +43,7 @@
                 <TableColumn fx:id="colNo" text="No" prefWidth="50.0" />
                 <TableColumn fx:id="colKode" text="Kode Registrasi" prefWidth="120.0" />
                 <TableColumn fx:id="colNama" text="Nama Koleksi" prefWidth="250.0" />
-                <TableColumn fx:id="colKategori" text="Kategori (Faktor)" prefWidth="140.0" />
+                <TableColumn fx:id="colKategori" text="Kategori" prefWidth="140.0" />
                 <TableColumn fx:id="colKondisi" text="Kondisi Fisik" prefWidth="130.0" />
                 <TableColumn fx:id="colAcuan" text="Acuan Pemeriksaan" prefWidth="150.0" />
                 <TableColumn fx:id="colHari" text="Hari Terlewat" prefWidth="110.0" />
