@@ -3,6 +3,6 @@
     "css.lint.unknownProperties": "ignore",
     "css.lint.unknownVendorSpecificProperties": "ignore",
     "css.lint.vendorPrefix": "ignore",
-    "java.compile.nullAnalysis.mode": "automatic",
+    "java.compile.nullAnalysis.mode": "disabled",
     "java.configuration.updateBuildConfiguration": "interactive"
 }

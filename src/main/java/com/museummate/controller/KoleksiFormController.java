@@ -239,7 +239,11 @@ public class KoleksiFormController {
         } catch (IllegalArgumentException e) {
             AlertHelper.showWarning("Validasi Input", e.getMessage());
         } catch (Exception e) {
-            AlertHelper.showError("Kesalahan Penyimpanan", "Gagal menyimpan koleksi: " + e.getMessage());
+            if (e.getMessage() != null && e.getMessage().contains("Duplicate entry")) {
+                AlertHelper.showError("Kode Registrasi Duplikat", "Kode registrasi '" + txtKodeRegistrasi.getText() + "' sudah terdaftar pada koleksi lain. Silakan gunakan kode unik yang berbeda.");
+            } else {
+                AlertHelper.showError("Kesalahan Penyimpanan", "Gagal menyimpan koleksi: " + e.getMessage());
+            }
             e.printStackTrace();
         }
     }

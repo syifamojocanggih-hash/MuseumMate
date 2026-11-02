@@ -75,7 +75,11 @@ public class PenggunaController {
                 AlertHelper.showInfo("Sukses", "Pengguna baru '" + user.getUsername() + "' berhasil didaftarkan.");
                 loadDataPengguna();
             } catch (SQLException e) {
-                AlertHelper.showError("Gagal Mendaftar", "Terjadi kesalahan: " + e.getMessage());
+                if (e.getErrorCode() == 1062 || (e.getMessage() != null && e.getMessage().contains("Duplicate entry"))) {
+                    AlertHelper.showError("Gagal Mendaftar", "Username '" + user.getUsername() + "' sudah digunakan oleh akun lain. Silakan gunakan username yang berbeda.");
+                } else {
+                    AlertHelper.showError("Gagal Mendaftar", "Terjadi kesalahan: " + e.getMessage());
+                }
             }
         });
     }
@@ -99,7 +103,11 @@ public class PenggunaController {
                 AlertHelper.showInfo("Sukses", "Data akun pengguna berhasil diperbarui.");
                 loadDataPengguna();
             } catch (SQLException e) {
-                AlertHelper.showError("Gagal Memperbarui", "Terjadi kesalahan: " + e.getMessage());
+                if (e.getErrorCode() == 1062 || (e.getMessage() != null && e.getMessage().contains("Duplicate entry"))) {
+                    AlertHelper.showError("Gagal Memperbarui", "Username '" + user.getUsername() + "' sudah digunakan oleh akun lain. Silakan gunakan username yang berbeda.");
+                } else {
+                    AlertHelper.showError("Gagal Memperbarui", "Terjadi kesalahan: " + e.getMessage());
+                }
             }
         });
     }
