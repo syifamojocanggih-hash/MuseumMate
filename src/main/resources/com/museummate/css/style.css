@@ -1043,38 +1043,17 @@
 
 
 
-.icon-btn-header-round {
+
+.header-notif-btn {
     -fx-background-color: transparent;
     -fx-border-color: transparent;
     -fx-border-width: 0;
-    -fx-min-width: 36px;
-    -fx-pref-width: 36px;
-    -fx-max-width: 36px;
-    -fx-min-height: 36px;
-    -fx-pref-height: 36px;
-    -fx-max-height: 36px;
-    -fx-background-radius: 18px;
-    -fx-alignment: center;
-    -fx-font-size: 16px;
+    -fx-padding: 4px 6px;
     -fx-cursor: hand;
-    -fx-text-fill: #334155;
-}
-
-.icon-btn-header-round:hover {
-    -fx-background-color: #f1f5f9;
-    -fx-text-fill: #0f172a;
-}
-
-.top-notif-badge {
-    -fx-background-color: #ef4444;
-    -fx-text-fill: #ffffff;
-    -fx-font-size: 10px;
-    -fx-font-weight: bold;
-    -fx-padding: 1px 5px;
-    -fx-background-radius: 10px;
-    -fx-min-width: 16px;
-    -fx-min-height: 16px;
+    -fx-background-radius: 8px;
     -fx-alignment: center;
-    -fx-translate-x: 4px;
-    -fx-translate-y: -2px;
+}
+
+.header-notif-btn:hover {
+    -fx-background-color: #f1f5f9;
 }

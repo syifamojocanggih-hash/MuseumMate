@@ -78,14 +78,14 @@
                 <!-- Right Info & Actions -->
                 <HBox alignment="CENTER_RIGHT" spacing="14">
                     <Label fx:id="lblTanggalHariIni" text="Senin, 19 Okt 2026" styleClass="header-date-badge" />
-                    <StackPane alignment="TOP_RIGHT">
-                        <Button fx:id="btnTopNotifikasi" text="🔔" onAction="#showNotifikasi" styleClass="icon-btn-header-round">
-                            <tooltip>
-                                <Tooltip text="Notifikasi Jadwal Perawatan" />
-                            </tooltip>
-                        </Button>
-                        <Label fx:id="lblTopNotifBadge" text="0" styleClass="top-notif-badge" mouseTransparent="true" visible="false" managed="false" />
-                    </StackPane>
+                    <Button fx:id="btnTopNotifikasi" onAction="#showNotifikasi" styleClass="header-notif-btn">
+                        <graphic>
+                            <Label text="🔔" style="-fx-font-size: 16px; -fx-text-fill: #334155;" />
+                        </graphic>
+                        <tooltip>
+                            <Tooltip text="Notifikasi Jadwal Perawatan" />
+                        </tooltip>
+                    </Button>
                     <HBox alignment="CENTER" spacing="10" styleClass="header-user-profile">
                         <StackPane styleClass="avatar-circle">
                             <Label fx:id="lblAvatarInitials" text="AS" styleClass="avatar-text" />
