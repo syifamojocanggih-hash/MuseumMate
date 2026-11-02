@@ -1,20 +1,35 @@
 package com.museummate.controller;
 
+import com.museummate.model.JadwalPerawatan;
 import com.museummate.model.Pengguna;
 import com.museummate.util.AlertHelper;
+import com.museummate.util.DateUtil;
 import com.museummate.util.SessionManager;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Point2D;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Controller utama pengatur tata letak (Sidebar & Navigasi Antar Halaman).
@@ -45,6 +60,7 @@ public class MainLayoutController {
 
     private Button activeButton;
     private final com.museummate.service.JadwalService jadwalService = new com.museummate.service.JadwalService();
+    private Popup notifPopup;
 
     @FXML
     public void initialize() {
@@ -89,11 +105,177 @@ public class MainLayoutController {
             int notifCount = jadwalService.getJumlahNotifikasiAktif();
             if (notifCount > 0) {
                 btnNavNotifikasi.setText("🔔  Notifikasi Jadwal (" + notifCount + ")");
+                if (btnTopNotifikasi != null) {
+                    btnTopNotifikasi.setGraphic(createBellWithBadge(notifCount));
+                }
             } else {
                 btnNavNotifikasi.setText("🔔  Notifikasi Jadwal");
+                if (btnTopNotifikasi != null) {
+                    Label bell = new Label("🔔");
+                    bell.setStyle("-fx-font-size: 16px; -fx-text-fill: #334155;");
+                    btnTopNotifikasi.setGraphic(bell);
+                }
             }
         } catch (Exception e) {
             btnNavNotifikasi.setText("🔔  Notifikasi Jadwal");
+            if (btnTopNotifikasi != null) {
+                Label bell = new Label("🔔");
+                bell.setStyle("-fx-font-size: 16px; -fx-text-fill: #334155;");
+                btnTopNotifikasi.setGraphic(bell);
+            }
+        }
+    }
+
+    private Node createBellWithBadge(int count) {
+        StackPane stack = new StackPane();
+        Label bell = new Label("🔔");
+        bell.setStyle("-fx-font-size: 16px; -fx-text-fill: #334155;");
+
+        Label badge = new Label(count > 99 ? "99+" : String.valueOf(count));
+        badge.setStyle("-fx-background-color: #ef4444; -fx-text-fill: white; -fx-font-size: 9px; -fx-font-weight: bold; -fx-padding: 1px 4px; -fx-background-radius: 8px;");
+        StackPane.setAlignment(badge, Pos.TOP_RIGHT);
+        StackPane.setMargin(badge, new Insets(-4, -6, 0, 0));
+
+        stack.getChildren().addAll(bell, badge);
+        return stack;
+    }
+
+    @FXML
+    public void handleTopNotifikasiClick() {
+        if (notifPopup != null && notifPopup.isShowing()) {
+            notifPopup.hide();
+            return;
+        }
+        showNotificationPopup();
+    }
+
+    private void showNotificationPopup() {
+        if (btnTopNotifikasi == null || btnTopNotifikasi.getScene() == null) return;
+
+        notifPopup = new Popup();
+        notifPopup.setAutoHide(true);
+
+        VBox popupCard = new VBox(12);
+        popupCard.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 14px; -fx-border-radius: 14px; -fx-border-color: #e2e8f0; -fx-border-width: 1px; -fx-padding: 16px;");
+        popupCard.setMinWidth(380);
+        popupCard.setMaxWidth(400);
+
+        DropShadow shadow = new DropShadow();
+        shadow.setRadius(20);
+        shadow.setSpread(0.12);
+        shadow.setColor(Color.rgb(0, 0, 0, 0.18));
+        shadow.setOffsetY(8);
+        popupCard.setEffect(shadow);
+
+        // Header
+        HBox header = new HBox(8);
+        header.setAlignment(Pos.CENTER_LEFT);
+
+        Label lblTitle = new Label("🔔 Peringatan & Notifikasi");
+        lblTitle.setStyle("-fx-font-size: 14px; -fx-font-weight: 800; -fx-text-fill: #0f172a;");
+
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+
+        int totalCount = 0;
+        List<JadwalPerawatan> listTerlambat = new ArrayList<>();
+        List<JadwalPerawatan> listMendatang = new ArrayList<>();
+        try {
+            listTerlambat = jadwalService.getJadwalTerlambat();
+            listMendatang = jadwalService.getJadwalMendatang(7);
+            totalCount = listTerlambat.size() + listMendatang.size();
+        } catch (Exception ignored) {}
+
+        Label lblBadge = new Label(totalCount > 0 ? totalCount + " Jadwal Aktif" : "Aman");
+        lblBadge.setStyle(totalCount > 0
+                ? "-fx-background-color: #fee2e2; -fx-text-fill: #b91c1c; -fx-font-size: 10px; -fx-font-weight: bold; -fx-padding: 3px 8px; -fx-background-radius: 10px;"
+                : "-fx-background-color: #dcfce7; -fx-text-fill: #16a34a; -fx-font-size: 10px; -fx-font-weight: bold; -fx-padding: 3px 8px; -fx-background-radius: 10px;");
+
+        header.getChildren().addAll(lblTitle, spacer, lblBadge);
+
+        // List Container
+        VBox listContainer = new VBox(8);
+
+        List<JadwalPerawatan> combined = new ArrayList<>();
+        combined.addAll(listTerlambat);
+        combined.addAll(listMendatang);
+
+        if (combined.isEmpty()) {
+            VBox emptyBox = new VBox(6);
+            emptyBox.setAlignment(Pos.CENTER);
+            emptyBox.setPadding(new Insets(16, 8, 16, 8));
+            Label lblEmptyIcon = new Label("✅");
+            lblEmptyIcon.setStyle("-fx-font-size: 24px;");
+            Label lblEmptyText = new Label("Semua jadwal perawatan dalam kondisi aman.");
+            lblEmptyText.setStyle("-fx-font-size: 12px; -fx-text-fill: #64748b; -fx-font-weight: 500;");
+            emptyBox.getChildren().addAll(lblEmptyIcon, lblEmptyText);
+            listContainer.getChildren().add(emptyBox);
+        } else {
+            int maxItems = Math.min(3, combined.size());
+            for (int i = 0; i < maxItems; i++) {
+                JadwalPerawatan j = combined.get(i);
+                VBox itemCard = new VBox(3);
+                itemCard.setStyle("-fx-background-color: #f8fafc; -fx-padding: 9px 12px; -fx-background-radius: 8px; -fx-border-color: #e2e8f0; -fx-border-radius: 8px; -fx-cursor: hand;");
+
+                itemCard.setOnMouseEntered(ev -> itemCard.setStyle("-fx-background-color: #f1f5f9; -fx-padding: 9px 12px; -fx-background-radius: 8px; -fx-border-color: #cbd5e1; -fx-border-radius: 8px; -fx-cursor: hand;"));
+                itemCard.setOnMouseExited(ev -> itemCard.setStyle("-fx-background-color: #f8fafc; -fx-padding: 9px 12px; -fx-background-radius: 8px; -fx-border-color: #e2e8f0; -fx-border-radius: 8px; -fx-cursor: hand;"));
+
+                HBox rowTop = new HBox(6);
+                rowTop.setAlignment(Pos.CENTER_LEFT);
+
+                Label lblStatus = new Label(j.isTerlambat() ? "TERLAMBAT" : "JATUH TEMPO");
+                lblStatus.setStyle(j.isTerlambat()
+                        ? "-fx-background-color: #fee2e2; -fx-text-fill: #b91c1c; -fx-font-size: 9px; -fx-font-weight: bold; -fx-padding: 2px 6px; -fx-background-radius: 4px;"
+                        : "-fx-background-color: #fef3c7; -fx-text-fill: #b45309; -fx-font-size: 9px; -fx-font-weight: bold; -fx-padding: 2px 6px; -fx-background-radius: 4px;");
+
+                Region rSpacer = new Region();
+                HBox.setHgrow(rSpacer, Priority.ALWAYS);
+
+                Label lblDate = new Label(j.getTanggalRencana() != null ? DateUtil.formatIndonesian(j.getTanggalRencana()) : "-");
+                lblDate.setStyle("-fx-font-size: 10.5px; -fx-font-weight: bold; -fx-text-fill: #174C78;");
+
+                rowTop.getChildren().addAll(lblStatus, rSpacer, lblDate);
+
+                Label lblKeg = new Label(j.getKegiatan());
+                lblKeg.setStyle("-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #0f172a;");
+
+                Label lblKol = new Label(j.getNamaKoleksi() != null ? j.getNamaKoleksi() : "Koleksi ID " + j.getIdKoleksi());
+                lblKol.setStyle("-fx-font-size: 11px; -fx-text-fill: #64748b;");
+
+                itemCard.getChildren().addAll(rowTop, lblKeg, lblKol);
+
+                // Clicking an item opens the notification detail
+                itemCard.setOnMouseClicked(ev -> {
+                    notifPopup.hide();
+                    showNotifikasi();
+                });
+
+                listContainer.getChildren().add(itemCard);
+            }
+        }
+
+        Separator sep = new Separator();
+        sep.setStyle("-fx-opacity: 0.5;");
+
+        // Footer button: "Lihat Selengkapnya →"
+        Button btnLihatSemua = new Button("Lihat Selengkapnya →");
+        btnLihatSemua.setMaxWidth(Double.MAX_VALUE);
+        btnLihatSemua.setStyle("-fx-background-color: #f1f5f9; -fx-text-fill: #174C78; -fx-font-weight: bold; -fx-font-size: 12px; -fx-padding: 9px 0; -fx-background-radius: 8px; -fx-border-color: #cbd5e1; -fx-border-radius: 8px; -fx-cursor: hand;");
+        btnLihatSemua.setOnMouseEntered(ev -> btnLihatSemua.setStyle("-fx-background-color: #174C78; -fx-text-fill: #ffffff; -fx-font-weight: bold; -fx-font-size: 12px; -fx-padding: 9px 0; -fx-background-radius: 8px; -fx-border-color: #174C78; -fx-border-radius: 8px; -fx-cursor: hand;"));
+        btnLihatSemua.setOnMouseExited(ev -> btnLihatSemua.setStyle("-fx-background-color: #f1f5f9; -fx-text-fill: #174C78; -fx-font-weight: bold; -fx-font-size: 12px; -fx-padding: 9px 0; -fx-background-radius: 8px; -fx-border-color: #cbd5e1; -fx-border-radius: 8px; -fx-cursor: hand;"));
+        btnLihatSemua.setOnAction(ev -> {
+            notifPopup.hide();
+            showNotifikasi();
+        });
+
+        popupCard.getChildren().addAll(header, listContainer, sep, btnLihatSemua);
+        notifPopup.getContent().setAll(popupCard);
+
+        Point2D p = btnTopNotifikasi.localToScreen(0, 0);
+        if (p != null) {
+            double x = p.getX() + btnTopNotifikasi.getWidth() - 380;
+            double y = p.getY() + btnTopNotifikasi.getHeight() + 8;
+            notifPopup.show(btnTopNotifikasi.getScene().getWindow(), x, y);
         }
     }
 

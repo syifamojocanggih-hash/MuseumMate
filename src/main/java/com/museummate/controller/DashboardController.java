@@ -130,6 +130,7 @@ public class DashboardController {
     }
 
     private void setupTableColumns() {
+        if (tableTopPrioritas == null || colKode == null) return;
         colKode.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getKodeRegistrasi()));
         colNama.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getNama()));
         colKategori.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getKategori().getLabel()));
@@ -229,7 +230,9 @@ public class DashboardController {
             if (topList.size() > 5) {
                 topList = topList.subList(0, 5);
             }
-            tableTopPrioritas.setItems(FXCollections.observableArrayList(topList));
+            if (tableTopPrioritas != null) {
+                tableTopPrioritas.setItems(FXCollections.observableArrayList(topList));
+            }
 
             // Render Grafik Tren Kondisi (PRD F9 / UC-12)
             renderTrenChart(stats.trenKondisi());
