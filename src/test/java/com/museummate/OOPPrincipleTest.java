@@ -63,4 +63,16 @@ class OOPPrincipleTest {
         assertThrows(IllegalArgumentException.class, () -> naskah.setKodeRegistrasi(null), "Kode registrasi null harus melempar exception");
         assertThrows(IllegalArgumentException.class, () -> naskah.setKondisi(null), "Kondisi null harus melempar exception");
     }
+
+    @Test
+    @DisplayName("5. Enkapsulasi & Model: Atribut Foto Koleksi dan Spesialisasi Konservator")
+    void testFotoDanSpesialisasi() {
+        Artefak artefak = new Artefak();
+        artefak.setFotoPath("uploads/koleksi/test.jpg");
+        assertEquals("uploads/koleksi/test.jpg", artefak.getFotoPath());
+
+        com.museummate.model.Pengguna p = new com.museummate.model.Pengguna();
+        p.setSpesialisasi("ARTEFAK");
+        assertEquals("ARTEFAK", p.getSpesialisasi());
+    }
 }

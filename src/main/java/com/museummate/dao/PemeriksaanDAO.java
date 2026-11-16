@@ -143,8 +143,8 @@ public class PemeriksaanDAO {
      * Menyimpan data pemeriksaan baru dan secara otomatis memperbarui kolom kondisi pada koleksi terkait (PRD F4).
      */
     public boolean save(Pemeriksaan p) throws SQLException {
-        String sqlPemeriksaan = "INSERT INTO pemeriksaan (id_koleksi, id_pengguna, tanggal_pemeriksaan, kondisi_hasil, tindakan, catatan) " +
-                                "VALUES (?, ?, ?, ?, ?, ?)";
+        String sqlPemeriksaan = "INSERT INTO pemeriksaan (id_koleksi, id_pengguna, tanggal_pemeriksaan, kondisi_hasil, tindakan, catatan, foto_kondisi) " +
+                                "VALUES (?, ?, ?, ?, ?, ?, ?)";
         String sqlUpdateKoleksi = "UPDATE koleksi SET kondisi = ? WHERE id_koleksi = ?";
 
         try (Connection conn = DatabaseConnection.getConnection()) {
@@ -157,6 +157,7 @@ public class PemeriksaanDAO {
                     ps.setString(4, p.getKondisiHasil().name());
                     ps.setString(5, p.getTindakan());
                     ps.setString(6, p.getCatatan());
+                    ps.setString(7, p.getFotoKondisi());
 
                     ps.executeUpdate();
                     try (ResultSet rs = ps.getGeneratedKeys()) {
@@ -200,6 +201,7 @@ public class PemeriksaanDAO {
         p.setKondisiHasil(KondisiKoleksi.fromString(rs.getString("kondisi_hasil")));
         p.setTindakan(rs.getString("tindakan"));
         p.setCatatan(rs.getString("catatan"));
+        p.setFotoKondisi(rs.getString("foto_kondisi"));
 
         Timestamp ts = rs.getTimestamp("dibuat_pada");
         if (ts != null) {

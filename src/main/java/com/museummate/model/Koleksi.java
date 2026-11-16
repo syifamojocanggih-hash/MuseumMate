@@ -17,6 +17,7 @@ public abstract class Koleksi {
     private String tahunPerkiraan;
     private String bahan;
     private String lokasiPenyimpanan;
+    private String fotoPath;
     private String sumberPerolehan;
     private KondisiKoleksi kondisi;
     private LocalDate tanggalDiterima;
@@ -171,6 +172,14 @@ public abstract class Koleksi {
 
     public void setLokasiPenyimpanan(String lokasiPenyimpanan) {
         this.lokasiPenyimpanan = lokasiPenyimpanan != null ? lokasiPenyimpanan.trim() : "";
+    }
+
+    public String getFotoPath() {
+        return fotoPath != null ? fotoPath : "";
+    }
+
+    public void setFotoPath(String fotoPath) {
+        this.fotoPath = fotoPath != null ? fotoPath.trim() : "";
     }
 
     public String getSumberPerolehan() {

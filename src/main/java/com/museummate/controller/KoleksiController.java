@@ -3,6 +3,8 @@ package com.museummate.controller;
 import com.museummate.model.KategoriKoleksi;
 import com.museummate.model.Koleksi;
 import com.museummate.model.KondisiKoleksi;
+import com.museummate.model.Pengguna;
+import com.museummate.model.PeranPengguna;
 import com.museummate.service.KoleksiService;
 import com.museummate.service.LaporanService;
 import com.museummate.util.AlertHelper;
@@ -16,12 +18,21 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -43,6 +54,8 @@ public class KoleksiController {
     @FXML private Button btnTambah;
     @FXML private Button btnUbah;
     @FXML private Button btnHapus;
+    @FXML private Button btnSpesialisasi;
+    @FXML private Button btnUploadFoto;
 
     @FXML private TableView<Koleksi> tableKoleksi;
     @FXML private TableColumn<Koleksi, String> colKode;
@@ -75,6 +88,26 @@ public class KoleksiController {
         btnUbah.setManaged(isAdmin);
         btnHapus.setVisible(isAdmin);
         btnHapus.setManaged(isAdmin);
+
+        // btnUploadFoto dapat diakses oleh Konservator maupun Admin
+        if (btnUploadFoto != null) {
+            btnUploadFoto.setVisible(true);
+            btnUploadFoto.setManaged(true);
+        }
+
+        // btnSpesialisasi: fitur pintar konservator berbasis bidang keahlian
+        if (btnSpesialisasi != null) {
+            Pengguna user = SessionManager.getInstance().getCurrentUser();
+            if (user != null && user.getPeran() == PeranPengguna.KONSERVATOR
+                    && user.getSpesialisasi() != null && !user.getSpesialisasi().equalsIgnoreCase("SEMUA")) {
+                btnSpesialisasi.setVisible(true);
+                btnSpesialisasi.setManaged(true);
+                btnSpesialisasi.setText("⭐ Khusus " + user.getSpesialisasi());
+            } else {
+                btnSpesialisasi.setVisible(false);
+                btnSpesialisasi.setManaged(false);
+            }
+        }
     }
 
     private void setupFilterControls() {
@@ -217,6 +250,99 @@ public class KoleksiController {
     }
 
     @FXML
+    public void handleToggleSpesialisasi() {
+        Pengguna user = SessionManager.getInstance().getCurrentUser();
+        if (user == null || user.getSpesialisasi() == null) {
+            return;
+        }
+
+        try {
+            KategoriKoleksi target = KategoriKoleksi.fromString(user.getSpesialisasi());
+            if (cmbKategoriFilter.getValue() == target) {
+                cmbKategoriFilter.setValue(null);
+            } else {
+                cmbKategoriFilter.setValue(target);
+            }
+        } catch (Exception ignored) {
+            cmbKategoriFilter.setValue(null);
+        }
+    }
+
+    @FXML
+    public void handleUploadFoto() {
+        Koleksi selected = tableKoleksi.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            AlertHelper.showWarning("Peringatan", "Pilih data koleksi yang ingin diunggah fotonya terlebih dahulu.");
+            return;
+        }
+        unggahFotoKoleksi(selected);
+    }
+
+    private void unggahFotoKoleksi(Koleksi selected) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Pilih Foto Koleksi: " + selected.getNama());
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("File Gambar (*.jpg, *.jpeg, *.png, *.webp)", "*.jpg", "*.jpeg", "*.png", "*.webp")
+        );
+
+        File file = fileChooser.showOpenDialog(tableKoleksi.getScene().getWindow());
+        if (file != null) {
+            try {
+                File uploadDir = new File("uploads/koleksi");
+                if (!uploadDir.exists()) {
+                    uploadDir.mkdirs();
+                }
+                String ext = "";
+                int dotIdx = file.getName().lastIndexOf('.');
+                if (dotIdx > 0) {
+                    ext = file.getName().substring(dotIdx);
+                }
+                String newFileName = "koleksi_" + selected.getIdKoleksi() + "_" + System.currentTimeMillis() + ext;
+                File destFile = new File(uploadDir, newFileName);
+                java.nio.file.Files.copy(file.toPath(), destFile.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+
+                String savedPath = "uploads/koleksi/" + newFileName;
+                koleksiService.updateFotoPath(selected.getIdKoleksi(), savedPath);
+                selected.setFotoPath(savedPath);
+
+                com.museummate.service.LogAktivitasService.catat(
+                        "UNGGAH_FOTO", "koleksi",
+                        "Konservator/Admin mengunggah foto untuk koleksi: " + selected.getKodeRegistrasi() + " (" + selected.getNama() + ")"
+                );
+
+                AlertHelper.showInfo("Unggah Berhasil", "Foto benda koleksi berhasil diperbarui.");
+                tableKoleksi.refresh();
+            } catch (Exception e) {
+                AlertHelper.showError("Gagal Mengunggah", "Terjadi kesalahan saat mengunggah foto: " + e.getMessage());
+            }
+        }
+    }
+
+    private Image muatGambar(String fotoPath) {
+        if (fotoPath == null || fotoPath.trim().isEmpty()) {
+            return null;
+        }
+        try {
+            File localFile = new File(fotoPath);
+            if (localFile.exists() && localFile.isFile()) {
+                return new Image(localFile.toURI().toString());
+            }
+            String resourcePath = fotoPath.startsWith("/") ? fotoPath : "/" + fotoPath;
+            var is = getClass().getResourceAsStream(resourcePath);
+            if (is != null) {
+                return new Image(is);
+            }
+            String imgPath = "/com/museummate/images/" + fotoPath.replaceFirst("^images/", "").replaceFirst("^com/museummate/images/", "");
+            var is2 = getClass().getResourceAsStream(imgPath);
+            if (is2 != null) {
+                return new Image(is2);
+            }
+        } catch (Exception ignored) {
+        }
+        return null;
+    }
+
+    @FXML
     public void handleLihatDetail() {
         Koleksi selected = tableKoleksi.getSelectionModel().getSelectedItem();
         if (selected == null) {
@@ -224,21 +350,103 @@ public class KoleksiController {
             return;
         }
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("Kode Registrasi: ").append(selected.getKodeRegistrasi()).append("\n");
-        sb.append("Nama Benda: ").append(selected.getNama()).append("\n");
-        sb.append("Kategori: ").append(selected.getKategori().getLabel()).append("\n");
-        sb.append("Kondisi Fisik: ").append(selected.getKondisi().getLabel()).append("\n");
-        sb.append("Asal Daerah: ").append(selected.getAsal()).append("\n");
-        sb.append("Tahun Perkiraan: ").append(selected.getTahunPerkiraan()).append("\n");
-        sb.append("Bahan: ").append(selected.getBahan()).append("\n");
-        sb.append("Sumber Perolehan: ").append(selected.getSumberPerolehan()).append("\n");
-        sb.append("Lokasi Simpan: ").append(selected.getLokasiPenyimpanan()).append("\n");
-        sb.append("Tanggal Diterima: ").append(selected.getTanggalDiterima()).append("\n\n");
-        sb.append("--- Atribut Khusus Kategori (OOP) ---\n");
-        sb.append(selected.getDeskripsiKhusus().isEmpty() ? "Tidak ada atribut khusus." : selected.getDeskripsiKhusus());
+        Dialog<Void> dialog = new Dialog<>();
+        dialog.setTitle("Detail Koleksi Museum");
+        dialog.setHeaderText("Rincian Benda Koleksi: " + selected.getNama() + " (" + selected.getKodeRegistrasi() + ")");
+        if (tableKoleksi.getScene() != null && tableKoleksi.getScene().getWindow() != null) {
+            dialog.initOwner(tableKoleksi.getScene().getWindow());
+            dialog.initModality(Modality.WINDOW_MODAL);
+            if (!tableKoleksi.getScene().getStylesheets().isEmpty()) {
+                dialog.getDialogPane().getStylesheets().addAll(tableKoleksi.getScene().getStylesheets());
+            }
+        }
 
-        AlertHelper.showInfo("Rincian Lengkap Koleksi", sb.toString());
+        HBox mainContent = new HBox(20);
+        mainContent.setPadding(new javafx.geometry.Insets(16));
+        mainContent.setAlignment(Pos.TOP_LEFT);
+
+        VBox photoBox = new VBox(10);
+        photoBox.setAlignment(Pos.CENTER);
+        photoBox.setPrefWidth(260);
+
+        StackPane imgFrame = new StackPane();
+        imgFrame.setPrefSize(250, 250);
+        imgFrame.setStyle("-fx-background-color: #f8fafc; -fx-border-color: #cbd5e1; -fx-border-radius: 8px; -fx-background-radius: 8px;");
+
+        ImageView imageView = new ImageView();
+        imageView.setFitWidth(240);
+        imageView.setFitHeight(240);
+        imageView.setPreserveRatio(true);
+        imageView.setSmooth(true);
+
+        Label lblNoPhoto = new Label("Belum ada foto fisik\n(Klik tombol di bawah untuk unggah)");
+        lblNoPhoto.setStyle("-fx-text-fill: #94a3b8; -fx-text-alignment: center; -fx-font-size: 11px;");
+
+        Image img = muatGambar(selected.getFotoPath());
+        if (img != null) {
+            imageView.setImage(img);
+            lblNoPhoto.setVisible(false);
+        } else {
+            lblNoPhoto.setVisible(true);
+        }
+
+        imgFrame.getChildren().addAll(lblNoPhoto, imageView);
+
+        Button btnGantiFoto = new Button("📷 Unggah / Ganti Foto");
+        btnGantiFoto.getStyleClass().add("btn-secondary");
+        btnGantiFoto.setOnAction(e -> {
+            unggahFotoKoleksi(selected);
+            Image updatedImg = muatGambar(selected.getFotoPath());
+            if (updatedImg != null) {
+                imageView.setImage(updatedImg);
+                lblNoPhoto.setVisible(false);
+            }
+        });
+
+        photoBox.getChildren().addAll(imgFrame, btnGantiFoto);
+
+        GridPane grid = new GridPane();
+        grid.setHgap(12);
+        grid.setVgap(8);
+
+        int row = 0;
+        addDetailRow(grid, row++, "Kode Registrasi:", selected.getKodeRegistrasi());
+        addDetailRow(grid, row++, "Nama Benda:", selected.getNama());
+        addDetailRow(grid, row++, "Kategori:", selected.getKategori().getLabel());
+        addDetailRow(grid, row++, "Kondisi Fisik:", selected.getKondisi().getLabel());
+        addDetailRow(grid, row++, "Asal / Budaya:", selected.getAsal() != null ? selected.getAsal() : "-");
+        addDetailRow(grid, row++, "Tahun Perkiraan:", selected.getTahunPerkiraan() != null ? selected.getTahunPerkiraan() : "-");
+        addDetailRow(grid, row++, "Bahan Utama:", selected.getBahan() != null ? selected.getBahan() : "-");
+        addDetailRow(grid, row++, "Sumber Perolehan:", selected.getSumberPerolehan() != null ? selected.getSumberPerolehan() : "-");
+        addDetailRow(grid, row++, "Lokasi Simpan:", selected.getLokasiPenyimpanan() != null ? selected.getLokasiPenyimpanan() : "-");
+        addDetailRow(grid, row++, "Tanggal Diterima:", selected.getTanggalDiterima() != null ? selected.getTanggalDiterima().toString() : "-");
+
+        String khusus = selected.getDeskripsiKhusus();
+        if (khusus != null && !khusus.trim().isEmpty()) {
+            addDetailRow(grid, row++, "Atribut OOP Khusus:", khusus);
+        }
+
+        ScrollPane scrollPane = new ScrollPane(grid);
+        scrollPane.setFitToWidth(true);
+        scrollPane.setPrefWidth(380);
+        scrollPane.setPrefHeight(300);
+        scrollPane.setStyle("-fx-background-color: transparent; -fx-background: transparent; -fx-border-color: transparent;");
+
+        mainContent.getChildren().addAll(photoBox, scrollPane);
+
+        dialog.getDialogPane().setContent(mainContent);
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+        dialog.showAndWait();
+    }
+
+    private void addDetailRow(GridPane grid, int row, String label, String value) {
+        Label lbl = new Label(label);
+        lbl.setStyle("-fx-font-weight: bold; -fx-text-fill: #475569; -fx-font-size: 12px;");
+        Label val = new Label(value);
+        val.setWrapText(true);
+        val.setStyle("-fx-text-fill: #1e293b; -fx-font-size: 12px;");
+        grid.add(lbl, 0, row);
+        grid.add(val, 1, row);
     }
 
     @FXML

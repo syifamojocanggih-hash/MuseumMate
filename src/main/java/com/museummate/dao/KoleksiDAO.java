@@ -118,8 +118,8 @@ public class KoleksiDAO {
     }
 
     public boolean save(Koleksi k) throws SQLException {
-        String sqlMain = "INSERT INTO koleksi (kode_registrasi, nama, kategori, asal, tahun_perkiraan, bahan, lokasi_penyimpanan, sumber_perolehan, kondisi, tanggal_diterima) " +
-                         "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sqlMain = "INSERT INTO koleksi (kode_registrasi, nama, kategori, asal, tahun_perkiraan, bahan, lokasi_penyimpanan, sumber_perolehan, kondisi, tanggal_diterima, foto_path) " +
+                         "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DatabaseConnection.getConnection()) {
             conn.setAutoCommit(false);
@@ -136,6 +136,7 @@ public class KoleksiDAO {
                     ps.setString(8, k.getSumberPerolehan());
                     ps.setString(9, k.getKondisi().name());
                     ps.setDate(10, Date.valueOf(k.getTanggalDiterima()));
+                    ps.setString(11, k.getFotoPath());
 
                     ps.executeUpdate();
                     try (ResultSet rs = ps.getGeneratedKeys()) {
@@ -163,7 +164,7 @@ public class KoleksiDAO {
 
     public boolean update(Koleksi k) throws SQLException {
         String sqlMain = "UPDATE koleksi SET kode_registrasi = ?, nama = ?, kategori = ?, asal = ?, tahun_perkiraan = ?, " +
-                         "bahan = ?, lokasi_penyimpanan = ?, sumber_perolehan = ?, kondisi = ?, tanggal_diterima = ? " +
+                         "bahan = ?, lokasi_penyimpanan = ?, sumber_perolehan = ?, kondisi = ?, tanggal_diterima = ?, foto_path = ? " +
                          "WHERE id_koleksi = ?";
 
         try (Connection conn = DatabaseConnection.getConnection()) {
@@ -180,7 +181,8 @@ public class KoleksiDAO {
                     ps.setString(8, k.getSumberPerolehan());
                     ps.setString(9, k.getKondisi().name());
                     ps.setDate(10, Date.valueOf(k.getTanggalDiterima()));
-                    ps.setInt(11, k.getIdKoleksi());
+                    ps.setString(11, k.getFotoPath());
+                    ps.setInt(12, k.getIdKoleksi());
 
                     ps.executeUpdate();
                 }
@@ -195,6 +197,16 @@ public class KoleksiDAO {
             } finally {
                 conn.setAutoCommit(true);
             }
+        }
+    }
+
+    public boolean updateFotoPath(int idKoleksi, String fotoPath) throws SQLException {
+        String sql = "UPDATE koleksi SET foto_path = ? WHERE id_koleksi = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, fotoPath);
+            ps.setInt(2, idKoleksi);
+            return ps.executeUpdate() > 0;
         }
     }
 
@@ -329,6 +341,7 @@ public class KoleksiDAO {
         k.setLokasiPenyimpanan(rs.getString("lokasi_penyimpanan"));
         k.setSumberPerolehan(rs.getString("sumber_perolehan"));
         k.setKondisi(KondisiKoleksi.fromString(rs.getString("kondisi")));
+        k.setFotoPath(rs.getString("foto_path"));
 
         Date tglDiterima = rs.getDate("tanggal_diterima");
         if (tglDiterima != null) {

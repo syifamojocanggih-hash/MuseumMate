@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS pengguna (
     password_hash VARCHAR(255) NOT NULL,
     nama_lengkap VARCHAR(100) NOT NULL,
     peran ENUM('ADMIN', 'KONSERVATOR') NOT NULL,
+    spesialisasi VARCHAR(50) NOT NULL DEFAULT 'SEMUA',
     is_aktif BOOLEAN NOT NULL DEFAULT TRUE,
     dibuat_pada TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
@@ -27,6 +28,7 @@ CREATE TABLE IF NOT EXISTS koleksi (
     tahun_perkiraan VARCHAR(50),
     bahan VARCHAR(100),
     lokasi_penyimpanan VARCHAR(100),
+    foto_path VARCHAR(255) NULL,
     sumber_perolehan VARCHAR(100),
     kondisi ENUM('BAIK', 'CUKUP', 'RUSAK_RINGAN', 'RUSAK_BERAT') NOT NULL DEFAULT 'BAIK',
     tanggal_diterima DATE NOT NULL,
@@ -83,6 +85,7 @@ CREATE TABLE IF NOT EXISTS pemeriksaan (
     kondisi_hasil ENUM('BAIK', 'CUKUP', 'RUSAK_RINGAN', 'RUSAK_BERAT') NOT NULL,
     tindakan VARCHAR(200) NOT NULL,
     catatan TEXT,
+    foto_kondisi VARCHAR(255) NULL,
     dibuat_pada TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (id_koleksi) REFERENCES koleksi(id_koleksi) ON DELETE CASCADE,
     FOREIGN KEY (id_pengguna) REFERENCES pengguna(id_pengguna),

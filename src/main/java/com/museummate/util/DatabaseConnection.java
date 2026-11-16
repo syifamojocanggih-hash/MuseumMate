@@ -72,12 +72,42 @@ public class DatabaseConnection {
                 executeSqlScript(conn, "/db/seed_data.sql");
                 System.out.println("Inisialisasi basis data berhasil diselesaikan.");
             } else {
-                // Pastikan kolom is_aktif (PRD F1) ada di tabel pengguna
+                // Pastikan kolom spesialisasi dan is_aktif (PRD F1) ada di tabel pengguna
                 try {
-                    stmt.executeUpdate("ALTER TABLE pengguna ADD COLUMN is_aktif BOOLEAN NOT NULL DEFAULT TRUE AFTER peran");
-                } catch (SQLException ignored) {
-                    // Kolom sudah ada
-                }
+                    stmt.executeUpdate("ALTER TABLE pengguna ADD COLUMN spesialisasi VARCHAR(50) NOT NULL DEFAULT 'SEMUA' AFTER peran");
+                } catch (SQLException ignored) {}
+                try {
+                    stmt.executeUpdate("ALTER TABLE pengguna ADD COLUMN is_aktif BOOLEAN NOT NULL DEFAULT TRUE AFTER spesialisasi");
+                } catch (SQLException ignored) {}
+
+                // Pastikan kolom foto_path ada di tabel koleksi
+                try {
+                    stmt.executeUpdate("ALTER TABLE koleksi ADD COLUMN foto_path VARCHAR(255) NULL AFTER lokasi_penyimpanan");
+                } catch (SQLException ignored) {}
+
+                // Pastikan kolom foto_kondisi ada di tabel pemeriksaan
+                try {
+                    stmt.executeUpdate("ALTER TABLE pemeriksaan ADD COLUMN foto_kondisi VARCHAR(255) NULL AFTER catatan");
+                } catch (SQLException ignored) {}
+
+                // Pastikan akun konservator spesialisasi riil tersedia
+                try {
+                    stmt.executeUpdate("INSERT IGNORE INTO pengguna (id_pengguna, username, password_hash, nama_lengkap, peran, spesialisasi, is_aktif) VALUES " +
+                            "(3, 'konservator_artefak', '$2a$10$EpwndmY6IelLsj9hUCFR1e9v5j7CvB2Ao/LJm0v0kVNO/Jek9EIbe', 'Budi Santoso (Konservator Artefak & Logam)', 'KONSERVATOR', 'ARTEFAK', 1), " +
+                            "(4, 'konservator_naskah', '$2a$10$EpwndmY6IelLsj9hUCFR1e9v5j7CvB2Ao/LJm0v0kVNO/Jek9EIbe', 'Siti Rahma (Konservator Naskah Kuno & Kertas)', 'KONSERVATOR', 'NASKAH', 1), " +
+                            "(5, 'konservator_lukisan', '$2a$10$EpwndmY6IelLsj9hUCFR1e9v5j7CvB2Ao/LJm0v0kVNO/Jek9EIbe', 'Hendra Wijaya (Konservator Lukisan & Seni Rupa)', 'KONSERVATOR', 'LUKISAN', 1), " +
+                            "(6, 'konservator_fosil', '$2a$10$EpwndmY6IelLsj9hUCFR1e9v5j7CvB2Ao/LJm0v0kVNO/Jek9EIbe', 'Dr. Bambang (Konservator Fosil & Geologi)', 'KONSERVATOR', 'FOSIL', 1)");
+                } catch (SQLException ignored) {}
+
+                // Tautkan foto fisik default ke koleksi utama Siola jika belum diatur
+                try {
+                    stmt.executeUpdate("UPDATE koleksi SET foto_path = '/com/museummate/images/siola_exhibition.jpg' WHERE kode_registrasi = 'SIOLA-ART-001' AND (foto_path IS NULL OR foto_path = '')");
+                    stmt.executeUpdate("UPDATE koleksi SET foto_path = '/com/museummate/images/siola_slide3_rempah.jpg' WHERE kode_registrasi = 'SIOLA-ART-005' AND (foto_path IS NULL OR foto_path = '')");
+                    stmt.executeUpdate("UPDATE koleksi SET foto_path = '/com/museummate/images/siola_slide2_topeng.jpg' WHERE kode_registrasi = 'SIOLA-ART-049' AND (foto_path IS NULL OR foto_path = '')");
+                    stmt.executeUpdate("UPDATE koleksi SET foto_path = '/com/museummate/images/siola_slide1_ordelama.jpg' WHERE kode_registrasi = 'SIOLA-NSK-001' AND (foto_path IS NULL OR foto_path = '')");
+                    stmt.executeUpdate("UPDATE koleksi SET foto_path = '/com/museummate/images/siola_banner_2.jpg' WHERE kode_registrasi = 'SIOLA-LUK-001' AND (foto_path IS NULL OR foto_path = '')");
+                    stmt.executeUpdate("UPDATE koleksi SET foto_path = '/com/museummate/images/siola_banner_3.jpg' WHERE kode_registrasi = 'SIOLA-FOS-001' AND (foto_path IS NULL OR foto_path = '')");
+                } catch (SQLException ignored) {}
 
                 // Pastikan akun bawaan memiliki hash BCrypt yang valid
                 stmt.executeUpdate("UPDATE pengguna SET password_hash = '$2a$10$X5n4R/yuL10Mh.BtxxXctOO05edLPDZ6ofQDEZyBTxkLud2ObNzRC' WHERE username = 'admin'");

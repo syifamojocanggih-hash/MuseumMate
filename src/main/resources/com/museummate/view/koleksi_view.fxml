@@ -31,6 +31,7 @@
         <Label text="Kondisi:" styleClass="form-label" style="-fx-padding: 6px 0 0 0;" />
         <ComboBox fx:id="cmbKondisiFilter" prefWidth="140.0" promptText="Semua Kondisi" />
 
+        <Button fx:id="btnSpesialisasi" text="⭐ Spesialisasi Saya" onAction="#handleToggleSpesialisasi" styleClass="btn-secondary" style="-fx-padding: 6px 12px;" />
         <Button text="Reset" onAction="#handleResetFilter" styleClass="btn-secondary" style="-fx-padding: 6px 12px;" />
     </HBox>
 
@@ -57,6 +58,7 @@
             <Label fx:id="lblStatusData" text="Menampilkan 0 koleksi" style="-fx-text-fill: #64748b; -fx-font-size: 12px;" HBox.hgrow="ALWAYS" />
             <Region HBox.hgrow="ALWAYS" />
             <Button text="🔍 Detail Lengkap" onAction="#handleLihatDetail" styleClass="btn-secondary" />
+            <Button fx:id="btnUploadFoto" text="📷 Unggah Foto" onAction="#handleUploadFoto" styleClass="btn-secondary" />
             <Button fx:id="btnUbah" text="✏️ Ubah Data" onAction="#handleUbahKoleksi" styleClass="btn-secondary" />
             <Button fx:id="btnHapus" text="🗑️ Hapus" onAction="#handleHapusKoleksi" styleClass="btn-danger" />
         </HBox>

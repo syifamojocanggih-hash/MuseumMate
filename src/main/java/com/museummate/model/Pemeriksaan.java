@@ -17,6 +17,7 @@ public class Pemeriksaan {
     private KondisiKoleksi kondisiHasil;
     private String tindakan;
     private String catatan;
+    private String fotoKondisi;
     private LocalDateTime dibuatPada;
 
     public Pemeriksaan() {
@@ -115,6 +116,14 @@ public class Pemeriksaan {
 
     public void setCatatan(String catatan) {
         this.catatan = catatan != null ? catatan.trim() : "";
+    }
+
+    public String getFotoKondisi() {
+        return fotoKondisi != null ? fotoKondisi : "";
+    }
+
+    public void setFotoKondisi(String fotoKondisi) {
+        this.fotoKondisi = fotoKondisi != null ? fotoKondisi.trim() : "";
     }
 
     public LocalDateTime getDibuatPada() {

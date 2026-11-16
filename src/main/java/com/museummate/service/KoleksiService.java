@@ -66,6 +66,10 @@ public class KoleksiService {
         return koleksiDAO.delete(idKoleksi);
     }
 
+    public boolean updateFotoPath(int idKoleksi, String fotoPath) throws SQLException {
+        return koleksiDAO.updateFotoPath(idKoleksi, fotoPath);
+    }
+
     private void validasiDataInti(Koleksi k) {
         if (k == null) {
             throw new IllegalArgumentException("Data koleksi tidak boleh kosong.");

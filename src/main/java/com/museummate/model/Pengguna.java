@@ -11,23 +11,30 @@ public class Pengguna {
     private String passwordHash;
     private String namaLengkap;
     private PeranPengguna peran;
+    private String spesialisasi = "SEMUA";
     private boolean aktif = true;
     private LocalDateTime dibuatPada;
 
     public Pengguna() {
         this.peran = PeranPengguna.KONSERVATOR;
+        this.spesialisasi = "SEMUA";
         this.aktif = true;
     }
 
     public Pengguna(String username, String passwordHash, String namaLengkap, PeranPengguna peran) {
-        this(username, passwordHash, namaLengkap, peran, true);
+        this(username, passwordHash, namaLengkap, peran, "SEMUA", true);
     }
 
     public Pengguna(String username, String passwordHash, String namaLengkap, PeranPengguna peran, boolean aktif) {
+        this(username, passwordHash, namaLengkap, peran, "SEMUA", aktif);
+    }
+
+    public Pengguna(String username, String passwordHash, String namaLengkap, PeranPengguna peran, String spesialisasi, boolean aktif) {
         this.username = username;
         this.passwordHash = passwordHash;
         this.namaLengkap = namaLengkap;
         this.peran = peran != null ? peran : PeranPengguna.KONSERVATOR;
+        this.spesialisasi = (spesialisasi != null && !spesialisasi.isBlank()) ? spesialisasi.toUpperCase().trim() : "SEMUA";
         this.aktif = aktif;
     }
 
@@ -77,6 +84,14 @@ public class Pengguna {
 
     public void setDibuatPada(LocalDateTime dibuatPada) {
         this.dibuatPada = dibuatPada;
+    }
+
+    public String getSpesialisasi() {
+        return (spesialisasi != null && !spesialisasi.isBlank()) ? spesialisasi : "SEMUA";
+    }
+
+    public void setSpesialisasi(String spesialisasi) {
+        this.spesialisasi = (spesialisasi != null && !spesialisasi.isBlank()) ? spesialisasi.toUpperCase().trim() : "SEMUA";
     }
 
     public boolean isAdmin() {
