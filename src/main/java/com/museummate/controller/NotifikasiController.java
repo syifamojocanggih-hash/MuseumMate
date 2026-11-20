@@ -6,6 +6,7 @@ import com.museummate.service.JadwalService;
 import com.museummate.service.LogAktivitasService;
 import com.museummate.util.AlertHelper;
 import com.museummate.util.DateUtil;
+import com.museummate.util.SessionManager;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -104,6 +105,14 @@ public class NotifikasiController {
         try {
             List<JadwalPerawatan> overdue = jadwalService.getJadwalTerlambat();
             List<JadwalPerawatan> upcoming = jadwalService.getJadwalMendatang(7);
+
+            if (SessionManager.getInstance().hasSpesialisasi()) {
+                com.museummate.model.KategoriKoleksi spec = SessionManager.getInstance().getKategoriSpesialisasi();
+                if (spec != null) {
+                    overdue = overdue.stream().filter(j -> j.getKategoriKoleksi() == spec).toList();
+                    upcoming = upcoming.stream().filter(j -> j.getKategoriKoleksi() == spec).toList();
+                }
+            }
 
             int totalTerlambat = overdue.size();
             int totalMendatang = upcoming.size();

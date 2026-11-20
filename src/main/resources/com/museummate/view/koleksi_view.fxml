@@ -2,17 +2,18 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
 <VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.museummate.controller.KoleksiController"
-      spacing="16">
+      spacing="14">
 
     <!-- Header Section -->
     <HBox alignment="CENTER_LEFT" spacing="16">
         <VBox spacing="3" HBox.hgrow="ALWAYS">
-            <Label text="Manajemen Data Koleksi Museum" styleClass="page-title" />
-            <Label text="Pencatatan inventaris empat kategori benda bersejarah beserta atribut spesifik dan lokasi penyimpanan." styleClass="page-subtitle" />
+            <Label fx:id="lblPageTitle" text="Manajemen Data Koleksi Museum" styleClass="page-title" />
+            <Label fx:id="lblPageSubtitle" text="Pencatatan inventaris empat kategori benda bersejarah beserta atribut spesifik dan dokumentasi foto." styleClass="page-subtitle" />
         </VBox>
         <HBox spacing="10">
             <Button text="📄 Cetak Laporan PDF" onAction="#handleExportPdf" styleClass="btn-secondary" />
@@ -20,48 +21,105 @@
         </HBox>
     </HBox>
 
-    <!-- Filter & Search Toolbar (PRD F2: satu aksi tanpa reload manual) -->
-    <HBox styleClass="card" spacing="12" alignment="CENTER_LEFT" style="-fx-padding: 12px 16px;">
+    <!-- Filter & Search Toolbar (PRD F2 / UC-02) -->
+    <HBox styleClass="card" spacing="12" alignment="CENTER_LEFT" style="-fx-padding: 10px 16px;">
         <Label text="Pencarian:" styleClass="form-label" style="-fx-padding: 6px 0 0 0;" />
         <TextField fx:id="txtSearch" promptText="Cari nama, kode registrasi, asal, bahan..." HBox.hgrow="ALWAYS" />
 
-        <Label text="Kategori:" styleClass="form-label" style="-fx-padding: 6px 0 0 0;" />
-        <ComboBox fx:id="cmbKategoriFilter" prefWidth="140.0" promptText="Semua Kategori" />
+        <HBox fx:id="boxKategoriFilter" alignment="CENTER_LEFT" spacing="8">
+            <Label text="Kategori:" styleClass="form-label" style="-fx-padding: 6px 0 0 0;" />
+            <ComboBox fx:id="cmbKategoriFilter" prefWidth="140.0" promptText="Semua Kategori" />
+        </HBox>
 
         <Label text="Kondisi:" styleClass="form-label" style="-fx-padding: 6px 0 0 0;" />
         <ComboBox fx:id="cmbKondisiFilter" prefWidth="140.0" promptText="Semua Kondisi" />
 
-        <Button fx:id="btnSpesialisasi" text="⭐ Spesialisasi Saya" onAction="#handleToggleSpesialisasi" styleClass="btn-secondary" style="-fx-padding: 6px 12px;" />
         <Button text="Reset" onAction="#handleResetFilter" styleClass="btn-secondary" style="-fx-padding: 6px 12px;" />
     </HBox>
 
-    <!-- Table of Collections -->
-    <VBox styleClass="card" VBox.vgrow="ALWAYS" spacing="10">
-        <TableView fx:id="tableKoleksi" VBox.vgrow="ALWAYS">
-            <columns>
-                <TableColumn fx:id="colKode" text="Kode Registrasi" prefWidth="120.0" />
-                <TableColumn fx:id="colNama" text="Nama Benda Koleksi" prefWidth="250.0" />
-                <TableColumn fx:id="colKategori" text="Kategori" prefWidth="110.0" />
-                <TableColumn fx:id="colKondisi" text="Kondisi" prefWidth="120.0" />
-                <TableColumn fx:id="colAsal" text="Asal / Budaya" prefWidth="140.0" />
-                <TableColumn fx:id="colBahan" text="Bahan" prefWidth="130.0" />
-                <TableColumn fx:id="colLokasi" text="Lokasi Simpan" prefWidth="160.0" />
-                <TableColumn fx:id="colAtributKhusus" text="Atribut Khusus" prefWidth="220.0" />
-            </columns>
-            <placeholder>
-                <Label text="Tidak ada data koleksi yang cocok dengan filter pencarian." />
-            </placeholder>
-        </TableView>
+    <!-- Main Collections Table & Side Preview Card Layout -->
+    <HBox spacing="14" VBox.vgrow="ALWAYS">
+        <!-- Table Area -->
+        <VBox styleClass="card" HBox.hgrow="ALWAYS" spacing="10">
+            <TableView fx:id="tableKoleksi" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="colKode" text="Kode Registrasi" prefWidth="110.0" />
+                    <TableColumn fx:id="colNama" text="Nama Benda Koleksi" prefWidth="230.0" />
+                    <TableColumn fx:id="colKategori" text="Kategori" prefWidth="95.0" />
+                    <TableColumn fx:id="colKondisi" text="Kondisi" prefWidth="110.0" />
+                    <TableColumn fx:id="colAsal" text="Asal / Budaya" prefWidth="120.0" />
+                    <TableColumn fx:id="colBahan" text="Bahan" prefWidth="110.0" />
+                    <TableColumn fx:id="colLokasi" text="Lokasi Simpan" prefWidth="130.0" />
+                    <TableColumn fx:id="colAtributKhusus" text="Atribut Khusus" prefWidth="160.0" />
+                </columns>
+                <placeholder>
+                    <Label text="Tidak ada data koleksi yang cocok dengan filter pencarian." />
+                </placeholder>
+            </TableView>
 
-        <!-- Bottom Action Bar -->
-        <HBox alignment="CENTER_RIGHT" spacing="10" style="-fx-padding: 6px 0 0 0;">
-            <Label fx:id="lblStatusData" text="Menampilkan 0 koleksi" style="-fx-text-fill: #64748b; -fx-font-size: 12px;" HBox.hgrow="ALWAYS" />
-            <Region HBox.hgrow="ALWAYS" />
-            <Button text="🔍 Detail Lengkap" onAction="#handleLihatDetail" styleClass="btn-secondary" />
-            <Button fx:id="btnUploadFoto" text="📷 Unggah Foto" onAction="#handleUploadFoto" styleClass="btn-secondary" />
-            <Button fx:id="btnUbah" text="✏️ Ubah Data" onAction="#handleUbahKoleksi" styleClass="btn-secondary" />
-            <Button fx:id="btnHapus" text="🗑️ Hapus" onAction="#handleHapusKoleksi" styleClass="btn-danger" />
-        </HBox>
-    </VBox>
+            <!-- Bottom Action Bar -->
+            <HBox alignment="CENTER_RIGHT" spacing="10" style="-fx-padding: 6px 0 0 0;">
+                <Label fx:id="lblStatusData" text="Menampilkan 0 koleksi" style="-fx-text-fill: #64748b; -fx-font-size: 12px;" HBox.hgrow="ALWAYS" />
+                <Region HBox.hgrow="ALWAYS" />
+                <Button text="🔍 Detail Lengkap" onAction="#handleLihatDetail" styleClass="btn-secondary" />
+                <Button fx:id="btnUploadFoto" text="📷 Unggah Foto" onAction="#handleUploadFoto" styleClass="btn-secondary" />
+                <Button fx:id="btnUbah" text="✏️ Ubah Data" onAction="#handleUbahKoleksi" styleClass="btn-secondary" />
+                <Button fx:id="btnHapus" text="🗑️ Hapus" onAction="#handleHapusKoleksi" styleClass="btn-danger" />
+            </HBox>
+        </VBox>
+
+        <!-- Side Preview & Foto Status Panel -->
+        <VBox fx:id="panelPreviewKoleksi" styleClass="card" prefWidth="320.0" minWidth="300.0" maxWidth="340.0" spacing="10">
+            <!-- Header Preview -->
+            <HBox alignment="CENTER_LEFT" spacing="8">
+                <VBox spacing="1" HBox.hgrow="ALWAYS">
+                    <Label text="Foto &amp; Status Perawatan" style="-fx-font-size: 12.5px; -fx-font-weight: 800; -fx-text-fill: #0f172a;" />
+                    <Label fx:id="lblPreviewSub" text="Pilih koleksi untuk melihat pratinjau" style="-fx-font-size: 11px; -fx-text-fill: #64748b;" />
+                </VBox>
+                <Label fx:id="lblPreviewKategoriBadge" text="KOLEKSI"
+                       style="-fx-font-size: 10px; -fx-font-weight: bold; -fx-background-color: #e0f2fe; -fx-text-fill: #0284c7; -fx-padding: 2px 7px; -fx-background-radius: 6px;" />
+            </HBox>
+
+            <!-- Photo Frame with Upload Action -->
+            <StackPane fx:id="framePreviewFoto" prefHeight="170.0" maxHeight="170.0"
+                       style="-fx-background-color: #f8fafc; -fx-border-color: #e2e8f0; -fx-border-width: 1.5px; -fx-border-radius: 12px; -fx-background-radius: 12px;">
+                <ImageView fx:id="imgPreviewKoleksi" fitHeight="160.0" fitWidth="270.0" preserveRatio="true" smooth="true" />
+                <VBox fx:id="boxNoPhotoPlaceholder" alignment="CENTER" spacing="6">
+                    <Label text="📷" style="-fx-font-size: 26px; -fx-opacity: 0.6;" />
+                    <Label text="Belum ada foto fisik" style="-fx-font-size: 11px; -fx-text-fill: #94a3b8; -fx-font-weight: 500;" />
+                    <Button text="Unggah Foto Sekarang" onAction="#handleUploadFoto" styleClass="btn-secondary" style="-fx-font-size: 10.5px; -fx-padding: 4px 8px;" />
+                </VBox>
+            </StackPane>
+
+            <!-- Upload / Ganti Foto Button -->
+            <Button fx:id="btnGantiFotoSide" text="📷  Unggah / Ganti Foto Fisik" onAction="#handleUploadFoto"
+                    maxWidth="Infinity" styleClass="btn-secondary" style="-fx-font-size: 11.5px; -fx-font-weight: bold;" />
+
+            <!-- Indikator Status Perawatan Koleksi (Kritis / Perlu Pembersihan / Bagus) -->
+            <VBox fx:id="boxIndikatorPerawatan" spacing="5"
+                  style="-fx-background-color: #f0fdf4; -fx-border-color: #bbf7d0; -fx-border-width: 1.5px; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 9px 11px;">
+                <HBox alignment="CENTER_LEFT" spacing="6">
+                    <Label fx:id="lblIndikatorIcon" text="🟢" style="-fx-font-size: 12px;" />
+                    <Label fx:id="lblIndikatorTitle" text="KONDISI BAGUS / PRIMA" style="-fx-font-size: 11.5px; -fx-font-weight: 800; -fx-text-fill: #16a34a;" />
+                </HBox>
+                <Label fx:id="lblIndikatorDesc" text="Koleksi dalam kondisi prima dan terawat dengan baik."
+                       wrapText="true" style="-fx-font-size: 11px; -fx-text-fill: #475569; -fx-line-spacing: 1.5px;" />
+                <Button fx:id="btnQuickTindakan" text="➕ Catat Pemeriksaan Baru" onAction="#handleQuickTindakan"
+                        maxWidth="Infinity" style="-fx-background-color: #ffffff; -fx-border-color: #cbd5e1; -fx-border-radius: 6px; -fx-background-radius: 6px; -fx-font-size: 11px; -fx-font-weight: bold; -fx-padding: 5px 8px; -fx-cursor: hand;" />
+            </VBox>
+
+            <!-- Quick Details -->
+            <VBox spacing="3" style="-fx-background-color: #f8fafc; -fx-padding: 8px 10px; -fx-background-radius: 8px;">
+                <Label fx:id="lblPreviewNama" text="Nama Koleksi" style="-fx-font-size: 11.5px; -fx-font-weight: bold; -fx-text-fill: #0f172a;" wrapText="true" />
+                <Label fx:id="lblPreviewLokasi" text="Lokasi: Hall Utama" style="-fx-font-size: 10.5px; -fx-text-fill: #64748b;" />
+                <Label fx:id="lblPreviewBahan" text="Bahan: - | Asal: -" style="-fx-font-size: 10.5px; -fx-text-fill: #64748b;" />
+            </VBox>
+
+            <Region VBox.vgrow="ALWAYS" />
+
+            <Button text="🔍  Lihat Detail Spesifikasi Lengkap" onAction="#handleLihatDetail"
+                    maxWidth="Infinity" styleClass="btn-primary" style="-fx-font-size: 11.5px;" />
+        </VBox>
+    </HBox>
 
 </VBox>

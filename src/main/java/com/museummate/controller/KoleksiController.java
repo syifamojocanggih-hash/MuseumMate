@@ -44,17 +44,22 @@ import java.util.List;
 
 /**
  * Controller untuk antarmuka manajemen data koleksi (PRD F2 & F3).
+ * Menghadirkan tabel inventaris, filter interaktif, side preview panel foto fisik,
+ * indikator status perawatan terintegrasi, dan pengelolaan foto benda cagar budaya.
  */
 public class KoleksiController {
 
+    @FXML private Label lblPageTitle;
+    @FXML private Label lblPageSubtitle;
+
     @FXML private TextField txtSearch;
+    @FXML private HBox boxKategoriFilter;
     @FXML private ComboBox<KategoriKoleksi> cmbKategoriFilter;
     @FXML private ComboBox<KondisiKoleksi> cmbKondisiFilter;
 
     @FXML private Button btnTambah;
     @FXML private Button btnUbah;
     @FXML private Button btnHapus;
-    @FXML private Button btnSpesialisasi;
     @FXML private Button btnUploadFoto;
 
     @FXML private TableView<Koleksi> tableKoleksi;
@@ -68,6 +73,23 @@ public class KoleksiController {
     @FXML private TableColumn<Koleksi, String> colAtributKhusus;
 
     @FXML private Label lblStatusData;
+
+    // Side Preview & Indikator Status Perawatan Panel
+    @FXML private VBox panelPreviewKoleksi;
+    @FXML private Label lblPreviewSub;
+    @FXML private Label lblPreviewKategoriBadge;
+    @FXML private StackPane framePreviewFoto;
+    @FXML private ImageView imgPreviewKoleksi;
+    @FXML private VBox boxNoPhotoPlaceholder;
+    @FXML private Button btnGantiFotoSide;
+    @FXML private VBox boxIndikatorPerawatan;
+    @FXML private Label lblIndikatorIcon;
+    @FXML private Label lblIndikatorTitle;
+    @FXML private Label lblIndikatorDesc;
+    @FXML private Button btnQuickTindakan;
+    @FXML private Label lblPreviewNama;
+    @FXML private Label lblPreviewLokasi;
+    @FXML private Label lblPreviewBahan;
 
     private final KoleksiService koleksiService = new KoleksiService();
     private final ObservableList<Koleksi> dataList = FXCollections.observableArrayList();
@@ -89,23 +111,28 @@ public class KoleksiController {
         btnHapus.setVisible(isAdmin);
         btnHapus.setManaged(isAdmin);
 
+        // Filter kategori disembunyikan untuk Konservator karena Konservator sudah dikhususkan per kategori
+        if (boxKategoriFilter != null) {
+            boxKategoriFilter.setVisible(isAdmin);
+            boxKategoriFilter.setManaged(isAdmin);
+        }
+
         // btnUploadFoto dapat diakses oleh Konservator maupun Admin
         if (btnUploadFoto != null) {
             btnUploadFoto.setVisible(true);
             btnUploadFoto.setManaged(true);
         }
 
-        // btnSpesialisasi: fitur pintar konservator berbasis bidang keahlian
-        if (btnSpesialisasi != null) {
-            Pengguna user = SessionManager.getInstance().getCurrentUser();
-            if (user != null && user.getPeran() == PeranPengguna.KONSERVATOR
-                    && user.getSpesialisasi() != null && !user.getSpesialisasi().equalsIgnoreCase("SEMUA")) {
-                btnSpesialisasi.setVisible(true);
-                btnSpesialisasi.setManaged(true);
-                btnSpesialisasi.setText("⭐ Khusus " + user.getSpesialisasi());
-            } else {
-                btnSpesialisasi.setVisible(false);
-                btnSpesialisasi.setManaged(false);
+        // Pengaturan spesialisasi peran konservator
+        if (SessionManager.getInstance().hasSpesialisasi()) {
+            KategoriKoleksi spec = SessionManager.getInstance().getKategoriSpesialisasi();
+            if (spec != null) {
+                if (lblPageTitle != null) {
+                    lblPageTitle.setText("Manajemen Koleksi: " + spec.getLabel());
+                }
+                if (lblPageSubtitle != null) {
+                    lblPageSubtitle.setText("Inventarisasi, pemantauan fisik, dan kurasi dokumentasi foto khusus kategori " + spec.getLabel() + ".");
+                }
             }
         }
     }
@@ -116,6 +143,14 @@ public class KoleksiController {
 
         cmbKondisiFilter.getItems().add(null); // Option "Semua"
         cmbKondisiFilter.getItems().addAll(KondisiKoleksi.values());
+
+        // Jika konservator memiliki spesialisasi, filter default disesuaikan
+        if (SessionManager.getInstance().hasSpesialisasi()) {
+            KategoriKoleksi spec = SessionManager.getInstance().getKategoriSpesialisasi();
+            if (spec != null) {
+                cmbKategoriFilter.setValue(spec);
+            }
+        }
 
         // Listener filter satu aksi tanpa reload manual (PRD F2)
         txtSearch.textProperty().addListener((obs, oldV, newV) -> filterData());
@@ -158,13 +193,33 @@ public class KoleksiController {
         colAtributKhusus.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getDeskripsiKhusus()));
 
         tableKoleksi.setItems(dataList);
+
+        // Listener saat item pada tabel dipilih untuk sinkronisasi side preview panel
+        tableKoleksi.getSelectionModel().selectedItemProperty().addListener((obs, oldV, selected) -> {
+            updateSidePreview(selected);
+        });
     }
 
     public void loadDataKoleksi() {
         try {
             List<Koleksi> all = koleksiService.getAllKoleksi();
+
+            // Jika konservator memiliki spesialisasi, batasi data awal hanya pada spesialisasinya
+            if (SessionManager.getInstance().hasSpesialisasi()) {
+                KategoriKoleksi spec = SessionManager.getInstance().getKategoriSpesialisasi();
+                if (spec != null) {
+                    all = all.stream().filter(k -> k.getKategori() == spec).toList();
+                }
+            }
+
             dataList.setAll(all);
             updateStatusLabel(all.size());
+
+            if (!dataList.isEmpty()) {
+                tableKoleksi.getSelectionModel().select(0);
+            } else {
+                updateSidePreview(null);
+            }
         } catch (SQLException e) {
             AlertHelper.showError("Gagal Memuat", "Kesalahan saat memuat data koleksi: " + e.getMessage());
         }
@@ -177,28 +232,211 @@ public class KoleksiController {
 
         try {
             List<Koleksi> hasil = koleksiService.searchAndFilter(keyword, kategori, kondisi);
+
+            if (SessionManager.getInstance().hasSpesialisasi() && kategori == null) {
+                KategoriKoleksi spec = SessionManager.getInstance().getKategoriSpesialisasi();
+                if (spec != null) {
+                    hasil = hasil.stream().filter(k -> k.getKategori() == spec).toList();
+                }
+            }
+
             dataList.setAll(hasil);
             updateStatusLabel(hasil.size());
+
+            if (!dataList.isEmpty()) {
+                tableKoleksi.getSelectionModel().select(0);
+            } else {
+                updateSidePreview(null);
+            }
         } catch (SQLException e) {
             AlertHelper.showError("Pencarian Gagal", "Terjadi kesalahan saat memfilter data: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Memperbarui visual Side Preview Panel sesuai koleksi yang sedang dipilih.
+     * Menampilkan foto fisik, indikator kondisi (Butuh Segera Dirawat / Perlu Pembersihan / Bagus),
+     * serta tombol tindakan cepat konservasi.
+     */
+    private void updateSidePreview(Koleksi k) {
+        if (panelPreviewKoleksi == null) return;
+
+        if (k == null) {
+            if (lblPreviewSub != null) lblPreviewSub.setText("Pilih koleksi untuk melihat pratinjau");
+            if (lblPreviewKategoriBadge != null) lblPreviewKategoriBadge.setText("MUSEUM");
+            if (imgPreviewKoleksi != null) imgPreviewKoleksi.setImage(null);
+            if (boxNoPhotoPlaceholder != null) boxNoPhotoPlaceholder.setVisible(true);
+            if (lblPreviewNama != null) lblPreviewNama.setText("Belum ada koleksi terpilih");
+            if (lblPreviewLokasi != null) lblPreviewLokasi.setText("Pilih salah satu baris tabel di sebelah kiri.");
+            if (lblPreviewBahan != null) lblPreviewBahan.setText("");
+            if (boxIndikatorPerawatan != null) boxIndikatorPerawatan.setVisible(false);
+            return;
+        }
+
+        if (lblPreviewSub != null) lblPreviewSub.setText(k.getKodeRegistrasi());
+        if (lblPreviewKategoriBadge != null) {
+            lblPreviewKategoriBadge.setText(k.getKategori().getLabel().toUpperCase());
+            lblPreviewKategoriBadge.setStyle(switch (k.getKategori()) {
+                case ARTEFAK -> "-fx-font-size: 10px; -fx-font-weight: bold; -fx-background-color: #e0f2fe; -fx-text-fill: #0284c7; -fx-padding: 2px 7px; -fx-background-radius: 6px;";
+                case NASKAH -> "-fx-font-size: 10px; -fx-font-weight: bold; -fx-background-color: #fef3c7; -fx-text-fill: #b45309; -fx-padding: 2px 7px; -fx-background-radius: 6px;";
+                case LUKISAN -> "-fx-font-size: 10px; -fx-font-weight: bold; -fx-background-color: #fee2e2; -fx-text-fill: #b91c1c; -fx-padding: 2px 7px; -fx-background-radius: 6px;";
+                case FOSIL -> "-fx-font-size: 10px; -fx-font-weight: bold; -fx-background-color: #f3e8ff; -fx-text-fill: #7e22ce; -fx-padding: 2px 7px; -fx-background-radius: 6px;";
+            });
+        }
+
+        if (lblPreviewNama != null) lblPreviewNama.setText(k.getNama());
+        if (lblPreviewLokasi != null) lblPreviewLokasi.setText("Lokasi: " + (k.getLokasiPenyimpanan() != null ? k.getLokasiPenyimpanan() : "-"));
+        if (lblPreviewBahan != null) lblPreviewBahan.setText("Bahan: " + (k.getBahan() != null ? k.getBahan() : "-") + " | Asal: " + (k.getAsal() != null ? k.getAsal() : "-"));
+
+        // Render Foto Fisik
+        Image img = muatGambar(k.getFotoPath());
+        if (img != null) {
+            if (imgPreviewKoleksi != null) {
+                imgPreviewKoleksi.setImage(img);
+                imgPreviewKoleksi.setVisible(true);
+            }
+            if (boxNoPhotoPlaceholder != null) boxNoPhotoPlaceholder.setVisible(false);
+        } else {
+            if (imgPreviewKoleksi != null) {
+                imgPreviewKoleksi.setImage(null);
+                imgPreviewKoleksi.setVisible(false);
+            }
+            if (boxNoPhotoPlaceholder != null) boxNoPhotoPlaceholder.setVisible(true);
+        }
+
+        // Render Indikator Status Perawatan Fisik
+        if (boxIndikatorPerawatan != null) {
+            boxIndikatorPerawatan.setVisible(true);
+            KondisiKoleksi kondisi = k.getKondisi();
+
+            if (kondisi == KondisiKoleksi.RUSAK_BERAT || kondisi == KondisiKoleksi.RUSAK_RINGAN) {
+                boxIndikatorPerawatan.setStyle("-fx-background-color: #fef2f2; -fx-border-color: #fecaca; -fx-border-width: 1.5px; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 9px 11px;");
+                if (lblIndikatorIcon != null) lblIndikatorIcon.setText("🔴");
+                if (lblIndikatorTitle != null) {
+                    lblIndikatorTitle.setText("BUTUH SEGERA DIRAWAT");
+                    lblIndikatorTitle.setStyle("-fx-font-size: 11.5px; -fx-font-weight: 800; -fx-text-fill: #dc2626;");
+                }
+                if (lblIndikatorDesc != null) {
+                    lblIndikatorDesc.setText("Fisik koleksi terindikasi mengalami kerusakan (" + kondisi.getLabel() + "). Tindakan restorasi konservasi mendesak!");
+                }
+            } else if (kondisi == KondisiKoleksi.CUKUP) {
+                boxIndikatorPerawatan.setStyle("-fx-background-color: #fffbeb; -fx-border-color: #fde68a; -fx-border-width: 1.5px; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 9px 11px;");
+                if (lblIndikatorIcon != null) lblIndikatorIcon.setText("🟡");
+                if (lblIndikatorTitle != null) {
+                    lblIndikatorTitle.setText("PERLU PEMBERSIHAN & PRESERVASI");
+                    lblIndikatorTitle.setStyle("-fx-font-size: 11.5px; -fx-font-weight: 800; -fx-text-fill: #d97706;");
+                }
+                if (lblIndikatorDesc != null) {
+                    lblIndikatorDesc.setText("Kondisi fisik cukup stabil, namun memerlukan pembersihan debu berkala atau stabilisasi kelembaban.");
+                }
+            } else {
+                boxIndikatorPerawatan.setStyle("-fx-background-color: #f0fdf4; -fx-border-color: #bbf7d0; -fx-border-width: 1.5px; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 9px 11px;");
+                if (lblIndikatorIcon != null) lblIndikatorIcon.setText("🟢");
+                if (lblIndikatorTitle != null) {
+                    lblIndikatorTitle.setText("KONDISI BAGUS / PRIMA");
+                    lblIndikatorTitle.setStyle("-fx-font-size: 11.5px; -fx-font-weight: 800; -fx-text-fill: #16a34a;");
+                }
+                if (lblIndikatorDesc != null) {
+                    lblIndikatorDesc.setText("Benda koleksi dalam keadaan prima, terawat baik, dan aman dalam ruang penyimpanan/pameran.");
+                }
+            }
+
+            // Aksi Cepat berdasarkan Role: Admin -> Buat Jadwal (UC-04), Konservator -> Catat Pemeriksaan (UC-06)
+            if (btnQuickTindakan != null) {
+                boolean isAdmin = SessionManager.getInstance().isAdmin();
+                if (isAdmin) {
+                    btnQuickTindakan.setText("📅 Buat Jadwal Perawatan");
+                    btnQuickTindakan.setStyle("-fx-background-color: #174C78; -fx-text-fill: white; -fx-border-radius: 6px; -fx-background-radius: 6px; -fx-font-size: 11px; -fx-font-weight: bold; -fx-padding: 5px 8px; -fx-cursor: hand;");
+                } else {
+                    btnQuickTindakan.setText("📋 Catat Pemeriksaan Fisik");
+                    btnQuickTindakan.setStyle("-fx-background-color: #16a34a; -fx-text-fill: white; -fx-border-radius: 6px; -fx-background-radius: 6px; -fx-font-size: 11px; -fx-font-weight: bold; -fx-padding: 5px 8px; -fx-cursor: hand;");
+                }
+            }
+        }
+    }
+
+    @FXML
+    public void handleQuickTindakan() {
+        Koleksi selected = tableKoleksi.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            AlertHelper.showWarning("Peringatan", "Pilih data koleksi terlebih dahulu.");
+            return;
+        }
+
+        if (SessionManager.getInstance().isAdmin()) {
+            bukaFormTambahJadwal(selected);
+        } else {
+            bukaFormCatatPemeriksaan(selected);
+        }
+    }
+
+    private void bukaFormCatatPemeriksaan(Koleksi koleksi) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/museummate/view/catat_pemeriksaan_dialog.fxml"));
+            Parent root = loader.load();
+
+            CatatPemeriksaanController controller = loader.getController();
+            controller.setKoleksiTarget(koleksi);
+            controller.setOnSuccessCallback(this::loadDataKoleksi);
+
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Catat Pemeriksaan Fisik");
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.initOwner(tableKoleksi.getScene().getWindow());
+            dialogStage.setScene(new Scene(root));
+            dialogStage.showAndWait();
+        } catch (IOException e) {
+            AlertHelper.showError("Kesalahan Dialog", "Gagal membuka form pemeriksaan: " + e.getMessage());
+        }
+    }
+
+    private void bukaFormTambahJadwal(Koleksi koleksi) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/museummate/view/tambah_jadwal_dialog.fxml"));
+            Parent root = loader.load();
+
+            TambahJadwalController controller = loader.getController();
+            controller.setKoleksiTarget(koleksi);
+            controller.setOnSuccessCallback(this::loadDataKoleksi);
+
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Tambah Rencana Perawatan");
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.initOwner(tableKoleksi.getScene().getWindow());
+            dialogStage.setScene(new Scene(root));
+            dialogStage.showAndWait();
+        } catch (IOException e) {
+            AlertHelper.showError("Kesalahan Dialog", "Gagal membuka form jadwal: " + e.getMessage());
         }
     }
 
     @FXML
     public void handleResetFilter() {
         txtSearch.clear();
-        cmbKategoriFilter.setValue(null);
+        if (SessionManager.getInstance().hasSpesialisasi()) {
+            cmbKategoriFilter.setValue(SessionManager.getInstance().getKategoriSpesialisasi());
+        } else {
+            cmbKategoriFilter.setValue(null);
+        }
         cmbKondisiFilter.setValue(null);
         loadDataKoleksi();
     }
 
     @FXML
     public void handleTambahKoleksi() {
+        if (!SessionManager.getInstance().isAdmin()) {
+            AlertHelper.showWarning("Akses Ditolak", "Hanya Administrator yang memiliki wewenang untuk menambah data koleksi baru (UC-03).");
+            return;
+        }
         bukaFormDialog(null);
     }
 
     @FXML
     public void handleUbahKoleksi() {
+        if (!SessionManager.getInstance().isAdmin()) {
+            AlertHelper.showWarning("Akses Ditolak", "Hanya Administrator yang memiliki wewenang untuk mengubah data koleksi (UC-03).");
+            return;
+        }
         Koleksi selected = tableKoleksi.getSelectionModel().getSelectedItem();
         if (selected == null) {
             AlertHelper.showWarning("Peringatan", "Pilih data koleksi yang ingin diubah terlebih dahulu.");
@@ -209,6 +447,10 @@ public class KoleksiController {
 
     @FXML
     public void handleHapusKoleksi() {
+        if (!SessionManager.getInstance().isAdmin()) {
+            AlertHelper.showWarning("Akses Ditolak", "Hanya Administrator yang memiliki wewenang untuk menghapus data koleksi (UC-03).");
+            return;
+        }
         Koleksi selected = tableKoleksi.getSelectionModel().getSelectedItem();
         if (selected == null) {
             AlertHelper.showWarning("Peringatan", "Pilih data koleksi yang ingin dihapus terlebih dahulu.");
@@ -216,7 +458,6 @@ public class KoleksiController {
         }
 
         try {
-            // PRD F2: Penghapusan koleksi yang masih memiliki riwayat pemeriksaan meminta konfirmasi tambahan
             int riwayatCount = koleksiService.cekRiwayatPemeriksaan(selected.getIdKoleksi());
             boolean konfirmasi;
 
@@ -246,25 +487,6 @@ public class KoleksiController {
             }
         } catch (SQLException e) {
             AlertHelper.showError("Kesalahan Basis Data", "Gagal memproses penghapusan: " + e.getMessage());
-        }
-    }
-
-    @FXML
-    public void handleToggleSpesialisasi() {
-        Pengguna user = SessionManager.getInstance().getCurrentUser();
-        if (user == null || user.getSpesialisasi() == null) {
-            return;
-        }
-
-        try {
-            KategoriKoleksi target = KategoriKoleksi.fromString(user.getSpesialisasi());
-            if (cmbKategoriFilter.getValue() == target) {
-                cmbKategoriFilter.setValue(null);
-            } else {
-                cmbKategoriFilter.setValue(target);
-            }
-        } catch (Exception ignored) {
-            cmbKategoriFilter.setValue(null);
         }
     }
 
@@ -312,6 +534,7 @@ public class KoleksiController {
 
                 AlertHelper.showInfo("Unggah Berhasil", "Foto benda koleksi berhasil diperbarui.");
                 tableKoleksi.refresh();
+                updateSidePreview(selected);
             } catch (Exception e) {
                 AlertHelper.showError("Gagal Mengunggah", "Terjadi kesalahan saat mengunggah foto: " + e.getMessage());
             }

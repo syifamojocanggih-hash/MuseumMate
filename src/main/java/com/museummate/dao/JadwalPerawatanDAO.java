@@ -20,7 +20,7 @@ import java.util.List;
 public class JadwalPerawatanDAO {
 
     private static final String BASE_SELECT_SQL =
-            "SELECT j.*, k.kode_registrasi, k.nama AS nama_koleksi " +
+            "SELECT j.*, k.kode_registrasi, k.nama AS nama_koleksi, k.kategori " +
             "FROM jadwal_perawatan j " +
             "JOIN koleksi k ON j.id_koleksi = k.id_koleksi ";
 
@@ -173,6 +173,12 @@ public class JadwalPerawatanDAO {
         j.setIdKoleksi(rs.getInt("id_koleksi"));
         j.setKodeKoleksi(rs.getString("kode_registrasi"));
         j.setNamaKoleksi(rs.getString("nama_koleksi"));
+        try {
+            String kat = rs.getString("kategori");
+            if (kat != null) {
+                j.setKategoriKoleksi(com.museummate.model.KategoriKoleksi.fromString(kat));
+            }
+        } catch (SQLException ignored) {}
 
         Date tgl = rs.getDate("tanggal_rencana");
         if (tgl != null) {

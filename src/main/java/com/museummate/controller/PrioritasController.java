@@ -5,6 +5,7 @@ import com.museummate.service.LaporanService;
 import com.museummate.service.PrioritasService;
 import com.museummate.util.AlertHelper;
 import com.museummate.util.DateUtil;
+import com.museummate.util.SessionManager;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -47,6 +48,8 @@ public class PrioritasController {
     @FXML private TableColumn<PrioritasItem, String> colUrgensi;
 
     @FXML private Label lblSummary;
+    @FXML private javafx.scene.control.Button btnCatatPemeriksaan;
+    @FXML private javafx.scene.control.Button btnBuatJadwal;
 
     private final PrioritasService prioritasService = new PrioritasService();
     private final ObservableList<PrioritasItem> prioritasList = FXCollections.observableArrayList();
@@ -54,8 +57,21 @@ public class PrioritasController {
     @FXML
     public void initialize() {
         dpTanggalAcuan.setValue(LocalDate.now());
+        setupRoleAccess();
         setupTableColumns();
         loadDataPrioritas();
+    }
+
+    private void setupRoleAccess() {
+        boolean isAdmin = SessionManager.getInstance().isAdmin();
+        if (btnCatatPemeriksaan != null) {
+            btnCatatPemeriksaan.setVisible(!isAdmin);
+            btnCatatPemeriksaan.setManaged(!isAdmin);
+        }
+        if (btnBuatJadwal != null) {
+            btnBuatJadwal.setVisible(isAdmin);
+            btnBuatJadwal.setManaged(isAdmin);
+        }
     }
 
     private void setupTableColumns() {
@@ -118,8 +134,18 @@ public class PrioritasController {
             }
 
             List<PrioritasItem> list = prioritasService.getDaftarPrioritas(acuan);
+            if (SessionManager.getInstance().hasSpesialisasi()) {
+                com.museummate.model.KategoriKoleksi spec = SessionManager.getInstance().getKategoriSpesialisasi();
+                if (spec != null) {
+                    list = list.stream().filter(pi -> pi.getKategori() == spec).toList();
+                    lblSummary.setText("Total: " + list.size() + " koleksi " + spec.getLabel() + " dihitung dan diurutkan dari skor tertinggi.");
+                } else {
+                    lblSummary.setText("Total: " + list.size() + " koleksi dihitung dan diurutkan dari skor tertinggi.");
+                }
+            } else {
+                lblSummary.setText("Total: " + list.size() + " koleksi dihitung dan diurutkan dari skor tertinggi.");
+            }
             prioritasList.setAll(list);
-            lblSummary.setText("Total: " + list.size() + " koleksi dihitung dan diurutkan dari skor tertinggi.");
         } catch (SQLException e) {
             AlertHelper.showError("Kesalahan Data", "Gagal menghitung daftar prioritas: " + e.getMessage());
         }
@@ -127,6 +153,10 @@ public class PrioritasController {
 
     @FXML
     public void handleCatatPemeriksaan() {
+        if (SessionManager.getInstance().isAdmin()) {
+            AlertHelper.showWarning("Akses Ditolak", "Catat Pemeriksaan Fisik hanya untuk Konservator (UC-06).");
+            return;
+        }
         PrioritasItem selected = tablePrioritas.getSelectionModel().getSelectedItem();
         if (selected == null) {
             AlertHelper.showWarning("Peringatan", "Pilih koleksi pada tabel yang ingin dicatat pemeriksaannya.");
@@ -154,6 +184,10 @@ public class PrioritasController {
 
     @FXML
     public void handleBuatJadwal() {
+        if (!SessionManager.getInstance().isAdmin()) {
+            AlertHelper.showWarning("Akses Ditolak", "Kelola Jadwal Perawatan hanya dapat dilakukan oleh Administrator (UC-04).");
+            return;
+        }
         PrioritasItem selected = tablePrioritas.getSelectionModel().getSelectedItem();
         if (selected == null) {
             AlertHelper.showWarning("Peringatan", "Pilih koleksi pada tabel yang ingin dibuatkan jadwal perawatannya.");

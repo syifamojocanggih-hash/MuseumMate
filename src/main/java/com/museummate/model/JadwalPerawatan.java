@@ -11,6 +11,7 @@ public class JadwalPerawatan {
     private int idKoleksi;
     private String kodeKoleksi;
     private String namaKoleksi;
+    private KategoriKoleksi kategoriKoleksi;
     private LocalDate tanggalRencana;
     private String kegiatan;
     private String keterangan;
@@ -72,6 +73,14 @@ public class JadwalPerawatan {
 
     public void setNamaKoleksi(String namaKoleksi) {
         this.namaKoleksi = namaKoleksi;
+    }
+
+    public KategoriKoleksi getKategoriKoleksi() {
+        return kategoriKoleksi;
+    }
+
+    public void setKategoriKoleksi(KategoriKoleksi kategoriKoleksi) {
+        this.kategoriKoleksi = kategoriKoleksi;
     }
 
     public LocalDate getTanggalRencana() {

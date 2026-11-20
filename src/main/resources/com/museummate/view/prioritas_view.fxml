@@ -55,12 +55,12 @@
             </placeholder>
         </TableView>
 
-        <!-- Bottom Actions -->
+        <!-- Bottom Actions (UC-06 Konservator vs UC-04 Admin) -->
         <HBox alignment="CENTER_RIGHT" spacing="10" style="-fx-padding: 6px 0 0 0;">
             <Label fx:id="lblSummary" text="Total: 0 koleksi dihitung" style="-fx-text-fill: #64748b; -fx-font-size: 12px;" HBox.hgrow="ALWAYS" />
             <Region HBox.hgrow="ALWAYS" />
-            <Button text="📋 Catat Pemeriksaan Langsung" onAction="#handleCatatPemeriksaan" styleClass="btn-primary" />
-            <Button text="📅 Buat Jadwal Perawatan" onAction="#handleBuatJadwal" styleClass="btn-secondary" />
+            <Button fx:id="btnCatatPemeriksaan" text="📋 Catat Pemeriksaan Langsung" onAction="#handleCatatPemeriksaan" styleClass="btn-primary" />
+            <Button fx:id="btnBuatJadwal" text="📅 Buat Jadwal Perawatan" onAction="#handleBuatJadwal" styleClass="btn-secondary" />
         </HBox>
     </VBox>
 

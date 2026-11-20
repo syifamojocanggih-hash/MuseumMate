@@ -67,18 +67,32 @@ public class MainLayoutController {
         Pengguna user = SessionManager.getInstance().getCurrentUser();
         if (user != null) {
             lblNamaPengguna.setText(user.getNamaLengkap());
-            lblPeranPengguna.setText(user.getPeran().getLabel().toUpperCase());
+            String roleText = user.getPeran().getLabel().toUpperCase();
+            if (SessionManager.getInstance().hasSpesialisasi()) {
+                roleText = "KONSERVATOR (" + user.getSpesialisasi() + ")";
+            }
+            lblPeranPengguna.setText(roleText);
             if (lblHeaderUserName != null) lblHeaderUserName.setText(user.getNamaLengkap());
-            if (lblHeaderUserRole != null) lblHeaderUserRole.setText(user.getPeran().getLabel().toUpperCase());
+            if (lblHeaderUserRole != null) lblHeaderUserRole.setText(roleText);
             if (lblAvatarInitials != null) lblAvatarInitials.setText(hitungInisial(user.getNamaLengkap()));
 
-            // Menu Pengguna dan Log Audit hanya untuk Admin (PRD F1 / F10)
+            // Penyesuaian hak akses berdasarkan Use Case Diagram & Deskripsi Use Case:
+            // Admin Saja: Kelola Jadwal Perawatan (UC-04), Kelola Pengguna (UC-05), Log Audit (UC-13)
+            // Konservator Saja: Catat Pemeriksaan (UC-06) & Lihat Riwayat Pemeriksaan (UC-07)
             boolean isAdmin = user.isAdmin();
+            boolean isKonservator = SessionManager.getInstance().isKonservator();
+
             btnNavPengguna.setVisible(isAdmin);
             btnNavPengguna.setManaged(isAdmin);
 
             btnNavLogAudit.setVisible(isAdmin);
             btnNavLogAudit.setManaged(isAdmin);
+
+            btnNavJadwal.setVisible(isAdmin);
+            btnNavJadwal.setManaged(isAdmin);
+
+            btnNavPemeriksaan.setVisible(isKonservator);
+            btnNavPemeriksaan.setManaged(isKonservator);
         }
 
         if (lblTanggalHariIni != null) {
@@ -314,6 +328,10 @@ public class MainLayoutController {
 
     @FXML
     public void showPemeriksaan() {
+        if (!SessionManager.getInstance().isKonservator()) {
+            AlertHelper.showWarning("Akses Ditolak", "Fitur Catat & Riwayat Pemeriksaan Fisik hanya untuk Konservator (UC-06 & UC-07).");
+            return;
+        }
         setActiveNav(btnNavPemeriksaan);
         loadView("/com/museummate/view/pemeriksaan_view.fxml");
         updateNotifikasiBadge();
@@ -321,6 +339,10 @@ public class MainLayoutController {
 
     @FXML
     public void showJadwal() {
+        if (!SessionManager.getInstance().isAdmin()) {
+            AlertHelper.showWarning("Akses Ditolak", "Kelola Jadwal Perawatan hanya dapat diakses oleh Administrator (UC-04).");
+            return;
+        }
         setActiveNav(btnNavJadwal);
         loadView("/com/museummate/view/jadwal_view.fxml");
         updateNotifikasiBadge();

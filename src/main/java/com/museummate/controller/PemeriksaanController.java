@@ -6,6 +6,7 @@ import com.museummate.service.KoleksiService;
 import com.museummate.service.PemeriksaanService;
 import com.museummate.util.AlertHelper;
 import com.museummate.util.DateUtil;
+import com.museummate.util.SessionManager;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -99,6 +100,12 @@ public class PemeriksaanController {
     private void loadKoleksiComboBox() {
         try {
             List<Koleksi> all = koleksiService.getAllKoleksi();
+            if (SessionManager.getInstance().hasSpesialisasi()) {
+                com.museummate.model.KategoriKoleksi spec = SessionManager.getInstance().getKategoriSpesialisasi();
+                if (spec != null) {
+                    all = all.stream().filter(k -> k.getKategori() == spec).toList();
+                }
+            }
             cmbPilihKoleksi.setItems(FXCollections.observableArrayList(all));
         } catch (SQLException e) {
             AlertHelper.showError("Kesalahan", "Gagal memuat daftar koleksi: " + e.getMessage());
@@ -133,6 +140,10 @@ public class PemeriksaanController {
 
     @FXML
     public void handleBukaFormCatat() {
+        if (SessionManager.getInstance().isAdmin()) {
+            AlertHelper.showWarning("Akses Ditolak", "Hanya Konservator yang berwenang mencatat hasil pemeriksaan fisik (UC-06).");
+            return;
+        }
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/museummate/view/catat_pemeriksaan_dialog.fxml"));
             Parent root = loader.load();

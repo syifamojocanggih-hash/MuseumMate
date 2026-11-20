@@ -73,6 +73,8 @@ public class DashboardController {
 
     @FXML private Label lblHeroGreetingTitle;
     @FXML private Label lblHeroGreetingSub;
+    @FXML private javafx.scene.control.Button btnHeroKelolaJadwal;
+    @FXML private javafx.scene.control.Button btnHeroCatatPemeriksaan;
 
     @FXML private Label lblTotalKoleksi;
     @FXML private Label lblPrioritasKritis;
@@ -99,6 +101,7 @@ public class DashboardController {
     @FXML private ProgressBar progressRingan;
     @FXML private ProgressBar progressBerat;
 
+    @FXML private VBox cardGrafikTren;
     @FXML private LineChart<String, Number> chartTrenKondisi;
     @FXML private CategoryAxis axisXWaktu;
     @FXML private NumberAxis axisYSkor;
@@ -119,6 +122,7 @@ public class DashboardController {
     @FXML private Label lblFeaturedKoleksi;
     @FXML private VBox boxUpcomingList;
     @FXML private Label lblEmptyUpcoming;
+    @FXML private javafx.scene.control.Button btnSemuaAgenda;
 
     private final DashboardService dashboardService = new DashboardService();
 
@@ -175,10 +179,34 @@ public class DashboardController {
                 lblHeroGreetingTitle.setText("Selamat Datang, " + userName + "!");
             }
 
+            boolean isAdmin = SessionManager.getInstance().isAdmin();
+
+            // Hak akses hero buttons: Admin -> Kelola Jadwal (UC-04), Konservator -> Catat Pemeriksaan (UC-06)
+            if (btnHeroKelolaJadwal != null) {
+                btnHeroKelolaJadwal.setVisible(isAdmin);
+                btnHeroKelolaJadwal.setManaged(isAdmin);
+            }
+            if (btnHeroCatatPemeriksaan != null) {
+                btnHeroCatatPemeriksaan.setVisible(!isAdmin);
+                btnHeroCatatPemeriksaan.setManaged(!isAdmin);
+            }
+
+            // UC-12: Grafik Tren Kondisi Koleksi HANYA untuk Administrator
+            if (cardGrafikTren != null) {
+                cardGrafikTren.setVisible(isAdmin);
+                cardGrafikTren.setManaged(isAdmin);
+            }
+
             int terlambat = stats.jumlahJadwalTerlambat();
             int kritis = stats.jumlahPrioritasMendesak();
+            KategoriKoleksi spec = SessionManager.getInstance().getKategoriSpesialisasi();
+
             if (lblHeroGreetingSub != null) {
-                if (terlambat > 0 || kritis > 0) {
+                if (spec != null) {
+                    lblHeroGreetingSub.setText("Dashboard Khusus Konservator " + spec.getLabel() + ": Terdata " + stats.totalKoleksi() +
+                            " koleksi dalam lingkup tanggung jawab kurasi Anda. " +
+                            (terlambat > 0 ? "Terdapat " + terlambat + " jadwal perawatan perlu tindakan!" : "Seluruh jadwal perawatan aman."));
+                } else if (terlambat > 0 || kritis > 0) {
                     lblHeroGreetingSub.setText("Terdapat " + terlambat + " jadwal perawatan terlambat dan " + kritis + " koleksi berstatus prioritas kritis atau tinggi. Segera lakukan penanganan preservasi.");
                 } else {
                     lblHeroGreetingSub.setText("Semua koleksi dan jadwal perawatan dalam pemantauan stabil. Pertahankan standar preservasi koleksi museum.");
@@ -200,15 +228,27 @@ public class DashboardController {
             int artefak = stats.perKategori().getOrDefault(KategoriKoleksi.ARTEFAK, 0);
             int fosil = stats.perKategori().getOrDefault(KategoriKoleksi.FOSIL, 0);
 
-            lblNaskahCount.setText(naskah + " item (" + (naskah * 100 / total) + "%)");
-            lblLukisanCount.setText(lukisan + " item (" + (lukisan * 100 / total) + "%)");
-            lblArtefakCount.setText(artefak + " item (" + (artefak * 100 / total) + "%)");
-            lblFosilCount.setText(fosil + " item (" + (fosil * 100 / total) + "%)");
+            if (spec != null) {
+                lblNaskahCount.setText(spec == KategoriKoleksi.NASKAH ? naskah + " item (100% Tanggung Jawab)" : "- (Bukan Bidang)");
+                lblLukisanCount.setText(spec == KategoriKoleksi.LUKISAN ? lukisan + " item (100% Tanggung Jawab)" : "- (Bukan Bidang)");
+                lblArtefakCount.setText(spec == KategoriKoleksi.ARTEFAK ? artefak + " item (100% Tanggung Jawab)" : "- (Bukan Bidang)");
+                lblFosilCount.setText(spec == KategoriKoleksi.FOSIL ? fosil + " item (100% Tanggung Jawab)" : "- (Bukan Bidang)");
 
-            if (progressNaskah != null) progressNaskah.setProgress((double) naskah / total);
-            if (progressLukisan != null) progressLukisan.setProgress((double) lukisan / total);
-            if (progressArtefak != null) progressArtefak.setProgress((double) artefak / total);
-            if (progressFosil != null) progressFosil.setProgress((double) fosil / total);
+                if (progressNaskah != null) progressNaskah.setProgress(spec == KategoriKoleksi.NASKAH ? 1.0 : 0.0);
+                if (progressLukisan != null) progressLukisan.setProgress(spec == KategoriKoleksi.LUKISAN ? 1.0 : 0.0);
+                if (progressArtefak != null) progressArtefak.setProgress(spec == KategoriKoleksi.ARTEFAK ? 1.0 : 0.0);
+                if (progressFosil != null) progressFosil.setProgress(spec == KategoriKoleksi.FOSIL ? 1.0 : 0.0);
+            } else {
+                lblNaskahCount.setText(naskah + " item (" + (naskah * 100 / total) + "%)");
+                lblLukisanCount.setText(lukisan + " item (" + (lukisan * 100 / total) + "%)");
+                lblArtefakCount.setText(artefak + " item (" + (artefak * 100 / total) + "%)");
+                lblFosilCount.setText(fosil + " item (" + (fosil * 100 / total) + "%)");
+
+                if (progressNaskah != null) progressNaskah.setProgress((double) naskah / total);
+                if (progressLukisan != null) progressLukisan.setProgress((double) lukisan / total);
+                if (progressArtefak != null) progressArtefak.setProgress((double) artefak / total);
+                if (progressFosil != null) progressFosil.setProgress((double) fosil / total);
+            }
 
             // Kondisi Breakdown with Progress Bars
             int cukup = stats.perKondisi().getOrDefault(KondisiKoleksi.CUKUP, 0);
@@ -287,10 +327,20 @@ public class DashboardController {
             }
         }
 
-        chartTrenKondisi.getData().add(seriesNaskah);
-        chartTrenKondisi.getData().add(seriesLukisan);
-        chartTrenKondisi.getData().add(seriesArtefak);
-        chartTrenKondisi.getData().add(seriesFosil);
+        KategoriKoleksi spec = SessionManager.getInstance().getKategoriSpesialisasi();
+        if (spec == null) {
+            chartTrenKondisi.getData().add(seriesNaskah);
+            chartTrenKondisi.getData().add(seriesLukisan);
+            chartTrenKondisi.getData().add(seriesArtefak);
+            chartTrenKondisi.getData().add(seriesFosil);
+        } else {
+            switch (spec) {
+                case NASKAH -> chartTrenKondisi.getData().add(seriesNaskah);
+                case LUKISAN -> chartTrenKondisi.getData().add(seriesLukisan);
+                case ARTEFAK -> chartTrenKondisi.getData().add(seriesArtefak);
+                case FOSIL -> chartTrenKondisi.getData().add(seriesFosil);
+            }
+        }
     }
 
     private void renderUpcomingSchedules(List<JadwalPerawatan> list) {
@@ -390,11 +440,33 @@ public class DashboardController {
 
     @FXML
     public void handleBukaJadwal() {
+        if (!SessionManager.getInstance().isAdmin()) {
+            AlertHelper.showWarning("Akses Ditolak", "Kelola Jadwal Perawatan hanya dapat diakses oleh Administrator (UC-04).");
+            return;
+        }
         switchView("/com/museummate/view/jadwal_view.fxml");
     }
 
     @FXML
+    public void handleBukaCatatPemeriksaan() {
+        switchView("/com/museummate/view/pemeriksaan_view.fxml");
+    }
+
+    @FXML
+    public void handleAgendaSemuaClick() {
+        if (SessionManager.getInstance().isAdmin()) {
+            switchView("/com/museummate/view/jadwal_view.fxml");
+        } else {
+            switchView("/com/museummate/view/notifikasi_view.fxml");
+        }
+    }
+
+    @FXML
     public void handleBukaPemeriksaan() {
+        if (SessionManager.getInstance().isAdmin()) {
+            AlertHelper.showWarning("Akses Ditolak", "Catat & Riwayat Pemeriksaan Fisik hanya untuk Konservator (UC-06 & UC-07).");
+            return;
+        }
         switchView("/com/museummate/view/pemeriksaan_view.fxml");
     }
 

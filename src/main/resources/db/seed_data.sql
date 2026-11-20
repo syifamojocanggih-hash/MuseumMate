@@ -19,10 +19,14 @@ TRUNCATE TABLE koleksi;
 TRUNCATE TABLE pengguna;
 SET FOREIGN_KEY_CHECKS = 1;
 
--- 1. Pengguna Bawaan (Admin & Konservator)
-INSERT INTO pengguna (id_pengguna, username, password_hash, nama_lengkap, peran) VALUES
-(1, 'admin', '$2a$10$X5n4R/yuL10Mh.BtxxXctOO05edLPDZ6ofQDEZyBTxkLud2ObNzRC', 'Ahmad Syifa (Administrator Museum Siola)', 'ADMIN'),
-(2, 'konservator', '$2a$10$EpwndmY6IelLsj9hUCFR1e9v5j7CvB2Ao/LJm0v0kVNO/Jek9EIbe', 'Amanda Eka (Konservator Cagar Budaya)', 'KONSERVATOR');
+-- 1. Pengguna Bawaan (Admin & Konservator per Spesialisasi)
+INSERT INTO pengguna (id_pengguna, username, password_hash, nama_lengkap, peran, spesialisasi) VALUES
+(1, 'admin', '$2a$10$X5n4R/yuL10Mh.BtxxXctOO05edLPDZ6ofQDEZyBTxkLud2ObNzRC', 'Ahmad Syifa (Administrator Museum Siola)', 'ADMIN', 'SEMUA'),
+(2, 'konservator', '$2a$10$EpwndmY6IelLsj9hUCFR1e9v5j7CvB2Ao/LJm0v0kVNO/Jek9EIbe', 'Amanda Eka (Konservator Cagar Budaya)', 'KONSERVATOR', 'SEMUA'),
+(3, 'konservator_artefak', '$2a$10$EpwndmY6IelLsj9hUCFR1e9v5j7CvB2Ao/LJm0v0kVNO/Jek9EIbe', 'Budi Santoso (Konservator Artefak & Logam)', 'KONSERVATOR', 'ARTEFAK'),
+(4, 'konservator_naskah', '$2a$10$EpwndmY6IelLsj9hUCFR1e9v5j7CvB2Ao/LJm0v0kVNO/Jek9EIbe', 'Siti Rahma (Konservator Naskah Kuno & Kertas)', 'KONSERVATOR', 'NASKAH'),
+(5, 'konservator_lukisan', '$2a$10$EpwndmY6IelLsj9hUCFR1e9v5j7CvB2Ao/LJm0v0kVNO/Jek9EIbe', 'Hendra Wijaya (Konservator Lukisan & Seni Rupa)', 'KONSERVATOR', 'LUKISAN'),
+(6, 'konservator_fosil', '$2a$10$EpwndmY6IelLsj9hUCFR1e9v5j7CvB2Ao/LJm0v0kVNO/Jek9EIbe', 'Dr. Bambang (Konservator Fosil & Geologi)', 'KONSERVATOR', 'FOSIL');
 
 -- 2. Seed 336 Koleksi Induk (koleksi)
 INSERT INTO koleksi (id_koleksi, kode_registrasi, nama, kategori, asal, tahun_perkiraan, bahan, lokasi_penyimpanan, sumber_perolehan, kondisi, tanggal_diterima) VALUES

@@ -1,8 +1,10 @@
 package com.museummate.controller;
 
 import com.museummate.model.Pengguna;
+import com.museummate.model.PeranPengguna;
 import com.museummate.service.AuthService;
 import com.museummate.util.AlertHelper;
+import com.museummate.util.SessionManager;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -14,15 +16,29 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 
 /**
  * Controller untuk halaman autentikasi dan login (PRD F1).
- * Mendukung layout modern split-screen, password toggle, dan quick-fill akun demo.
+ * Mendukung switch role Admin vs Konservator, pemilihan spesialisasi kurasi
+ * (Artefak, Naskah, Lukisan, Fosil), dan akun demo cepat untuk masing-masing bidang.
  */
 public class LoginController {
+
+    @FXML private Label lblLoginTitle;
+    @FXML private Label lblLoginSubtitle;
+
+    @FXML private Button btnRoleAdmin;
+    @FXML private Button btnRoleKonservator;
+
+    @FXML private VBox boxSpesialisasiKonservator;
+    @FXML private Button btnSpecArtefak;
+    @FXML private Button btnSpecNaskah;
+    @FXML private Button btnSpecLukisan;
+    @FXML private Button btnSpecFosil;
 
     @FXML private TextField txtUsername;
     @FXML private PasswordField txtPassword;
@@ -32,10 +48,16 @@ public class LoginController {
     @FXML private HBox boxPassword;
     @FXML private Button btnLogin;
     @FXML private Label lblError;
+
+    @FXML private VBox boxDemoAdmin;
+    @FXML private VBox boxDemoKonservator;
+
     @FXML private StackPane visualPane;
     @FXML private ImageView imgVisual;
 
     private final AuthService authService = new AuthService();
+    private String selectedRole = "ADMIN";
+    private String selectedSpec = "ARTEFAK";
 
     @FXML
     public void initialize() {
@@ -85,6 +107,104 @@ public class LoginController {
             imgVisual.fitWidthProperty().bind(visualPane.widthProperty());
             imgVisual.fitHeightProperty().bind(visualPane.heightProperty());
         }
+
+        // Default: Admin mode
+        applyRoleMode("ADMIN");
+        fillAdminDemo();
+    }
+
+    @FXML
+    public void handleSelectRoleAdmin() {
+        applyRoleMode("ADMIN");
+        fillAdminDemo();
+    }
+
+    @FXML
+    public void handleSelectRoleKonservator() {
+        applyRoleMode("KONSERVATOR");
+        applySpecSelection(selectedSpec);
+    }
+
+    private void applyRoleMode(String role) {
+        this.selectedRole = role;
+        boolean isAdmin = "ADMIN".equalsIgnoreCase(role);
+
+        if (btnRoleAdmin != null && btnRoleKonservator != null) {
+            if (isAdmin) {
+                btnRoleAdmin.setStyle("-fx-background-color: #174C78; -fx-text-fill: #ffffff; -fx-font-weight: bold; -fx-font-size: 12px; -fx-padding: 8px 12px; -fx-background-radius: 8px; -fx-cursor: hand;");
+                btnRoleKonservator.setStyle("-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-font-weight: bold; -fx-font-size: 12px; -fx-padding: 8px 12px; -fx-background-radius: 8px; -fx-cursor: hand;");
+            } else {
+                btnRoleAdmin.setStyle("-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-font-weight: bold; -fx-font-size: 12px; -fx-padding: 8px 12px; -fx-background-radius: 8px; -fx-cursor: hand;");
+                btnRoleKonservator.setStyle("-fx-background-color: #047857; -fx-text-fill: #ffffff; -fx-font-weight: bold; -fx-font-size: 12px; -fx-padding: 8px 12px; -fx-background-radius: 8px; -fx-cursor: hand;");
+            }
+        }
+
+        if (boxSpesialisasiKonservator != null) {
+            boxSpesialisasiKonservator.setVisible(!isAdmin);
+            boxSpesialisasiKonservator.setManaged(!isAdmin);
+        }
+
+        if (boxDemoAdmin != null) {
+            boxDemoAdmin.setVisible(isAdmin);
+            boxDemoAdmin.setManaged(isAdmin);
+        }
+
+        if (boxDemoKonservator != null) {
+            boxDemoKonservator.setVisible(!isAdmin);
+            boxDemoKonservator.setManaged(!isAdmin);
+        }
+
+        if (lblLoginTitle != null) {
+            lblLoginTitle.setText(isAdmin ? "Masuk sebagai Administrator" : "Masuk sebagai Konservator");
+        }
+        if (lblLoginSubtitle != null) {
+            lblLoginSubtitle.setText(isAdmin
+                    ? "Akses kontrol operasional museum, manajemen pengguna & log audit"
+                    : "Kelola kondisi fisik, jadwal perawatan, dan dokumentasi foto koleksi");
+        }
+    }
+
+    @FXML
+    public void handleSelectSpecArtefak() {
+        applySpecSelection("ARTEFAK");
+        fillDemoArtefak();
+    }
+
+    @FXML
+    public void handleSelectSpecNaskah() {
+        applySpecSelection("NASKAH");
+        fillDemoNaskah();
+    }
+
+    @FXML
+    public void handleSelectSpecLukisan() {
+        applySpecSelection("LUKISAN");
+        fillDemoLukisan();
+    }
+
+    @FXML
+    public void handleSelectSpecFosil() {
+        applySpecSelection("FOSIL");
+        fillDemoFosil();
+    }
+
+    private void applySpecSelection(String spec) {
+        this.selectedSpec = spec != null ? spec.toUpperCase() : "ARTEFAK";
+
+        setSpecBtnState(btnSpecArtefak, "ARTEFAK".equals(this.selectedSpec));
+        setSpecBtnState(btnSpecNaskah, "NASKAH".equals(this.selectedSpec));
+        setSpecBtnState(btnSpecLukisan, "LUKISAN".equals(this.selectedSpec));
+        setSpecBtnState(btnSpecFosil, "FOSIL".equals(this.selectedSpec));
+    }
+
+    private void setSpecBtnState(Button btn, boolean active) {
+        if (btn == null) return;
+        btn.getStyleClass().removeAll("spec-chip-btn", "spec-chip-btn-active");
+        if (active) {
+            btn.getStyleClass().add("spec-chip-btn-active");
+        } else {
+            btn.getStyleClass().add("spec-chip-btn");
+        }
     }
 
     @FXML
@@ -121,6 +241,15 @@ public class LoginController {
 
         try {
             Pengguna user = authService.login(username, password);
+
+            // Jika login sebagai konservator, pastikan spesialisasi diselaraskan
+            if (user.getPeran() == PeranPengguna.KONSERVATOR) {
+                if (user.getSpesialisasi() == null || "SEMUA".equalsIgnoreCase(user.getSpesialisasi())) {
+                    user.setSpesialisasi(selectedSpec);
+                    SessionManager.getInstance().setSessionSpesialisasi(selectedSpec);
+                }
+            }
+
             bukaMainLayout(user);
         } catch (IllegalArgumentException e) {
             lblError.setText(e.getMessage());
@@ -136,17 +265,51 @@ public class LoginController {
     public void fillAdminDemo() {
         txtUsername.setText("admin");
         txtPassword.setText("admin123");
-        if (txtPassword.isVisible()) {
-            txtPassword.requestFocus();
-        } else if (txtPasswordPlain != null) {
-            txtPasswordPlain.requestFocus();
-        }
+        focusPassword();
     }
 
     @FXML
     public void fillKonservatorDemo() {
-        txtUsername.setText("konservator");
+        fillDemoArtefak();
+    }
+
+    @FXML
+    public void fillDemoArtefak() {
+        applyRoleMode("KONSERVATOR");
+        applySpecSelection("ARTEFAK");
+        txtUsername.setText("konservator_artefak");
         txtPassword.setText("konservator123");
+        focusPassword();
+    }
+
+    @FXML
+    public void fillDemoNaskah() {
+        applyRoleMode("KONSERVATOR");
+        applySpecSelection("NASKAH");
+        txtUsername.setText("konservator_naskah");
+        txtPassword.setText("konservator123");
+        focusPassword();
+    }
+
+    @FXML
+    public void fillDemoLukisan() {
+        applyRoleMode("KONSERVATOR");
+        applySpecSelection("LUKISAN");
+        txtUsername.setText("konservator_lukisan");
+        txtPassword.setText("konservator123");
+        focusPassword();
+    }
+
+    @FXML
+    public void fillDemoFosil() {
+        applyRoleMode("KONSERVATOR");
+        applySpecSelection("FOSIL");
+        txtUsername.setText("konservator_fosil");
+        txtPassword.setText("konservator123");
+        focusPassword();
+    }
+
+    private void focusPassword() {
         if (txtPassword.isVisible()) {
             txtPassword.requestFocus();
         } else if (txtPasswordPlain != null) {

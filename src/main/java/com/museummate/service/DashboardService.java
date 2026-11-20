@@ -6,6 +6,7 @@ import com.museummate.model.KategoriKoleksi;
 import com.museummate.model.Koleksi;
 import com.museummate.model.KondisiKoleksi;
 import com.museummate.model.PrioritasItem;
+import com.museummate.util.SessionManager;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -37,7 +38,18 @@ public class DashboardService {
     }
 
     public DashboardStats getStats() throws SQLException {
+        KategoriKoleksi filter = null;
+        try {
+            filter = SessionManager.getInstance().getKategoriSpesialisasi();
+        } catch (Exception ignored) {}
+        return getStats(filter);
+    }
+
+    public DashboardStats getStats(KategoriKoleksi filterKategori) throws SQLException {
         List<Koleksi> all = koleksiDAO.findAll();
+        if (filterKategori != null) {
+            all = all.stream().filter(k -> k.getKategori() == filterKategori).toList();
+        }
         int totalKoleksi = all.size();
 
         Map<KategoriKoleksi, Integer> perKategori = new EnumMap<>(KategoriKoleksi.class);
@@ -55,10 +67,31 @@ public class DashboardService {
             perKondisi.put(k.getKondisi(), perKondisi.get(k.getKondisi()) + 1);
         }
 
-        int jumlahTerlambat = jadwalDAO.countOverdue();
-        int jumlahMendatang = jadwalDAO.countDueSoon(7);
+        List<com.museummate.model.JadwalPerawatan> allJadwal = jadwalDAO.findAll();
+        if (filterKategori != null) {
+            allJadwal = allJadwal.stream().filter(j -> j.getKategoriKoleksi() == filterKategori).toList();
+        }
+
+        int jumlahTerlambat = 0;
+        int jumlahMendatang = 0;
+        LocalDate now = LocalDate.now();
+        LocalDate nextWeek = now.plusDays(7);
+        for (com.museummate.model.JadwalPerawatan j : allJadwal) {
+            if (j.isTerlambat()) {
+                jumlahTerlambat++;
+            }
+            if (j.getStatus() == com.museummate.model.StatusJadwal.DIRENCANAKAN && j.getTanggalRencana() != null) {
+                if (!j.getTanggalRencana().isBefore(now) && !j.getTanggalRencana().isAfter(nextWeek)) {
+                    jumlahMendatang++;
+                }
+            }
+        }
 
         List<PrioritasItem> listPrioritas = prioritasService.getDaftarPrioritas(LocalDate.now());
+        if (filterKategori != null) {
+            listPrioritas = listPrioritas.stream().filter(pi -> pi.getKategori() == filterKategori).toList();
+        }
+
         int jumlahKritis = 0;
         for (PrioritasItem pi : listPrioritas) {
             if ("Kritis".equalsIgnoreCase(pi.getTingkatUrgensi()) || "Tinggi".equalsIgnoreCase(pi.getTingkatUrgensi())) {
@@ -67,7 +100,15 @@ public class DashboardService {
         }
 
         List<com.museummate.model.TrenKondisiItem> trenKondisi = pemeriksaanDAO.getTrenKondisi();
-        List<com.museummate.model.JadwalPerawatan> upcomingJadwal = jadwalDAO.findUpcoming(5);
+        if (filterKategori != null) {
+            trenKondisi = trenKondisi.stream().filter(t -> t.getKategori() == filterKategori).toList();
+        }
+
+        List<com.museummate.model.JadwalPerawatan> upcomingJadwal = allJadwal.stream()
+                .filter(j -> j.getStatus() == com.museummate.model.StatusJadwal.DIRENCANAKAN)
+                .sorted((a, b) -> a.getTanggalRencana().compareTo(b.getTanggalRencana()))
+                .limit(5)
+                .toList();
 
         return new DashboardStats(totalKoleksi, perKategori, perKondisi, jumlahTerlambat, jumlahMendatang, jumlahKritis, listPrioritas, trenKondisi, upcomingJadwal);
     }

@@ -5,6 +5,7 @@ import com.museummate.model.Koleksi;
 import com.museummate.service.JadwalService;
 import com.museummate.service.KoleksiService;
 import com.museummate.util.AlertHelper;
+import com.museummate.util.SessionManager;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -36,6 +37,12 @@ public class TambahJadwalController {
         dpTanggalRencana.setValue(LocalDate.now().plusDays(7));
         try {
             List<Koleksi> list = koleksiService.getAllKoleksi();
+            if (SessionManager.getInstance().hasSpesialisasi()) {
+                com.museummate.model.KategoriKoleksi spec = SessionManager.getInstance().getKategoriSpesialisasi();
+                if (spec != null) {
+                    list = list.stream().filter(k -> k.getKategori() == spec).toList();
+                }
+            }
             cmbKoleksi.setItems(FXCollections.observableArrayList(list));
         } catch (SQLException e) {
             AlertHelper.showError("Kesalahan", "Gagal memuat daftar koleksi: " + e.getMessage());

@@ -7,14 +7,14 @@
 
 <HBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.museummate.controller.LoginController"
-      prefHeight="640.0" prefWidth="980.0"
+      prefHeight="680.0" prefWidth="1020.0"
       styleClass="login-split-root"
       stylesheets="@../css/style.css">
 
     <!-- ================================================================= -->
     <!-- LEFT PANEL: Museum Surabaya (Gedung Siola) Exhibition Showcase    -->
     <!-- ================================================================= -->
-    <StackPane fx:id="visualPane" HBox.hgrow="ALWAYS" minWidth="440.0" prefWidth="490.0"
+    <StackPane fx:id="visualPane" HBox.hgrow="ALWAYS" minWidth="440.0" prefWidth="480.0"
                styleClass="login-visual-pane">
 
         <!-- Authentic Siola Museum Timeline Wall Image -->
@@ -41,7 +41,7 @@
                        styleClass="login-visual-description" wrapText="true" />
             </VBox>
 
-            <!-- Curatorial Category Badges (Clean Typography without Broken Emojis) -->
+            <!-- Curatorial Category Badges -->
             <HBox spacing="8" style="-fx-padding: 6px 0 0 0;">
                 <Label text="Lukisan" styleClass="museum-category-chip" />
                 <Label text="Artefak" styleClass="museum-category-chip" />
@@ -58,12 +58,12 @@
     <!-- ================================================================= -->
     <!-- RIGHT PANEL: Clean Modern Login Form (Centered)                  -->
     <!-- ================================================================= -->
-    <StackPane HBox.hgrow="ALWAYS" minWidth="460.0" prefWidth="490.0"
+    <StackPane HBox.hgrow="ALWAYS" minWidth="480.0" prefWidth="540.0"
                style="-fx-background-color: #ffffff;">
         <ScrollPane fitToWidth="true" fitToHeight="true"
                     styleClass="login-form-scroll">
-            <StackPane alignment="CENTER" minHeight="-Infinity" style="-fx-padding: 32px 36px;">
-                <VBox alignment="CENTER" maxWidth="430.0" spacing="16">
+            <StackPane alignment="CENTER" minHeight="-Infinity" style="-fx-padding: 28px 36px;">
+                <VBox alignment="CENTER" maxWidth="440.0" spacing="14">
 
                     <!-- Brand Header with Rich Gradient Typography -->
                     <VBox alignment="CENTER" spacing="3" maxWidth="Infinity">
@@ -73,16 +73,49 @@
                         <HBox prefHeight="3.0" prefWidth="64.0" maxWidth="64.0"
                               style="-fx-background-color: #174C78; -fx-background-radius: 2px;">
                             <VBox.margin>
-                                <Insets top="4" bottom="10" />
+                                <Insets top="4" bottom="6" />
                             </VBox.margin>
                         </HBox>
                     </VBox>
 
                     <!-- Form Heading -->
                     <VBox alignment="CENTER" spacing="3" maxWidth="Infinity">
-                        <Label text="Masuk ke Akun" styleClass="login-heading" />
-                        <Label text="Pilih akun Administrator atau Konservator untuk melanjutkan"
+                        <Label fx:id="lblLoginTitle" text="Masuk ke Akun" styleClass="login-heading" />
+                        <Label fx:id="lblLoginSubtitle" text="Pilih peran akun Administrator atau Konservator"
                                styleClass="login-subheading" />
+                    </VBox>
+
+                    <!-- Role Switcher Tabs (Admin vs Konservator) -->
+                    <VBox spacing="8" maxWidth="Infinity">
+                        <Label text="Pilih Peran Pengguna:" styleClass="login-field-label" />
+                        <HBox spacing="8" maxWidth="Infinity" style="-fx-background-color: #f1f5f9; -fx-padding: 4px; -fx-background-radius: 10px;">
+                            <Button fx:id="btnRoleAdmin" text="🛡️  Administrator" onAction="#handleSelectRoleAdmin"
+                                    HBox.hgrow="ALWAYS" maxWidth="Infinity"
+                                    style="-fx-background-color: #174C78; -fx-text-fill: #ffffff; -fx-font-weight: bold; -fx-font-size: 12px; -fx-padding: 8px 12px; -fx-background-radius: 8px; -fx-cursor: hand;" />
+                            <Button fx:id="btnRoleKonservator" text="🔬  Konservator Museum" onAction="#handleSelectRoleKonservator"
+                                    HBox.hgrow="ALWAYS" maxWidth="Infinity"
+                                    style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-font-weight: bold; -fx-font-size: 12px; -fx-padding: 8px 12px; -fx-background-radius: 8px; -fx-cursor: hand;" />
+                        </HBox>
+                    </VBox>
+
+                    <!-- Sub-selection: Kategori Spesialisasi Konservator -->
+                    <VBox fx:id="boxSpesialisasiKonservator" spacing="6" maxWidth="Infinity" visible="false" managed="false"
+                          style="-fx-background-color: #f8fafc; -fx-border-color: #e2e8f0; -fx-border-width: 1px; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 10px 12px;">
+                        <Label text="Pilih Kategori Konservasi yang Dikelola:" style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #0369a1;" />
+                        <GridPane hgap="8" vgap="8">
+                            <columnConstraints>
+                                <ColumnConstraints hgrow="ALWAYS" percentWidth="50" />
+                                <ColumnConstraints hgrow="ALWAYS" percentWidth="50" />
+                            </columnConstraints>
+                            <Button fx:id="btnSpecArtefak" text="🏺 Artefak &amp; Senjata" onAction="#handleSelectSpecArtefak"
+                                    maxWidth="Infinity" styleClass="spec-chip-btn-active" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                            <Button fx:id="btnSpecNaskah" text="📜 Naskah Kuno" onAction="#handleSelectSpecNaskah"
+                                    maxWidth="Infinity" styleClass="spec-chip-btn" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                            <Button fx:id="btnSpecLukisan" text="🎨 Lukisan Seni" onAction="#handleSelectSpecLukisan"
+                                    maxWidth="Infinity" styleClass="spec-chip-btn" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                            <Button fx:id="btnSpecFosil" text="🦴 Fosil &amp; Paleontologi" onAction="#handleSelectSpecFosil"
+                                    maxWidth="Infinity" styleClass="spec-chip-btn" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        </GridPane>
                     </VBox>
 
                     <!-- Error Banner -->
@@ -122,47 +155,89 @@
                     <Button fx:id="btnLogin" text="Masuk ke Sistem" onAction="#handleLogin"
                             maxWidth="Infinity" styleClass="login-submit-btn">
                         <VBox.margin>
-                            <Insets top="4" />
+                            <Insets top="2" />
                         </VBox.margin>
                     </Button>
 
                     <!-- Divider -->
-                    <HBox alignment="CENTER" spacing="10" maxWidth="Infinity" style="-fx-padding: 4px 0;">
+                    <HBox alignment="CENTER" spacing="10" maxWidth="Infinity" style="-fx-padding: 2px 0;">
                         <Separator HBox.hgrow="ALWAYS" />
                         <Label text="Atau Masuk Cepat dengan Akun Demo"
                                style="-fx-font-size: 11px; -fx-text-fill: #94a3b8; -fx-font-weight: 500;" />
                         <Separator HBox.hgrow="ALWAYS" />
                     </HBox>
 
-                    <!-- Demo Quick-Fill Buttons -->
-                    <HBox spacing="10" maxWidth="Infinity">
-                        <Button onAction="#fillAdminDemo" HBox.hgrow="ALWAYS" maxWidth="Infinity"
-                                styleClass="login-demo-btn">
+                    <!-- Demo Quick-Fill: Administrator Mode -->
+                    <VBox fx:id="boxDemoAdmin" spacing="8" maxWidth="Infinity">
+                        <Button onAction="#fillAdminDemo" maxWidth="Infinity" styleClass="login-demo-btn">
                             <graphic>
-                                <VBox spacing="2">
-                                    <Label text="Admin" style="-fx-font-weight: bold; -fx-font-size: 12px; -fx-text-fill: #174C78;" />
-                                    <Label text="admin / admin123" style="-fx-font-size: 11px; -fx-text-fill: #64748b;" />
-                                </VBox>
+                                <HBox alignment="CENTER_LEFT" spacing="12">
+                                    <Label text="🛡️" style="-fx-font-size: 18px;" />
+                                    <VBox spacing="1">
+                                        <Label text="Akun Demo: Administrator Museum Siola" style="-fx-font-weight: bold; -fx-font-size: 12px; -fx-text-fill: #174C78;" />
+                                        <Label text="Username: admin | Password: admin123 (Akses Penuh)" style="-fx-font-size: 11px; -fx-text-fill: #64748b;" />
+                                    </VBox>
+                                </HBox>
                             </graphic>
                         </Button>
+                    </VBox>
 
-                        <Button onAction="#fillKonservatorDemo" HBox.hgrow="ALWAYS" maxWidth="Infinity"
-                                styleClass="login-demo-btn">
-                            <graphic>
-                                <VBox spacing="2">
-                                    <Label text="Konservator" style="-fx-font-weight: bold; -fx-font-size: 12px; -fx-text-fill: #047857;" />
-                                    <Label text="konservator / konservator123" style="-fx-font-size: 11px; -fx-text-fill: #64748b;" />
-                                </VBox>
-                            </graphic>
-                        </Button>
-                    </HBox>
+                    <!-- Demo Quick-Fill: Konservator Mode (4 Specialized Accounts) -->
+                    <VBox fx:id="boxDemoKonservator" spacing="8" maxWidth="Infinity" visible="false" managed="false">
+                        <GridPane hgap="8" vgap="8">
+                            <columnConstraints>
+                                <ColumnConstraints hgrow="ALWAYS" percentWidth="50" />
+                                <ColumnConstraints hgrow="ALWAYS" percentWidth="50" />
+                            </columnConstraints>
+
+                            <Button onAction="#fillDemoArtefak" maxWidth="Infinity" styleClass="login-demo-btn"
+                                    GridPane.columnIndex="0" GridPane.rowIndex="0">
+                                <graphic>
+                                    <VBox spacing="1">
+                                        <Label text="🏺 Konservator Artefak" style="-fx-font-weight: bold; -fx-font-size: 11px; -fx-text-fill: #047857;" />
+                                        <Label text="Budi Santoso (Artefak)" style="-fx-font-size: 10px; -fx-text-fill: #64748b;" />
+                                    </VBox>
+                                </graphic>
+                            </Button>
+
+                            <Button onAction="#fillDemoNaskah" maxWidth="Infinity" styleClass="login-demo-btn"
+                                    GridPane.columnIndex="1" GridPane.rowIndex="0">
+                                <graphic>
+                                    <VBox spacing="1">
+                                        <Label text="📜 Konservator Naskah" style="-fx-font-weight: bold; -fx-font-size: 11px; -fx-text-fill: #0284c7;" />
+                                        <Label text="Siti Rahma (Naskah Kuno)" style="-fx-font-size: 10px; -fx-text-fill: #64748b;" />
+                                    </VBox>
+                                </graphic>
+                            </Button>
+
+                            <Button onAction="#fillDemoLukisan" maxWidth="Infinity" styleClass="login-demo-btn"
+                                    GridPane.columnIndex="0" GridPane.rowIndex="1">
+                                <graphic>
+                                    <VBox spacing="1">
+                                        <Label text="🎨 Konservator Lukisan" style="-fx-font-weight: bold; -fx-font-size: 11px; -fx-text-fill: #b45309;" />
+                                        <Label text="Hendra Wijaya (Lukisan)" style="-fx-font-size: 10px; -fx-text-fill: #64748b;" />
+                                    </VBox>
+                                </graphic>
+                            </Button>
+
+                            <Button onAction="#fillDemoFosil" maxWidth="Infinity" styleClass="login-demo-btn"
+                                    GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                <graphic>
+                                    <VBox spacing="1">
+                                        <Label text="🦴 Konservator Fosil" style="-fx-font-weight: bold; -fx-font-size: 11px; -fx-text-fill: #7c3aed;" />
+                                        <Label text="Dr. Bambang (Fosil)" style="-fx-font-size: 10px; -fx-text-fill: #64748b;" />
+                                    </VBox>
+                                </graphic>
+                            </Button>
+                        </GridPane>
+                    </VBox>
 
                     <!-- Footer Attribution -->
                     <Label text="Team 8, D3 Teknik Informatika PSDKU Lamongan, PENS (2026)"
-                           style="-fx-font-size: 11px; -fx-text-fill: #94a3b8; -fx-padding: 8px 0 0 0;" />
+                           style="-fx-font-size: 11px; -fx-text-fill: #94a3b8; -fx-padding: 4px 0 0 0;" />
                 </VBox>
             </StackPane>
         </ScrollPane>
     </StackPane>
-</HBox>
 
+</HBox>

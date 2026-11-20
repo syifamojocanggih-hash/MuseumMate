@@ -117,9 +117,15 @@ public class JadwalController {
     public void loadDataJadwal() {
         try {
             List<JadwalPerawatan> list = jadwalService.getAllJadwal();
+            if (SessionManager.getInstance().hasSpesialisasi()) {
+                com.museummate.model.KategoriKoleksi spec = SessionManager.getInstance().getKategoriSpesialisasi();
+                if (spec != null) {
+                    list = list.stream().filter(j -> j.getKategoriKoleksi() == spec).toList();
+                }
+            }
             jadwalList.setAll(list);
 
-            int terlambat = jadwalService.getJumlahTerlambat();
+            long terlambat = list.stream().filter(JadwalPerawatan::isTerlambat).count();
             if (terlambat > 0) {
                 boxAlertTerlambat.setVisible(true);
                 boxAlertTerlambat.setManaged(true);
