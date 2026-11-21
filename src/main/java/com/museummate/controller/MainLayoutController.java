@@ -66,12 +66,12 @@ public class MainLayoutController {
     public void initialize() {
         Pengguna user = SessionManager.getInstance().getCurrentUser();
         if (user != null) {
-            lblNamaPengguna.setText(user.getNamaLengkap());
+            if (lblNamaPengguna != null) lblNamaPengguna.setText(user.getNamaLengkap());
             String roleText = user.getPeran().getLabel().toUpperCase();
             if (SessionManager.getInstance().hasSpesialisasi()) {
                 roleText = "KONSERVATOR (" + user.getSpesialisasi() + ")";
             }
-            lblPeranPengguna.setText(roleText);
+            if (lblPeranPengguna != null) lblPeranPengguna.setText(roleText);
             if (lblHeaderUserName != null) lblHeaderUserName.setText(user.getNamaLengkap());
             if (lblHeaderUserRole != null) lblHeaderUserRole.setText(roleText);
             if (lblAvatarInitials != null) lblAvatarInitials.setText(hitungInisial(user.getNamaLengkap()));

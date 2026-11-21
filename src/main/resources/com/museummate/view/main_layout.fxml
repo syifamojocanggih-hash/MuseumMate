@@ -18,14 +18,6 @@
                 <Label text="Museum Surabaya (Gedung Siola)" styleClass="sidebar-brand-subtitle" style="-fx-text-fill: #c8dcee; -fx-font-size: 11px; -fx-font-weight: bold;" />
             </VBox>
 
-            <!-- User Session Card -->
-            <VBox styleClass="user-profile-box" spacing="4">
-                <Label fx:id="lblNamaPengguna" text="Nama Pengguna" styleClass="user-name-label" />
-                <Label fx:id="lblPeranPengguna" text="ADMINISTRATOR" styleClass="user-role-badge" />
-            </VBox>
-
-            <Separator style="-fx-padding: 6px 0; -fx-opacity: 0.2;" />
-
             <!-- Nav Links (Sesuai Diagram & Deskripsi Use Case) -->
             <!-- UC-10: Dashboard Ringkasan (Admin & Konservator) -->
             <Button fx:id="btnNavDashboard" text="📊  Dashboard Ringkasan" onAction="#showDashboard"

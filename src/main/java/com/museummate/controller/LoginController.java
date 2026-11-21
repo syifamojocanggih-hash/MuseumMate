@@ -5,11 +5,13 @@ import com.museummate.model.PeranPengguna;
 import com.museummate.service.AuthService;
 import com.museummate.util.AlertHelper;
 import com.museummate.util.SessionManager;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -35,10 +37,7 @@ public class LoginController {
     @FXML private Button btnRoleKonservator;
 
     @FXML private VBox boxSpesialisasiKonservator;
-    @FXML private Button btnSpecArtefak;
-    @FXML private Button btnSpecNaskah;
-    @FXML private Button btnSpecLukisan;
-    @FXML private Button btnSpecFosil;
+    @FXML private ComboBox<String> cmbSpesialisasiKonservator;
 
     @FXML private TextField txtUsername;
     @FXML private PasswordField txtPassword;
@@ -48,9 +47,6 @@ public class LoginController {
     @FXML private HBox boxPassword;
     @FXML private Button btnLogin;
     @FXML private Label lblError;
-
-    @FXML private VBox boxDemoAdmin;
-    @FXML private VBox boxDemoKonservator;
 
     @FXML private StackPane visualPane;
     @FXML private ImageView imgVisual;
@@ -108,21 +104,44 @@ public class LoginController {
             imgVisual.fitHeightProperty().bind(visualPane.heightProperty());
         }
 
+        // Init dropdown spesialisasi konservator
+        if (cmbSpesialisasiKonservator != null) {
+            cmbSpesialisasiKonservator.setItems(FXCollections.observableArrayList(
+                    "🏺 Artefak & Senjata",
+                    "📜 Naskah Kuno",
+                    "🎨 Lukisan Seni",
+                    "🦴 Fosil & Paleontologi"
+            ));
+            cmbSpesialisasiKonservator.setValue("🏺 Artefak & Senjata");
+            cmbSpesialisasiKonservator.valueProperty().addListener((obs, oldVal, newVal) -> {
+                if (newVal != null) {
+                    if (newVal.contains("Naskah")) selectedSpec = "NASKAH";
+                    else if (newVal.contains("Lukisan")) selectedSpec = "LUKISAN";
+                    else if (newVal.contains("Fosil")) selectedSpec = "FOSIL";
+                    else selectedSpec = "ARTEFAK";
+                }
+            });
+        }
+
         // Default: Admin mode
         applyRoleMode("ADMIN");
-        fillAdminDemo();
     }
 
     @FXML
     public void handleSelectRoleAdmin() {
         applyRoleMode("ADMIN");
-        fillAdminDemo();
     }
 
     @FXML
     public void handleSelectRoleKonservator() {
         applyRoleMode("KONSERVATOR");
-        applySpecSelection(selectedSpec);
+        if (cmbSpesialisasiKonservator != null && cmbSpesialisasiKonservator.getValue() != null) {
+            String val = cmbSpesialisasiKonservator.getValue();
+            if (val.contains("Naskah")) selectedSpec = "NASKAH";
+            else if (val.contains("Lukisan")) selectedSpec = "LUKISAN";
+            else if (val.contains("Fosil")) selectedSpec = "FOSIL";
+            else selectedSpec = "ARTEFAK";
+        }
     }
 
     private void applyRoleMode(String role) {
@@ -144,16 +163,6 @@ public class LoginController {
             boxSpesialisasiKonservator.setManaged(!isAdmin);
         }
 
-        if (boxDemoAdmin != null) {
-            boxDemoAdmin.setVisible(isAdmin);
-            boxDemoAdmin.setManaged(isAdmin);
-        }
-
-        if (boxDemoKonservator != null) {
-            boxDemoKonservator.setVisible(!isAdmin);
-            boxDemoKonservator.setManaged(!isAdmin);
-        }
-
         if (lblLoginTitle != null) {
             lblLoginTitle.setText(isAdmin ? "Masuk sebagai Administrator" : "Masuk sebagai Konservator");
         }
@@ -161,49 +170,6 @@ public class LoginController {
             lblLoginSubtitle.setText(isAdmin
                     ? "Akses kontrol operasional museum, manajemen pengguna & log audit"
                     : "Kelola kondisi fisik, jadwal perawatan, dan dokumentasi foto koleksi");
-        }
-    }
-
-    @FXML
-    public void handleSelectSpecArtefak() {
-        applySpecSelection("ARTEFAK");
-        fillDemoArtefak();
-    }
-
-    @FXML
-    public void handleSelectSpecNaskah() {
-        applySpecSelection("NASKAH");
-        fillDemoNaskah();
-    }
-
-    @FXML
-    public void handleSelectSpecLukisan() {
-        applySpecSelection("LUKISAN");
-        fillDemoLukisan();
-    }
-
-    @FXML
-    public void handleSelectSpecFosil() {
-        applySpecSelection("FOSIL");
-        fillDemoFosil();
-    }
-
-    private void applySpecSelection(String spec) {
-        this.selectedSpec = spec != null ? spec.toUpperCase() : "ARTEFAK";
-
-        setSpecBtnState(btnSpecArtefak, "ARTEFAK".equals(this.selectedSpec));
-        setSpecBtnState(btnSpecNaskah, "NASKAH".equals(this.selectedSpec));
-        setSpecBtnState(btnSpecLukisan, "LUKISAN".equals(this.selectedSpec));
-        setSpecBtnState(btnSpecFosil, "FOSIL".equals(this.selectedSpec));
-    }
-
-    private void setSpecBtnState(Button btn, boolean active) {
-        if (btn == null) return;
-        btn.getStyleClass().removeAll("spec-chip-btn", "spec-chip-btn-active");
-        if (active) {
-            btn.getStyleClass().add("spec-chip-btn-active");
-        } else {
-            btn.getStyleClass().add("spec-chip-btn");
         }
     }
 
@@ -261,62 +227,6 @@ public class LoginController {
         }
     }
 
-    @FXML
-    public void fillAdminDemo() {
-        txtUsername.setText("admin");
-        txtPassword.setText("admin123");
-        focusPassword();
-    }
-
-    @FXML
-    public void fillKonservatorDemo() {
-        fillDemoArtefak();
-    }
-
-    @FXML
-    public void fillDemoArtefak() {
-        applyRoleMode("KONSERVATOR");
-        applySpecSelection("ARTEFAK");
-        txtUsername.setText("konservator_artefak");
-        txtPassword.setText("konservator123");
-        focusPassword();
-    }
-
-    @FXML
-    public void fillDemoNaskah() {
-        applyRoleMode("KONSERVATOR");
-        applySpecSelection("NASKAH");
-        txtUsername.setText("konservator_naskah");
-        txtPassword.setText("konservator123");
-        focusPassword();
-    }
-
-    @FXML
-    public void fillDemoLukisan() {
-        applyRoleMode("KONSERVATOR");
-        applySpecSelection("LUKISAN");
-        txtUsername.setText("konservator_lukisan");
-        txtPassword.setText("konservator123");
-        focusPassword();
-    }
-
-    @FXML
-    public void fillDemoFosil() {
-        applyRoleMode("KONSERVATOR");
-        applySpecSelection("FOSIL");
-        txtUsername.setText("konservator_fosil");
-        txtPassword.setText("konservator123");
-        focusPassword();
-    }
-
-    private void focusPassword() {
-        if (txtPassword.isVisible()) {
-            txtPassword.requestFocus();
-        } else if (txtPasswordPlain != null) {
-            txtPasswordPlain.requestFocus();
-        }
-    }
-
     private void bukaMainLayout(Pengguna user) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/museummate/view/main_layout.fxml"));
@@ -324,7 +234,7 @@ public class LoginController {
 
             Stage stage = (Stage) btnLogin.getScene().getWindow();
             Scene scene = new Scene(root, 1200, 780);
-            stage.setTitle("MuseumMate — Sistem Manajemen Koleksi & Konservasi Museum");
+            stage.setTitle("MuseumMate: Sistem Manajemen Koleksi & Konservasi Museum");
             stage.setScene(scene);
             stage.centerOnScreen();
         } catch (IOException e) {

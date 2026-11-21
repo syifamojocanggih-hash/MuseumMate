@@ -20,7 +20,7 @@ public class MainApp extends Application {
             Parent root = loader.load();
 
             Scene scene = new Scene(root, 980, 640);
-            primaryStage.setTitle("MuseumMate — Museum Surabaya (Gedung Siola)");
+            primaryStage.setTitle("MuseumMate: Museum Surabaya (Gedung Siola)");
             primaryStage.setScene(scene);
             primaryStage.setMinWidth(880);
             primaryStage.setMinHeight(580);
